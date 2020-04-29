@@ -27,6 +27,7 @@
     "babel-preset-es2015": "^6.24.1"
   },
   "dependencies": {
+    "http-status": "^1.4.2",
     "node-fetch": "^2.6.0"
   }
 }

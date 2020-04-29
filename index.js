@@ -1,14 +1,22 @@
 import fetch from 'node-fetch';
+import status from 'http-status'
 
-const WealthSimpleTradeEndpoints = {
+const defaultEndpointBehaviour = {
 
-  // Common failure method for all endpoint calls
-  onFailure: (response) => {
+  // Default failure method for all endpoint calls
+  onFailure: async (response) => {
     return {
       status: response.status,
-      reason: response.statusText
+      reason: response.statusText,
+      body: await response.json()
     }
   },
+
+  // Default success method for all endpoint calls
+  onSuccess: async (response) => await response.json()
+}
+
+const WealthSimpleTradeEndpoints = {
 
   /*
    * The LOGIN endpoint intializes a new session for the given email and
@@ -29,6 +37,7 @@ const WealthSimpleTradeEndpoints = {
         accountInfo: await response.json()
       };
     },
+    onFailure: defaultEndpointBehaviour.onFailure
   },
 
   /*
@@ -39,11 +48,8 @@ const WealthSimpleTradeEndpoints = {
   LIST_ACCOUNT: {
     method: "GET",
     url: "https://trade-service.wealthsimple.com/account/list",
-    onSuccess: async (response) => {
-      return {
-        data: await response.json()
-      }
-    }
+    onSuccess: defaultEndpointBehaviour.onSuccess,
+    onFailure: defaultEndpointBehaviour.onFailure
   },
 
   /*
@@ -57,11 +63,28 @@ const WealthSimpleTradeEndpoints = {
       0: "interval",
       1: "accountId"
     },
+    onSuccess: defaultEndpointBehaviour.onSuccess,
+    onFailure: defaultEndpointBehaviour.onFailure
+  },
+
+  SECURITY_ID: {
+    method: "GET",
+    url: "https://trade-service.wealthsimple.com/securities?query={0}",
+    parameters: {
+      0: "ticker"
+    },
     onSuccess: async (response) => {
-      return {
-        data: await response.json()
-      } 
-    }
+      let data = await response.json();
+
+      if (data.results.length === 0) {
+        return Promise.reject({
+          reason: `Security does not exist`
+        });
+      }
+
+      return data.results[0].id
+    },
+    onFailure: defaultEndpointBehaviour.onFailure
   },
 
   /*
@@ -75,13 +98,31 @@ const WealthSimpleTradeEndpoints = {
       0: "accountId",
       1: "offset"
     },
-    onSuccess: async (response) => {
-      return {
-        data: await response.json()
-      }
-    }
+    onSuccess: defaultEndpointBehaviour.onSuccess,
+    onFailure: defaultEndpointBehaviour.onFailure
+  },
+
+  PLACE_ORDER: {
+    method: "POST",
+    url: "https://trade-service.wealthsimple.com/orders?account_id={0}",
+    parameters: {
+      0: "accountId"
+    },
+    onSuccess: defaultEndpointBehaviour.onSuccess,
+    onFailure: defaultEndpointBehaviour.onFailure
   }
 }
+
+// WealthSimple Trade API returns some custom HTTP codes
+const wealthSimpleHttpCodes = {
+  ORDER_FILLED: 201
+}
+
+// Successful HTTP codes to be used for determining the status of the request
+const httpSuccessCodes = [
+  status.OK,
+  wealthSimpleHttpCodes.ORDER_FILLED
+]
 
 /*
  * Fulfill the endpoint request given the endpoint configuration, optional
@@ -89,14 +130,14 @@ const WealthSimpleTradeEndpoints = {
  */
 async function handleRequest(endpoint, data, tokens) {
   try {
-    
+
     // Submit the HTTP request to the WealthSimple Trade Servers
     const response = await talk(endpoint, data, tokens);
 
-    if (response.status == 200) {
+    if (isSuccessfulRequest(response.status)) {
       return endpoint.onSuccess(response);
     } else {
-      return Promise.reject(WealthSimpleTradeEndpoints.onFailure(response));
+      return Promise.reject(await endpoint.onFailure(response));
     }
 
   } catch (error) {
@@ -107,27 +148,28 @@ async function handleRequest(endpoint, data, tokens) {
 }
 
 /*
- * Finalize the URL by filling the parameter placeholders with the
+ * Complete the URL by filling the parameter placeholders with the
  * data arguments.
  */
-function buildURL(endpoint, data) {
+function finalizeRequest(endpoint, data) {
 
   // No need to do anything if the URL is static (no parameters)
   if (!endpoint.parameters) {
-    return endpoint.url;
+    return { url: endpoint.url, payload: data };
   }
 
   // Swap all the parameter placeholders with the arguments.
   let url = endpoint.url;
-  for (let index = 0; index < Object.keys(endpoint.parameters).length; index++){
+  for (let index = 0; index < Object.keys(endpoint.parameters).length; index++) {
     if (data[endpoint.parameters[index]] === null) {
       throw new Error("URL Path parameter missing");
     }
 
     url = url.replace(`{${index}}`, data[endpoint.parameters[index]]);
+    delete data[endpoint.parameters[index]];
   }
 
-  return url;
+  return { url, payload: data };
 }
 
 /*
@@ -142,12 +184,17 @@ function talk(endpoint, data, tokens) {
     headers.append('Authorization', `${tokens.access}`)
   }
 
-  return fetch(buildURL(endpoint, data), {
-    body: endpoint.method === 'GET' ? undefined: JSON.stringify(data),
+  // fill path and query parameters in the URL
+  let { url, payload } = finalizeRequest(endpoint, data);
+
+  return fetch(url, {
+    body: endpoint.method === 'GET' ? undefined : JSON.stringify(payload),
     method: endpoint.method,
     headers: headers
   })
 }
+
+const isSuccessfulRequest = (code) => httpSuccessCodes.includes(code);
 
 /**
  * Attempts to create a session for the provided email and password.
@@ -173,7 +220,7 @@ export const getAccountData = async (tokens) =>
  * @param {*} interval The time interval for the history query
  * @param {*} accountId The account to query
  */
-export const getHistory = async (tokens, interval, accountId) => 
+export const getHistory = async (tokens, interval, accountId) =>
   handleRequest(WealthSimpleTradeEndpoints.HISTORY_ACCOUNT, { interval, accountId }, tokens);
 
 
@@ -189,4 +236,33 @@ export const getOrders = async (tokens, accountId, page) =>
   handleRequest(WealthSimpleTradeEndpoints.RETRIEVE_ORDERS, {
     accountId,
     offset: (page - 1) * ORDERS_PER_PAGE
+  }, tokens);
+
+/**
+ * Discovers the WealthSimple Trade security id for the provided ticker.
+ *
+ * @param {*} tokens The access and refresh tokens returned by a successful login.
+ * @param {*} ticker The security symbol
+ */
+export const getSecurityId = async (tokens, ticker) =>
+  handleRequest(WealthSimpleTradeEndpoints.SECURITY_ID, { ticker }, tokens);
+
+/**
+ * Limit buy a security through the WealthSimple Trade application.
+ *
+ * @param {*} tokens The access and refresh tokens returned by a successful login.
+ * @param {*} accountId The account to query
+ * @param {*} ticker The security symbol
+ * @param {*} limit The maximum price to purchase the security at
+ * @param {*} quantity The number of securities to purchase
+ */
+export const placeLimitBuy = async (tokens, accountId, ticker, limit, quantity) =>
+  handleRequest(WealthSimpleTradeEndpoints.PLACE_ORDER, {
+    accountId,
+    security_id: await getSecurityId(tokens, ticker),
+    limit_price: limit,
+    quantity,
+    order_type: "buy_quantity",
+    order_sub_type: "limit",
+    time_in_force: "day"
   }, tokens);
