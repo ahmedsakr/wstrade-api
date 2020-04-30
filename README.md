@@ -13,7 +13,7 @@ WealthSimple Trade account to authenticate against. If you have not signed up fo
 
 ### Prerequisites
 
-You just need need node.js — and npm, obviously.
+You just need node.js — and npm, obviously.
 
 
 ### Installing
@@ -60,8 +60,8 @@ import trade from 'wstrade-api';
 * [——> trade.getCancelledOrders()](#getCancelledOrders)
 * [——> trade.cancelOrder()](#cancelOrder)
 * [——> trade.cancelPendingOrders()](#cancelPendingOrders)
-
-
+* [——> trade.placeLimitBuy()](#placeLimitBuy)
+* [——> trade.placeLimitSell()](#placeLimitSell)
 
 <a id="login"></a>
 
