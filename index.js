@@ -141,10 +141,9 @@ var WealthSimpleTradeEndpoints = {
   },
 
   /*
-   * Provides the WealthSimple Trade security id for the security represented
-   * by the ticker.
+   * Grabs information about the security resembled by the ticker.
    */
-  SECURITY_ID: {
+  SECURITY: {
     method: "GET",
     url: "https://trade-service.wealthsimple.com/securities?query={0}",
     parameters: {
@@ -159,7 +158,7 @@ var WealthSimpleTradeEndpoints = {
         });
       }
 
-      return data.results[0].id;
+      return data.results[0];
     },
     onFailure: defaultEndpointBehaviour.onFailure
   },
@@ -287,8 +286,14 @@ var WealthSimpleTradeEndpoints = {
     onFailure: defaultEndpointBehaviour.onFailure
   }
 
-  // WealthSimple Trade API returns some custom HTTP codes
-};var wealthSimpleHttpCodes = {
+  // The maximum number of orders retrieved by the /orders API.
+};var ORDERS_PER_PAGE = 20;
+var isSuccessfulRequest = function isSuccessfulRequest(code) {
+  return httpSuccessCodes.includes(code);
+};
+
+// WealthSimple Trade API returns some custom HTTP codes
+var wealthSimpleHttpCodes = {
   ORDER_FILLED: 201
 
   // Successful HTTP codes to be used for determining the status of the request
@@ -372,13 +377,6 @@ function talk(endpoint, data, tokens) {
     headers: headers
   });
 }
-
-var isSuccessfulRequest = function isSuccessfulRequest(code) {
-  return httpSuccessCodes.includes(code);
-};
-
-// The maximum number of orders retrieved by the /orders API.
-var ORDERS_PER_PAGE = 20;
 
 var wealthsimple = {
 
@@ -542,13 +540,13 @@ var wealthsimple = {
   },
 
   /**
-   * Discovers the WealthSimple Trade security id for the provided ticker.
+   * Information about a security on the WealthSimple Trade Platform.
    *
    * @param {*} tokens The access and refresh tokens returned by a successful login.
    * @param {*} ticker The security symbol
    */
-  getSecurityId: async function getSecurityId(tokens, ticker) {
-    return handleRequest(WealthSimpleTradeEndpoints.SECURITY_ID, { ticker: ticker }, tokens);
+  getSecurity: async function getSecurity(tokens, ticker) {
+    return handleRequest(WealthSimpleTradeEndpoints.SECURITY, { ticker: ticker }, tokens);
   },
 
   /**
@@ -563,7 +561,7 @@ var wealthsimple = {
   placeLimitBuy: async function placeLimitBuy(tokens, accountId, ticker, limit, quantity) {
     return handleRequest(WealthSimpleTradeEndpoints.PLACE_ORDER, {
       accountId: accountId,
-      security_id: await wealthsimple.getSecurityId(tokens, ticker),
+      security_id: (await wealthsimple.getSecurity(tokens, ticker)).id,
       limit_price: limit,
       quantity: quantity,
       order_type: "buy_quantity",
@@ -584,7 +582,7 @@ var wealthsimple = {
   placeLimitSell: async function placeLimitSell(tokens, accountId, ticker, limit, quantity) {
     return handleRequest(WealthSimpleTradeEndpoints.PLACE_ORDER, {
       accountId: accountId,
-      security_id: await wealthsimple.getSecurityId(tokens, ticker),
+      security_id: (await wealthsimple.getSecurity(tokens, ticker)).id,
       limit_price: limit,
       quantity: quantity,
       order_type: "sell_quantity",

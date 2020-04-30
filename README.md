@@ -60,6 +60,7 @@ import trade from 'wstrade-api';
 * [——> trade.getCancelledOrders()](#getCancelledOrders)
 * [——> trade.cancelOrder()](#cancelOrder)
 * [——> trade.cancelPendingOrders()](#cancelPendingOrders)
+* [——> trade.getSecurity()](#getSecurity)
 * [——> trade.placeLimitBuy()](#placeLimitBuy)
 * [——> trade.placeLimitSell()](#placeLimitSell)
 
@@ -475,7 +476,7 @@ Grabs all cancelled orders for the specified account under the WealthSimple Trad
 
 ## **trade**.cancelOrder(*tokens*, *orderId*) -> **Promise\<result\>**
 
-Attempts to cancels the order associated with the provided orderId.
+Attempts to cancel the order associated with the provided orderId.
 
 **Note**: The order might NOT be cancelled if it was filled by WealthSimple Trade. This has nothing to do with this wrapper; be cautious!
 
@@ -528,11 +529,11 @@ Place a cancellation order for all pending orders in the provided account.
 ]
 ```
 
-<a id="getSecurityId"></a>
+<a id="getSecurity"></a>
 
-## **trade**.getSecurityId(*tokens*, *ticker*) -> **Promise\<result\>**
+## **trade**.getSecurity(*tokens*, *ticker*) -> **Promise\<result\>**
 
-Provides the security id of the ticker (used internally by WealthSimple Trade).
+Information about a security on the WealthSimple Trade Platform.
 
 
 | Parameters|Required|
@@ -543,7 +544,10 @@ Provides the security id of the ticker (used internally by WealthSimple Trade).
 ### Return on Success (Promise.resolve())
 
 ```javascript
-'sec-XXXXXXXXXX'
+{
+    // A lot of information about the security
+    ...
+}
 ```
 
 <a id="placeLimitBuy"></a>
