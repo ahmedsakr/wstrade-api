@@ -266,6 +266,10 @@ const WealthSimpleTradeEndpoints = {
   }
 }
 
+// The maximum number of orders retrieved by the /orders API.
+const ORDERS_PER_PAGE = 20;
+const isSuccessfulRequest = (code) => httpSuccessCodes.includes(code);
+
 // WealthSimple Trade API returns some custom HTTP codes
 const wealthSimpleHttpCodes = {
   ORDER_FILLED: 201
@@ -353,11 +357,6 @@ function talk(endpoint, data, tokens) {
     headers: headers
   })
 }
-
-const isSuccessfulRequest = (code) => httpSuccessCodes.includes(code);
-
-// The maximum number of orders retrieved by the /orders API.
-const  ORDERS_PER_PAGE = 20;
 
 const wealthsimple = {
     

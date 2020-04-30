@@ -286,8 +286,14 @@ var WealthSimpleTradeEndpoints = {
     onFailure: defaultEndpointBehaviour.onFailure
   }
 
-  // WealthSimple Trade API returns some custom HTTP codes
-};var wealthSimpleHttpCodes = {
+  // The maximum number of orders retrieved by the /orders API.
+};var ORDERS_PER_PAGE = 20;
+var isSuccessfulRequest = function isSuccessfulRequest(code) {
+  return httpSuccessCodes.includes(code);
+};
+
+// WealthSimple Trade API returns some custom HTTP codes
+var wealthSimpleHttpCodes = {
   ORDER_FILLED: 201
 
   // Successful HTTP codes to be used for determining the status of the request
@@ -371,13 +377,6 @@ function talk(endpoint, data, tokens) {
     headers: headers
   });
 }
-
-var isSuccessfulRequest = function isSuccessfulRequest(code) {
-  return httpSuccessCodes.includes(code);
-};
-
-// The maximum number of orders retrieved by the /orders API.
-var ORDERS_PER_PAGE = 20;
 
 var wealthsimple = {
 

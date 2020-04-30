@@ -60,6 +60,7 @@ import trade from 'wstrade-api';
 * [——> trade.getCancelledOrders()](#getCancelledOrders)
 * [——> trade.cancelOrder()](#cancelOrder)
 * [——> trade.cancelPendingOrders()](#cancelPendingOrders)
+* [——> trade.getSecurity()](#getSecurity)
 * [——> trade.placeLimitBuy()](#placeLimitBuy)
 * [——> trade.placeLimitSell()](#placeLimitSell)
 
