@@ -1,10 +1,5 @@
 'use strict';
 
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.placeLimitSell = exports.placeLimitBuy = exports.getSecurityId = exports.cancelPendingOrders = exports.cancelOrder = exports.getPendingOrdersFor = exports.getOrders = exports.getExchangeRates = exports.getDeposits = exports.getBankAccounts = exports.getHistory = exports.getAccountData = exports.getAccounts = exports.login = undefined;
-
 var _nodeFetch = require('node-fetch');
 
 var _nodeFetch2 = _interopRequireDefault(_nodeFetch);
@@ -14,6 +9,23 @@ var _httpStatus = require('http-status');
 var _httpStatus2 = _interopRequireDefault(_httpStatus);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+module.exports = {
+  login: login,
+  getAccounts: getAccounts,
+  getAccountData: getAccountData,
+  getHistory: getHistory,
+  getBankAccounts: getBankAccounts,
+  getDeposits: getDeposits,
+  getExchangeRates: getExchangeRates,
+  getOrders: getOrders,
+  getPendingOrdersFor: getPendingOrdersFor,
+  cancelOrder: cancelOrder,
+  cancelPendingOrders: cancelPendingOrders,
+  getSecurityId: getSecurityId,
+  placeLimitBuy: placeLimitBuy,
+  placeLimitSell: placeLimitSell
+};
 
 var defaultEndpointBehaviour = {
 
@@ -331,7 +343,7 @@ var isSuccessfulRequest = function isSuccessfulRequest(code) {
  * @param {*} email emailed registered by the WealthSimple Trade account
  * @param {*} password The password of the account
  */
-var login = exports.login = async function login(email, password) {
+var login = async function login(email, password) {
   return handleRequest(WealthSimpleTradeEndpoints.LOGIN, { email: email, password: password });
 };
 
@@ -340,7 +352,7 @@ var login = exports.login = async function login(email, password) {
  *
  * @param {*} tokens The access and refresh tokens returned by a successful login.
  */
-var getAccounts = exports.getAccounts = async function getAccounts(tokens) {
+var getAccounts = async function getAccounts(tokens) {
   return handleRequest(WealthSimpleTradeEndpoints.ACCOUNT_IDS, {}, tokens);
 };
 
@@ -349,7 +361,7 @@ var getAccounts = exports.getAccounts = async function getAccounts(tokens) {
  *
  * @param {*} tokens The access and refresh tokens returned by a successful login.
  */
-var getAccountData = exports.getAccountData = async function getAccountData(tokens) {
+var getAccountData = async function getAccountData(tokens) {
   return handleRequest(WealthSimpleTradeEndpoints.LIST_ACCOUNT, {}, tokens);
 };
 
@@ -360,7 +372,7 @@ var getAccountData = exports.getAccountData = async function getAccountData(toke
  * @param {*} interval The time interval for the history query
  * @param {*} accountId The account to query
  */
-var getHistory = exports.getHistory = async function getHistory(tokens, interval, accountId) {
+var getHistory = async function getHistory(tokens, interval, accountId) {
   return handleRequest(WealthSimpleTradeEndpoints.HISTORY_ACCOUNT, { interval: interval, accountId: accountId }, tokens);
 };
 
@@ -369,7 +381,7 @@ var getHistory = exports.getHistory = async function getHistory(tokens, interval
  *
  * @param {*} tokens The access and refresh tokens returned by a successful login.
  */
-var getBankAccounts = exports.getBankAccounts = async function getBankAccounts(tokens) {
+var getBankAccounts = async function getBankAccounts(tokens) {
   return handleRequest(WealthSimpleTradeEndpoints.BANK_ACCOUNTS, {}, tokens);
 };
 
@@ -378,7 +390,7 @@ var getBankAccounts = exports.getBankAccounts = async function getBankAccounts(t
  *
  * @param {*} tokens The access and refresh tokens returned by a successful login.
  */
-var getDeposits = exports.getDeposits = async function getDeposits(tokens) {
+var getDeposits = async function getDeposits(tokens) {
   return handleRequest(WealthSimpleTradeEndpoints.DEPOSITS, {}, tokens);
 };
 
@@ -388,7 +400,7 @@ var getDeposits = exports.getDeposits = async function getDeposits(tokens) {
  *
  * @param {*} tokens The access and refresh tokens returned by a successful login.
  */
-var getExchangeRates = exports.getExchangeRates = async function getExchangeRates(tokens) {
+var getExchangeRates = async function getExchangeRates(tokens) {
   return handleRequest(WealthSimpleTradeEndpoints.EXCHANGE_RATES, {}, tokens);
 };
 
@@ -400,7 +412,7 @@ var ORDERS_PER_PAGE = 20;
  *
  * @param {*} tokens The access and refresh tokens returned by a successful login.
  */
-var getOrders = exports.getOrders = async function getOrders(tokens, page) {
+var getOrders = async function getOrders(tokens, page) {
   return handleRequest(WealthSimpleTradeEndpoints.RETRIEVE_ORDERS, {
     offset: (page - 1) * ORDERS_PER_PAGE
   }, tokens);
@@ -412,7 +424,7 @@ var getOrders = exports.getOrders = async function getOrders(tokens, page) {
  * @param {*} tokens The access and refresh tokens returned by a successful login.
  * @param {*} ticker The security symbol
  */
-var getPendingOrdersFor = exports.getPendingOrdersFor = async function getPendingOrdersFor(tokens, ticker) {
+var getPendingOrdersFor = async function getPendingOrdersFor(tokens, ticker) {
   return handleRequest(WealthSimpleTradeEndpoints.PENDING_ORDERS_FOR_TICKER, { ticker: ticker }, tokens);
 };
 
@@ -422,7 +434,7 @@ var getPendingOrdersFor = exports.getPendingOrdersFor = async function getPendin
  * @param {*} tokens The access and refresh tokens returned by a successful login.
  * @param {*} orderId The pending order to cancel
  */
-var cancelOrder = exports.cancelOrder = async function cancelOrder(tokens, orderId) {
+var cancelOrder = async function cancelOrder(tokens, orderId) {
   return handleRequest(WealthSimpleTradeEndpoints.CANCEL_ORDER, { orderId: orderId }, tokens);
 };
 
@@ -431,7 +443,7 @@ var cancelOrder = exports.cancelOrder = async function cancelOrder(tokens, order
  *
  * @param {*} tokens The access and refresh tokens returned by a successful login.
  */
-var cancelPendingOrders = exports.cancelPendingOrders = async function cancelPendingOrders(tokens) {
+var cancelPendingOrders = async function cancelPendingOrders(tokens) {
   return handleRequest(WealthSimpleTradeEndpoints.CANCEL_PENDING_ORDERS, {}, tokens);
 };
 
@@ -441,7 +453,7 @@ var cancelPendingOrders = exports.cancelPendingOrders = async function cancelPen
  * @param {*} tokens The access and refresh tokens returned by a successful login.
  * @param {*} ticker The security symbol
  */
-var getSecurityId = exports.getSecurityId = async function getSecurityId(tokens, ticker) {
+var getSecurityId = async function getSecurityId(tokens, ticker) {
   return handleRequest(WealthSimpleTradeEndpoints.SECURITY_ID, { ticker: ticker }, tokens);
 };
 
@@ -454,7 +466,7 @@ var getSecurityId = exports.getSecurityId = async function getSecurityId(tokens,
  * @param {*} limit The maximum price to purchase the security at
  * @param {*} quantity The number of securities to purchase
  */
-var placeLimitBuy = exports.placeLimitBuy = async function placeLimitBuy(tokens, accountId, ticker, limit, quantity) {
+var placeLimitBuy = async function placeLimitBuy(tokens, accountId, ticker, limit, quantity) {
   return handleRequest(WealthSimpleTradeEndpoints.PLACE_ORDER, {
     accountId: accountId,
     security_id: await getSecurityId(tokens, ticker),
@@ -475,7 +487,7 @@ var placeLimitBuy = exports.placeLimitBuy = async function placeLimitBuy(tokens,
  * @param {*} limit The minimum price to sell the security at
  * @param {*} quantity The number of securities to sell
  */
-var placeLimitSell = exports.placeLimitSell = async function placeLimitSell(tokens, accountId, ticker, limit, quantity) {
+var placeLimitSell = async function placeLimitSell(tokens, accountId, ticker, limit, quantity) {
   return handleRequest(WealthSimpleTradeEndpoints.PLACE_ORDER, {
     accountId: accountId,
     security_id: await getSecurityId(tokens, ticker),

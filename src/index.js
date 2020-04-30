@@ -1,5 +1,22 @@
 import fetch from 'node-fetch';
-import status from 'http-status'
+import status from 'http-status';
+
+module.exports = {
+  login,
+  getAccounts,
+  getAccountData,
+  getHistory,
+  getBankAccounts,
+  getDeposits,
+  getExchangeRates,
+  getOrders,
+  getPendingOrdersFor,
+  cancelOrder,
+  cancelPendingOrders,
+  getSecurityId,
+  placeLimitBuy,
+  placeLimitSell
+}
 
 const defaultEndpointBehaviour = {
 
@@ -306,7 +323,7 @@ const isSuccessfulRequest = (code) => httpSuccessCodes.includes(code);
  * @param {*} email emailed registered by the WealthSimple Trade account
  * @param {*} password The password of the account
  */
-export const login = async (email, password) =>
+const login = async (email, password) =>
   handleRequest(WealthSimpleTradeEndpoints.LOGIN, { email, password });
 
 
@@ -315,7 +332,7 @@ export const login = async (email, password) =>
  *
  * @param {*} tokens The access and refresh tokens returned by a successful login.
  */
-export const getAccounts = async (tokens) =>
+const getAccounts = async (tokens) =>
   handleRequest(WealthSimpleTradeEndpoints.ACCOUNT_IDS, {}, tokens);
 
 
@@ -324,7 +341,7 @@ export const getAccounts = async (tokens) =>
  *
  * @param {*} tokens The access and refresh tokens returned by a successful login.
  */
-export const getAccountData = async (tokens) =>
+const getAccountData = async (tokens) =>
   handleRequest(WealthSimpleTradeEndpoints.LIST_ACCOUNT, {}, tokens);
 
 /**
@@ -334,7 +351,7 @@ export const getAccountData = async (tokens) =>
  * @param {*} interval The time interval for the history query
  * @param {*} accountId The account to query
  */
-export const getHistory = async (tokens, interval, accountId) =>
+const getHistory = async (tokens, interval, accountId) =>
   handleRequest(WealthSimpleTradeEndpoints.HISTORY_ACCOUNT, { interval, accountId }, tokens);
 
 /**
@@ -342,7 +359,7 @@ export const getHistory = async (tokens, interval, accountId) =>
  *
  * @param {*} tokens The access and refresh tokens returned by a successful login.
  */
-export const getBankAccounts = async (tokens) =>
+const getBankAccounts = async (tokens) =>
   handleRequest(WealthSimpleTradeEndpoints.BANK_ACCOUNTS, {}, tokens);
 
 /**
@@ -350,7 +367,7 @@ export const getBankAccounts = async (tokens) =>
  *
  * @param {*} tokens The access and refresh tokens returned by a successful login.
  */
-export const getDeposits = async (tokens) =>
+const getDeposits = async (tokens) =>
   handleRequest(WealthSimpleTradeEndpoints.DEPOSITS, {}, tokens);
 
 /**
@@ -359,7 +376,7 @@ export const getDeposits = async (tokens) =>
  *
  * @param {*} tokens The access and refresh tokens returned by a successful login.
  */
-export const getExchangeRates = async (tokens) =>
+const getExchangeRates = async (tokens) =>
   handleRequest(WealthSimpleTradeEndpoints.EXCHANGE_RATES, {}, tokens);
 
 
@@ -371,7 +388,7 @@ const ORDERS_PER_PAGE = 20;
  *
  * @param {*} tokens The access and refresh tokens returned by a successful login.
  */
-export const getOrders = async (tokens, page) =>
+const getOrders = async (tokens, page) =>
   handleRequest(WealthSimpleTradeEndpoints.RETRIEVE_ORDERS, {
     offset: (page - 1) * ORDERS_PER_PAGE
   }, tokens);
@@ -382,7 +399,7 @@ export const getOrders = async (tokens, page) =>
  * @param {*} tokens The access and refresh tokens returned by a successful login.
  * @param {*} ticker The security symbol
  */
-export const getPendingOrdersFor = async (tokens, ticker) =>
+const getPendingOrdersFor = async (tokens, ticker) =>
   handleRequest(WealthSimpleTradeEndpoints.PENDING_ORDERS_FOR_TICKER, { ticker }, tokens)
 
 /**
@@ -391,7 +408,7 @@ export const getPendingOrdersFor = async (tokens, ticker) =>
  * @param {*} tokens The access and refresh tokens returned by a successful login.
  * @param {*} orderId The pending order to cancel
  */
-export const cancelOrder = async (tokens, orderId) =>
+const cancelOrder = async (tokens, orderId) =>
   handleRequest(WealthSimpleTradeEndpoints.CANCEL_ORDER, { orderId }, tokens);
 
 /**
@@ -399,7 +416,7 @@ export const cancelOrder = async (tokens, orderId) =>
  *
  * @param {*} tokens The access and refresh tokens returned by a successful login.
  */
-export const cancelPendingOrders = async (tokens) =>
+const cancelPendingOrders = async (tokens) =>
   handleRequest(WealthSimpleTradeEndpoints.CANCEL_PENDING_ORDERS, {}, tokens);
 
 /**
@@ -408,7 +425,7 @@ export const cancelPendingOrders = async (tokens) =>
  * @param {*} tokens The access and refresh tokens returned by a successful login.
  * @param {*} ticker The security symbol
  */
-export const getSecurityId = async (tokens, ticker) =>
+const getSecurityId = async (tokens, ticker) =>
   handleRequest(WealthSimpleTradeEndpoints.SECURITY_ID, { ticker }, tokens);
 
 /**
@@ -420,7 +437,7 @@ export const getSecurityId = async (tokens, ticker) =>
  * @param {*} limit The maximum price to purchase the security at
  * @param {*} quantity The number of securities to purchase
  */
-export const placeLimitBuy = async (tokens, accountId, ticker, limit, quantity) =>
+const placeLimitBuy = async (tokens, accountId, ticker, limit, quantity) =>
   handleRequest(WealthSimpleTradeEndpoints.PLACE_ORDER, {
     accountId,
     security_id: await getSecurityId(tokens, ticker),
@@ -440,7 +457,7 @@ export const placeLimitBuy = async (tokens, accountId, ticker, limit, quantity) 
  * @param {*} limit The minimum price to sell the security at
  * @param {*} quantity The number of securities to sell
  */
-export const placeLimitSell = async (tokens, accountId, ticker, limit, quantity) =>
+const placeLimitSell = async (tokens, accountId, ticker, limit, quantity) =>
   handleRequest(WealthSimpleTradeEndpoints.PLACE_ORDER, {
     accountId,
     security_id: await getSecurityId(tokens, ticker),
