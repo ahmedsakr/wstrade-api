@@ -63,6 +63,23 @@ import trade from 'wstrade-api';
 * [——> trade.placeLimitBuy()](#placeLimitBuy)
 * [——> trade.placeLimitSell()](#placeLimitSell)
 
+
+## Failure return
+
+For all API Calls, the failure return is standardized to the following:
+
+```javascript
+{
+    status, // HTTP status
+    reason, // Failure reason,
+
+    // The body of the response
+    body: {
+        ...
+    } 
+}
+```
+
 <a id="login"></a>
 
 ## **trade**.login(*email*, *password*) -> **Promise\<result\>**
@@ -92,21 +109,6 @@ Attempts to login to the WealthSimple Trade platform using the email and passwor
 }
 ```
 
-### Return on Failure (Promise.reject())
-
-```javascript
-{
-    status, // HTTP status
-    reason, // Failure reason,
-
-    // The body of the response
-    body: {
-        ...
-    } 
-}
-```
-
-
 <a id="getAccounts"></a>
 
 ## **trade**.getAccounts(*tokens*) -> **Promise\<result\>**
@@ -124,20 +126,6 @@ Grabs all account ids under this WealthSimple Trade account (i.e., all personal,
 ```javascript
 // A list of account ids
 ['non-registered-XXXXX', 'tfsa-XXXXX', ...]
-```
-
-### Return on Failure (Promise.reject())
-
-```javascript
-{
-    status, // HTTP status
-    reason, // Failure reason,
-
-    // The body of the response
-    body: {
-        ...
-    } 
-}
 ```
 
 <a id="getAccountData"></a>
@@ -158,20 +146,6 @@ Provides the general state information of the overall WealthSimple Trade account
 {
     // General information of the overall WealthSimple Trade account
     ...
-}
-```
-
-### Return on Failure (Promise.reject())
-
-```javascript
-{
-    status, // HTTP status
-    reason, // Failure reason,
-
-    // The body of the response
-    body: {
-        ...
-    } 
 }
 ```
 
@@ -216,20 +190,6 @@ in the provided time interval.
 }
 ```
 
-### Return on Failure (Promise.reject())
-
-```javascript
-{
-    status, // HTTP status
-    reason, // Failure reason,
-
-    // The body of the response
-    body: {
-        ...
-    } 
-}
-```
-
 <a id="getBankAccounts"></a>
 
 
@@ -259,20 +219,6 @@ Provides a list of the bank accounts that have been linked to the WealthSimple T
 
     ...
 ]
-```
-
-### Return on Failure (Promise.reject())
-
-```javascript
-{
-    status, // HTTP status
-    reason, // Failure reason,
-
-    // The body of the response
-    body: {
-        ...
-    } 
-}
 ```
 
 <a id="getDeposits"></a>
@@ -305,20 +251,6 @@ All deposits (in progress, completed, and cancelled) made to the WealthSimple Tr
 ]
 ```
 
-### Return on Failure (Promise.reject())
-
-```javascript
-{
-    status, // HTTP status
-    reason, // Failure reason,
-
-    // The body of the response
-    body: {
-        ...
-    } 
-}
-```
-
 <a id="getExchangeRates"></a>
 
 
@@ -341,20 +273,6 @@ Provides the current USD/CAD conversion rates for the WealthSimple Trade platfor
         "spread": 0.xxx,
         "fx_rate": 1.xxx
     }
-}
-```
-
-### Return on Failure (Promise.reject())
-
-```javascript
-{
-    status, // HTTP status
-    reason, // Failure reason,
-
-    // The body of the response
-    body: {
-        ...
-    } 
 }
 ```
 
@@ -399,20 +317,6 @@ you specify a page that exceeds the number of pages, the results list will be em
 }
 ```
 
-### Return on Failure (Promise.reject())
-
-```javascript
-{
-    status, // HTTP status
-    reason, // Failure reason,
-
-    // The body of the response
-    body: {
-        ...
-    } 
-}
-```
-
 <a id="getOrders"></a>
 
 ## **trade**.getOrders(*tokens*, *accountId*) -> **Promise\<result\>**
@@ -447,20 +351,6 @@ Grabs all orders (filled, pending, and cancelled) from a specific account under 
 
     // Total number of orders
     total: XXX
-}
-```
-
-### Return on Failure (Promise.reject())
-
-```javascript
-{
-    status, // HTTP status
-    reason, // Failure reason,
-
-    // The body of the response
-    body: {
-        ...
-    } 
 }
 ```
 
@@ -503,20 +393,6 @@ Grabs all pending orders for the specified account under the WealthSimple Trade 
 }
 ```
 
-### Return on Failure (Promise.reject())
-
-```javascript
-{
-    status, // HTTP status
-    reason, // Failure reason,
-
-    // The body of the response
-    body: {
-        ...
-    } 
-}
-```
-
 <a id="getFilledOrders"></a>
 
 ## **trade**.getFilledOrders(*tokens*, *accountId*, *[ticker]*) -> **Promise\<result\>**
@@ -553,20 +429,6 @@ Grabs all filled orders for the specified account under the WealthSimple Trade a
 
     // Total number of filled orders
     total: XXX
-}
-```
-
-### Return on Failure (Promise.reject())
-
-```javascript
-{
-    status, // HTTP status
-    reason, // Failure reason,
-
-    // The body of the response
-    body: {
-        ...
-    } 
 }
 ```
 
@@ -609,20 +471,6 @@ Grabs all cancelled orders for the specified account under the WealthSimple Trad
 }
 ```
 
-### Return on Failure (Promise.reject())
-
-```javascript
-{
-    status, // HTTP status
-    reason, // Failure reason,
-
-    // The body of the response
-    body: {
-        ...
-    } 
-}
-```
-
 <a id="cancelOrder"></a>
 
 ## **trade**.cancelOrder(*tokens*, *orderId*) -> **Promise\<result\>**
@@ -643,20 +491,6 @@ Attempts to cancels the order associated with the provided orderId.
 {
     // Information regarding the cancellation of the order
     ...
-}
-```
-
-### Return on Failure (Promise.reject())
-
-```javascript
-{
-    status, // HTTP status
-    reason, // Failure reason,
-
-    // The body of the response
-    body: {
-        ...
-    } 
 }
 ```
 
@@ -694,20 +528,6 @@ Place a cancellation order for all pending orders in the provided account.
 ]
 ```
 
-### Return on Failure (Promise.reject())
-
-```javascript
-{
-    status, // HTTP status
-    reason, // Failure reason,
-
-    // The body of the response
-    body: {
-        ...
-    } 
-}
-```
-
 <a id="getSecurityId"></a>
 
 ## **trade**.getSecurityId(*tokens*, *ticker*) -> **Promise\<result\>**
@@ -724,20 +544,6 @@ Provides the security id of the ticker (used internally by WealthSimple Trade).
 
 ```javascript
 'sec-XXXXXXXXXX'
-```
-
-### Return on Failure (Promise.reject())
-
-```javascript
-{
-    status, // HTTP status
-    reason, // Failure reason,
-
-    // The body of the response
-    body: {
-        ...
-    } 
-}
 ```
 
 <a id="placeLimitBuy"></a>
@@ -767,25 +573,11 @@ Attempts to purchase a given quantity of a security at a maximum price.
 }
 ```
 
-### Return on Failure (Promise.reject())
-
-```javascript
-{
-    status, // HTTP status
-    reason, // Failure reason,
-
-    // The body of the response
-    body: {
-        ...
-    } 
-}
-```
-
 <a id="placeLimitSell"></a>
 
 ## **trade**.placeLimitSell(*tokens*,*accountId*, *ticker*, *limit*, *quantity*) -> **Promise\<result\>** ##
 
-Attempts to sell a given quantity of a security at a maximum price.
+Attempts to sell a given quantity of a security at a minimum price.
 
 
 | Parameters|Required|
@@ -805,21 +597,6 @@ Attempts to sell a given quantity of a security at a maximum price.
     ...
 }
 ```
-
-### Return on Failure (Promise.reject())
-
-```javascript
-{
-    status, // HTTP status
-    reason, // Failure reason,
-
-    // The body of the response
-    body: {
-        ...
-    } 
-}
-```
-
 
 ## Contributing
 
