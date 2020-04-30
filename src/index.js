@@ -91,7 +91,10 @@ const WealthSimpleTradeEndpoints = {
   DEPOSITS: {
     method: "GET",
     url: "https://trade-service.wealthsimple.com/deposits",
-    onSuccess: defaultEndpointBehaviour.onSuccess,
+    onSuccess: async (request) => {
+      const data = await request.response.json();
+      return data.results;
+    },
     onFailure: defaultEndpointBehaviour.onFailure
   },
 
@@ -101,7 +104,10 @@ const WealthSimpleTradeEndpoints = {
   BANK_ACCOUNTS: {
     method: "GET",
     url: "https://trade-service.wealthsimple.com/bank-accounts",
-    onSuccess: defaultEndpointBehaviour.onSuccess,
+    onSuccess: async (request) => {
+      const data = await request.response.json();
+      return data.results;
+    },
     onFailure: defaultEndpointBehaviour.onFailure
   },
 
@@ -140,28 +146,89 @@ const WealthSimpleTradeEndpoints = {
   },
 
   /*
-   * Pull all orders (filled, cancelled, pending) for the specified account under
-   * the WealthSimple Trade account.
+   * Grab a page of orders (20 orders).
    */
-  RETRIEVE_ORDERS: {
+  ORDERS_BY_PAGE: {
     method: "GET",
-    url: "https://trade-service.wealthsimple.com/orders?offset={0}",
+    url: "https://trade-service.wealthsimple.com/orders?offset={0}&account_id={1}",
     parameters: {
-      0: "offset"
+      0: "offset",
+      1: "accountId",
     },
-    onSuccess: defaultEndpointBehaviour.onSuccess,
+    onSuccess: async (request) => {
+      const data = await request.response.json();
+      return {
+        total: data.total,
+        orders: data.results
+      }
+    },
     onFailure: defaultEndpointBehaviour.onFailure
   },
 
   /*
-   * Retrieves all pending orders for a specific security.
+   * Pull all orders (filled, cancelled, pending) for the specified account under
+   * the WealthSimple Trade account.
    */
-  PENDING_ORDERS_FOR_TICKER: {
+  ALL_ORDERS: {
     method: "GET",
-    url: "https://trade-service.wealthsimple.com/orders",
-    onSuccess: async (request) => {
+    url: "https://trade-service.wealthsimple.com/orders?account_id={0}",
+    parameters: {
+      0: "accountId",
+    },
+    onSuccess: async (request, tokens) => {
       const data = await request.response.json();
-      return data.results.filter(order => order.symbol === request.arguments.ticker && order.status === 'submitted')
+      const pages = Math.ceil(data.total / ORDERS_PER_PAGE);
+      let orders = data.results;
+
+      if (pages > 1) {
+
+        // Query the rest of the pages
+        for (let page = 2; page <= pages; page++) {
+          let tmp = await wealthsimple.getOrdersByPage(tokens, request.arguments.accountId, page);
+          orders.push(...tmp.orders)
+        }
+      }
+
+      return {
+        total: orders.length,
+        orders
+      };
+    },
+    onFailure: defaultEndpointBehaviour.onFailure
+  },
+
+  /*
+   * Filters orders by status and ticker.
+   */
+  FILTERED_ORDERS: {
+    method: "GET",
+    url: "https://trade-service.wealthsimple.com/orders?account_id={0}",
+    parameters: {
+      0: "accountId"
+    },
+    onSuccess: async (request, tokens) => {
+      const data = await request.response.json();
+      const pages = Math.ceil(data.total / ORDERS_PER_PAGE);
+
+      // The ticker symbol restricts the pending orders to a specific security
+      let pendingFilter = (request.arguments.ticker) ?
+                          order => order.symbol === request.arguments.ticker && order.status === request.arguments.status:
+                          order => order.status === request.arguments.status;
+
+      let orders = data.results.filter(pendingFilter);
+      if (pages > 1) {
+
+        // Check all other pages for pending orders
+        for (let page = 2; page <= pages; page++) {
+          let tmp = await wealthsimple.getOrdersByPage(tokens, request.arguments.accountId, page);
+          orders.push(...tmp.orders.filter(pendingFilter))
+        }
+      }
+
+      return {
+        total: orders.length,
+        orders
+      };
     },
     onFailure: defaultEndpointBehaviour.onFailure
   },
@@ -175,26 +242,12 @@ const WealthSimpleTradeEndpoints = {
     parameters: {
       0: "orderId"
     },
-    onSuccess: defaultEndpointBehaviour.onSuccess,
-    onFailure: defaultEndpointBehaviour.onFailure
-  },
-
-  /*
-   * Cancels all pending orders within the WealthSimple Trade account.
-   */
-  CANCEL_PENDING_ORDERS: {
-    method: "GET",
-    url: "https://trade-service.wealthsimple.com/orders",
-    onSuccess: async (request, tokens) => {
-      const data = await request.response.json();
-
-      // Iteratively execute the CANCEL_ORDER endpoint for each pending order
-      let pendingOrders = data.results.filter(order => order.status === 'submitted');
-      pendingOrders.map(async (order) => await cancelOrder(tokens, order.order_id));
+    onSuccess: async (request) => {
+      let data = await request.response.json();
 
       return {
-        orders_cancelled: pendingOrders.length,
-        ids: pendingOrders.map(order => order.order_id)
+        order: request.arguments.orderId,
+        response: data
       }
     },
     onFailure: defaultEndpointBehaviour.onFailure
@@ -288,8 +341,12 @@ function talk(endpoint, data, tokens) {
     headers.append('Authorization', `${tokens.access}`)
   }
 
+  // Make a copy of the arguments so the original copy is not modified
+  let copy = {}
+  Object.assign(copy, data);
+
   // fill path and query parameters in the URL
-  let { url, payload } = finalizeRequest(endpoint, data);
+  let { url, payload } = finalizeRequest(endpoint, copy);
 
   return fetch(url, {
     body: ['GET', 'DELETE'].includes(endpoint.method) ? undefined : JSON.stringify(payload),
@@ -366,23 +423,68 @@ const wealthsimple = {
     handleRequest(WealthSimpleTradeEndpoints.EXCHANGE_RATES, {}, tokens),
 
   /**
-   * Collects orders (filled, pending, cancelled) in pages of 20 orders.
-   *
-   * @param {*} tokens The access and refresh tokens returned by a successful login.
+   * Collects orders (filled, pending, cancelled) for the provided page and
+   * account id.
    */
-  getOrders: async (tokens, page) =>
-    handleRequest(WealthSimpleTradeEndpoints.RETRIEVE_ORDERS, {
-      offset: (page - 1) * ORDERS_PER_PAGE
+  getOrdersByPage: async (tokens, accountId, page) =>
+    handleRequest(WealthSimpleTradeEndpoints.ORDERS_BY_PAGE, {
+      offset: (page - 1) * ORDERS_PER_PAGE,
+      accountId
     }, tokens),
 
   /**
-   * Retrieves pending orders for the specified security.
+   * Collects all orders (filled, pending, cancelled) for the specific account.
    *
    * @param {*} tokens The access and refresh tokens returned by a successful login.
-   * @param {*} ticker The security symbol
+   * @param {*} accountId The specific account in the WealthSimple Trade account
    */
-  getPendingOrdersFor: async (tokens, ticker) =>
-    handleRequest(WealthSimpleTradeEndpoints.PENDING_ORDERS_FOR_TICKER, { ticker }, tokens),
+  getOrders: async (tokens, accountId) =>
+    handleRequest(WealthSimpleTradeEndpoints.ALL_ORDERS, {
+      offset: 0,
+      accountId
+    }, tokens),
+
+  /**
+   * Retrieves pending orders for the specified security in the account.
+   *
+   * @param {*} tokens The access and refresh tokens returned by a successful login.
+   * @param {*} accountId The specific account in the WealthSimple Trade account
+   * @param {*} ticker (optional) The security symbol
+   */
+  getPendingOrders: async (tokens, accountId, ticker) =>
+    handleRequest(WealthSimpleTradeEndpoints.FILTERED_ORDERS, {
+      accountId,
+      ticker,
+      status: 'submitted'
+    }, tokens),
+  
+  /**
+   * Retrieves filled orders for the specified security in the account.
+   *
+   * @param {*} tokens The access and refresh tokens returned by a successful login.
+   * @param {*} accountId The specific account in the WealthSimple Trade account
+   * @param {*} ticker (optional) The security symbol
+   */
+  getFilledOrders: async (tokens, accountId, ticker) =>
+    handleRequest(WealthSimpleTradeEndpoints.FILTERED_ORDERS, {
+      accountId,
+      ticker,
+      status: 'posted'
+    }, tokens),
+
+  /**
+   * Retrieves cancelled orders for the specified security in the account.
+   *
+   * @param {*} tokens The access and refresh tokens returned by a successful login.
+   * @param {*} accountId The specific account in the WealthSimple Trade account
+   * @param {*} ticker (optional) The security symbol
+   */
+  getCancelledOrders: async (tokens, accountId, ticker) =>
+    handleRequest(WealthSimpleTradeEndpoints.FILTERED_ORDERS, {
+      accountId,
+      ticker,
+      status: 'cancelled'
+    }, tokens),
 
   /**
    * Cancels the pending order specified by the order id.
@@ -397,9 +499,12 @@ const wealthsimple = {
    * Cancels all pending orders under the WealthSimple Trade Account.
    *
    * @param {*} tokens The access and refresh tokens returned by a successful login.
+   * @param {*} accountId The specific account in the WealthSimple Trade account
    */
-  cancelPendingOrders: async (tokens) =>
-    handleRequest(WealthSimpleTradeEndpoints.CANCEL_PENDING_ORDERS, {}, tokens),
+  cancelPendingOrders: async (tokens, accountId) => {
+    const pending = await wealthsimple.getPendingOrders(tokens, accountId);
+    return Promise.all(pending.orders.map(async (order) => await wealthsimple.cancelOrder(tokens, order.order_id)));
+  },
 
   /**
    * Discovers the WealthSimple Trade security id for the provided ticker.
@@ -422,7 +527,7 @@ const wealthsimple = {
   placeLimitBuy: async(tokens, accountId, ticker, limit, quantity) =>
     handleRequest(WealthSimpleTradeEndpoints.PLACE_ORDER, {
       accountId,
-      security_id: await getSecurityId(tokens, ticker),
+      security_id: await wealthsimple.getSecurityId(tokens, ticker),
       limit_price: limit,
       quantity,
       order_type: "buy_quantity",
@@ -442,7 +547,7 @@ const wealthsimple = {
   placeLimitSell: async (tokens, accountId, ticker, limit, quantity) =>
     handleRequest(WealthSimpleTradeEndpoints.PLACE_ORDER, {
       accountId,
-      security_id: await getSecurityId(tokens, ticker),
+      security_id: await wealthsimple.getSecurityId(tokens, ticker),
       limit_price: limit,
       quantity,
       order_type: "sell_quantity",
