@@ -86,6 +86,36 @@ const WealthSimpleTradeEndpoints = {
   },
 
   /*
+   * All deposits under the WealthSimple Trade account
+   */
+  DEPOSITS: {
+    method: "GET",
+    url: "https://trade-service.wealthsimple.com/deposits",
+    onSuccess: defaultEndpointBehaviour.onSuccess,
+    onFailure: defaultEndpointBehaviour.onFailure
+  },
+
+  /*
+   * All linked bank accounts under the WealthSimple Trade account
+   */
+  BANK_ACCOUNTS: {
+    method: "GET",
+    url: "https://trade-service.wealthsimple.com/bank-accounts",
+    onSuccess: defaultEndpointBehaviour.onSuccess,
+    onFailure: defaultEndpointBehaviour.onFailure
+  },
+
+  /*
+   * Current WealthSimple Trade USD/CAD exchange rates
+   */
+  EXCHANGE_RATES : {
+    method: "GET",
+    url: "https://trade-service.wealthsimple.com/forex",
+    onSuccess: defaultEndpointBehaviour.onSuccess,
+    onFailure: defaultEndpointBehaviour.onFailure
+  },
+
+  /*
    * Provides the WealthSimple Trade security id for the security represented
    * by the ticker.
    */
@@ -306,6 +336,31 @@ export const getAccountData = async (tokens) =>
  */
 export const getHistory = async (tokens, interval, accountId) =>
   handleRequest(WealthSimpleTradeEndpoints.HISTORY_ACCOUNT, { interval, accountId }, tokens);
+
+/**
+ * Retains all bank accounts linked to the WealthSimple Trade account.
+ *
+ * @param {*} tokens The access and refresh tokens returned by a successful login.
+ */
+export const getBankAccounts = async (tokens) =>
+  handleRequest(WealthSimpleTradeEndpoints.BANK_ACCOUNTS, {}, tokens);
+
+/**
+ * Grab all deposit records on the WealthSimple Trade account.
+ *
+ * @param {*} tokens The access and refresh tokens returned by a successful login.
+ */
+export const getDeposits = async (tokens) =>
+  handleRequest(WealthSimpleTradeEndpoints.DEPOSITS, {}, tokens);
+
+/**
+ * A snapshots of the current USD/CAD exchange rates on the WealthSimple Trade
+ * platform.
+ *
+ * @param {*} tokens The access and refresh tokens returned by a successful login.
+ */
+export const getExchangeRates = async (tokens) =>
+  handleRequest(WealthSimpleTradeEndpoints.EXCHANGE_RATES, {}, tokens);
 
 
 // The maximum number of orders retrieved by the /orders API.
