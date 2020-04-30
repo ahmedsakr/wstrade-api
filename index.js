@@ -1,5 +1,9 @@
 'use strict';
 
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
 var _nodeFetch = require('node-fetch');
 
 var _nodeFetch2 = _interopRequireDefault(_nodeFetch);
@@ -9,23 +13,6 @@ var _httpStatus = require('http-status');
 var _httpStatus2 = _interopRequireDefault(_httpStatus);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-module.exports = {
-  login: login,
-  getAccounts: getAccounts,
-  getAccountData: getAccountData,
-  getHistory: getHistory,
-  getBankAccounts: getBankAccounts,
-  getDeposits: getDeposits,
-  getExchangeRates: getExchangeRates,
-  getOrders: getOrders,
-  getPendingOrdersFor: getPendingOrdersFor,
-  cancelOrder: cancelOrder,
-  cancelPendingOrders: cancelPendingOrders,
-  getSecurityId: getSecurityId,
-  placeLimitBuy: placeLimitBuy,
-  placeLimitSell: placeLimitSell
-};
 
 var defaultEndpointBehaviour = {
 
@@ -337,164 +324,169 @@ var isSuccessfulRequest = function isSuccessfulRequest(code) {
   return httpSuccessCodes.includes(code);
 };
 
-/**
- * Attempts to create a session for the provided email and password.
- *
- * @param {*} email emailed registered by the WealthSimple Trade account
- * @param {*} password The password of the account
- */
-var login = async function login(email, password) {
-  return handleRequest(WealthSimpleTradeEndpoints.LOGIN, { email: email, password: password });
-};
-
-/**
- * Retrieves all account ids open under this WealthSimple Trade account.
- *
- * @param {*} tokens The access and refresh tokens returned by a successful login.
- */
-var getAccounts = async function getAccounts(tokens) {
-  return handleRequest(WealthSimpleTradeEndpoints.ACCOUNT_IDS, {}, tokens);
-};
-
-/**
- * Retrieves the top-level data of the account, including account id, account types, account values, and more.
- *
- * @param {*} tokens The access and refresh tokens returned by a successful login.
- */
-var getAccountData = async function getAccountData(tokens) {
-  return handleRequest(WealthSimpleTradeEndpoints.LIST_ACCOUNT, {}, tokens);
-};
-
-/**
- * Query the history of the account within a certain time interval.
- *
- * @param {*} tokens The access and refresh tokens returned by a successful login.
- * @param {*} interval The time interval for the history query
- * @param {*} accountId The account to query
- */
-var getHistory = async function getHistory(tokens, interval, accountId) {
-  return handleRequest(WealthSimpleTradeEndpoints.HISTORY_ACCOUNT, { interval: interval, accountId: accountId }, tokens);
-};
-
-/**
- * Retains all bank accounts linked to the WealthSimple Trade account.
- *
- * @param {*} tokens The access and refresh tokens returned by a successful login.
- */
-var getBankAccounts = async function getBankAccounts(tokens) {
-  return handleRequest(WealthSimpleTradeEndpoints.BANK_ACCOUNTS, {}, tokens);
-};
-
-/**
- * Grab all deposit records on the WealthSimple Trade account.
- *
- * @param {*} tokens The access and refresh tokens returned by a successful login.
- */
-var getDeposits = async function getDeposits(tokens) {
-  return handleRequest(WealthSimpleTradeEndpoints.DEPOSITS, {}, tokens);
-};
-
-/**
- * A snapshots of the current USD/CAD exchange rates on the WealthSimple Trade
- * platform.
- *
- * @param {*} tokens The access and refresh tokens returned by a successful login.
- */
-var getExchangeRates = async function getExchangeRates(tokens) {
-  return handleRequest(WealthSimpleTradeEndpoints.EXCHANGE_RATES, {}, tokens);
-};
-
 // The maximum number of orders retrieved by the /orders API.
 var ORDERS_PER_PAGE = 20;
 
-/**
- * Collects orders (filled, pending, cancelled) in pages of 20 orders.
- *
- * @param {*} tokens The access and refresh tokens returned by a successful login.
- */
-var getOrders = async function getOrders(tokens, page) {
-  return handleRequest(WealthSimpleTradeEndpoints.RETRIEVE_ORDERS, {
-    offset: (page - 1) * ORDERS_PER_PAGE
-  }, tokens);
+var wealthsimple = {
+
+  /**
+   * Attempts to create a session for the provided email and password.
+   *
+   * @param {*} email emailed registered by the WealthSimple Trade account
+   * @param {*} password The password of the account
+   */
+  login: async function login(email, password) {
+    return handleRequest(WealthSimpleTradeEndpoints.LOGIN, { email: email, password: password });
+  },
+
+  /**
+   * Retrieves all account ids open under this WealthSimple Trade account.
+   *
+   * @param {*} tokens The access and refresh tokens returned by a successful login.
+   */
+  getAccounts: async function getAccounts(tokens) {
+    return handleRequest(WealthSimpleTradeEndpoints.ACCOUNT_IDS, {}, tokens);
+  },
+
+  /**
+   * Retrieves the top-level data of the account, including account id, account types, account values, and more.
+   *
+   * @param {*} tokens The access and refresh tokens returned by a successful login.
+   */
+  getAccountData: async function getAccountData(tokens) {
+    return handleRequest(WealthSimpleTradeEndpoints.LIST_ACCOUNT, {}, tokens);
+  },
+
+  /**
+   * Query the history of the account within a certain time interval.
+   *
+   * @param {*} tokens The access and refresh tokens returned by a successful login.
+   * @param {*} interval The time interval for the history query
+   * @param {*} accountId The account to query
+   */
+  getHistory: async function getHistory(tokens, interval, accountId) {
+    return handleRequest(WealthSimpleTradeEndpoints.HISTORY_ACCOUNT, { interval: interval, accountId: accountId }, tokens);
+  },
+
+  /**
+   * Retains all bank accounts linked to the WealthSimple Trade account.
+   *
+   * @param {*} tokens The access and refresh tokens returned by a successful login.
+   */
+  getBankAccounts: async function getBankAccounts(tokens) {
+    return handleRequest(WealthSimpleTradeEndpoints.BANK_ACCOUNTS, {}, tokens);
+  },
+
+  /**
+   * Grab all deposit records on the WealthSimple Trade account.
+   *
+   * @param {*} tokens The access and refresh tokens returned by a successful login.
+   */
+  getDeposits: async function getDeposits(tokens) {
+    return handleRequest(WealthSimpleTradeEndpoints.DEPOSITS, {}, tokens);
+  },
+
+  /**
+   * A snapshots of the current USD/CAD exchange rates on the WealthSimple Trade
+   * platform.
+   *
+   * @param {*} tokens The access and refresh tokens returned by a successful login.
+   */
+  getExchangeRates: async function getExchangeRates(tokens) {
+    return handleRequest(WealthSimpleTradeEndpoints.EXCHANGE_RATES, {}, tokens);
+  },
+
+  /**
+   * Collects orders (filled, pending, cancelled) in pages of 20 orders.
+   *
+   * @param {*} tokens The access and refresh tokens returned by a successful login.
+   */
+  getOrders: async function getOrders(tokens, page) {
+    return handleRequest(WealthSimpleTradeEndpoints.RETRIEVE_ORDERS, {
+      offset: (page - 1) * ORDERS_PER_PAGE
+    }, tokens);
+  },
+
+  /**
+   * Retrieves pending orders for the specified security.
+   *
+   * @param {*} tokens The access and refresh tokens returned by a successful login.
+   * @param {*} ticker The security symbol
+   */
+  getPendingOrdersFor: async function getPendingOrdersFor(tokens, ticker) {
+    return handleRequest(WealthSimpleTradeEndpoints.PENDING_ORDERS_FOR_TICKER, { ticker: ticker }, tokens);
+  },
+
+  /**
+   * Cancels the pending order specified by the order id.
+   *
+   * @param {*} tokens The access and refresh tokens returned by a successful login.
+   * @param {*} orderId The pending order to cancel
+   */
+  cancelOrder: async function cancelOrder(tokens, orderId) {
+    return handleRequest(WealthSimpleTradeEndpoints.CANCEL_ORDER, { orderId: orderId }, tokens);
+  },
+
+  /**
+   * Cancels all pending orders under the WealthSimple Trade Account.
+   *
+   * @param {*} tokens The access and refresh tokens returned by a successful login.
+   */
+  cancelPendingOrders: async function cancelPendingOrders(tokens) {
+    return handleRequest(WealthSimpleTradeEndpoints.CANCEL_PENDING_ORDERS, {}, tokens);
+  },
+
+  /**
+   * Discovers the WealthSimple Trade security id for the provided ticker.
+   *
+   * @param {*} tokens The access and refresh tokens returned by a successful login.
+   * @param {*} ticker The security symbol
+   */
+  getSecurityId: async function getSecurityId(tokens, ticker) {
+    return handleRequest(WealthSimpleTradeEndpoints.SECURITY_ID, { ticker: ticker }, tokens);
+  },
+
+  /**
+   * Limit buy a security through the WealthSimple Trade application.
+   *
+   * @param {*} tokens The access and refresh tokens returned by a successful login.
+   * @param {*} accountId The account to make the transaction from
+   * @param {*} ticker The security symbol
+   * @param {*} limit The maximum price to purchase the security at
+   * @param {*} quantity The number of securities to purchase
+   */
+  placeLimitBuy: async function placeLimitBuy(tokens, accountId, ticker, limit, quantity) {
+    return handleRequest(WealthSimpleTradeEndpoints.PLACE_ORDER, {
+      accountId: accountId,
+      security_id: await getSecurityId(tokens, ticker),
+      limit_price: limit,
+      quantity: quantity,
+      order_type: "buy_quantity",
+      order_sub_type: "limit",
+      time_in_force: "day"
+    }, tokens);
+  },
+
+  /**
+   * Limit sell a security through the WealthSimple Trade application.
+   *
+   * @param {*} tokens The access and refresh tokens returned by a successful login.
+   * @param {*} accountId The account to make the transaction from
+   * @param {*} ticker The security symbol
+   * @param {*} limit The minimum price to sell the security at
+   * @param {*} quantity The number of securities to sell
+   */
+  placeLimitSell: async function placeLimitSell(tokens, accountId, ticker, limit, quantity) {
+    return handleRequest(WealthSimpleTradeEndpoints.PLACE_ORDER, {
+      accountId: accountId,
+      security_id: await getSecurityId(tokens, ticker),
+      limit_price: limit,
+      quantity: quantity,
+      order_type: "sell_quantity",
+      order_sub_type: "limit",
+      time_in_force: "day"
+    }, tokens);
+  }
 };
 
-/**
- * Retrieves pending orders for the specified security.
- *
- * @param {*} tokens The access and refresh tokens returned by a successful login.
- * @param {*} ticker The security symbol
- */
-var getPendingOrdersFor = async function getPendingOrdersFor(tokens, ticker) {
-  return handleRequest(WealthSimpleTradeEndpoints.PENDING_ORDERS_FOR_TICKER, { ticker: ticker }, tokens);
-};
-
-/**
- * Cancels the pending order specified by the order id.
- *
- * @param {*} tokens The access and refresh tokens returned by a successful login.
- * @param {*} orderId The pending order to cancel
- */
-var cancelOrder = async function cancelOrder(tokens, orderId) {
-  return handleRequest(WealthSimpleTradeEndpoints.CANCEL_ORDER, { orderId: orderId }, tokens);
-};
-
-/**
- * Cancels all pending orders under the WealthSimple Trade Account.
- *
- * @param {*} tokens The access and refresh tokens returned by a successful login.
- */
-var cancelPendingOrders = async function cancelPendingOrders(tokens) {
-  return handleRequest(WealthSimpleTradeEndpoints.CANCEL_PENDING_ORDERS, {}, tokens);
-};
-
-/**
- * Discovers the WealthSimple Trade security id for the provided ticker.
- *
- * @param {*} tokens The access and refresh tokens returned by a successful login.
- * @param {*} ticker The security symbol
- */
-var getSecurityId = async function getSecurityId(tokens, ticker) {
-  return handleRequest(WealthSimpleTradeEndpoints.SECURITY_ID, { ticker: ticker }, tokens);
-};
-
-/**
- * Limit buy a security through the WealthSimple Trade application.
- *
- * @param {*} tokens The access and refresh tokens returned by a successful login.
- * @param {*} accountId The account to make the transaction from
- * @param {*} ticker The security symbol
- * @param {*} limit The maximum price to purchase the security at
- * @param {*} quantity The number of securities to purchase
- */
-var placeLimitBuy = async function placeLimitBuy(tokens, accountId, ticker, limit, quantity) {
-  return handleRequest(WealthSimpleTradeEndpoints.PLACE_ORDER, {
-    accountId: accountId,
-    security_id: await getSecurityId(tokens, ticker),
-    limit_price: limit,
-    quantity: quantity,
-    order_type: "buy_quantity",
-    order_sub_type: "limit",
-    time_in_force: "day"
-  }, tokens);
-};
-
-/**
- * Limit sell a security through the WealthSimple Trade application.
- *
- * @param {*} tokens The access and refresh tokens returned by a successful login.
- * @param {*} accountId The account to make the transaction from
- * @param {*} ticker The security symbol
- * @param {*} limit The minimum price to sell the security at
- * @param {*} quantity The number of securities to sell
- */
-var placeLimitSell = async function placeLimitSell(tokens, accountId, ticker, limit, quantity) {
-  return handleRequest(WealthSimpleTradeEndpoints.PLACE_ORDER, {
-    accountId: accountId,
-    security_id: await getSecurityId(tokens, ticker),
-    limit_price: limit,
-    quantity: quantity,
-    order_type: "sell_quantity",
-    order_sub_type: "limit",
-    time_in_force: "day"
-  }, tokens);
-};
+exports.default = wealthsimple;
