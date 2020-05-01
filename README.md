@@ -531,7 +531,6 @@ Attempts to cancel the order associated with the provided orderId.
 
 ```javascript
 {
-
     order: 'order-XXXX',
     response: {} // The API returns nothing.
 }
