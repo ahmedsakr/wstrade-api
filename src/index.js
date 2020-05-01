@@ -48,12 +48,9 @@ const WealthSimpleTradeEndpoints = {
     url: "https://trade-service.wealthsimple.com/account/list",
     onSuccess: async (request) => {
       const data = await request.response.json();
-      let ids = []
 
       // Collect all account ids registered under this WealthSimple Trade Account
-      data.results.map(account => ids.push(account.id));
-
-      return ids;
+      return data.results.map(account => account.id);
     },
     onFailure: defaultEndpointBehaviour.onFailure
   },
@@ -242,11 +239,9 @@ const WealthSimpleTradeEndpoints = {
       0: "orderId"
     },
     onSuccess: async (request) => {
-      let data = await request.response.json();
-
       return {
         order: request.arguments.orderId,
-        response: data
+        response: await request.response.json()
       }
     },
     onFailure: defaultEndpointBehaviour.onFailure
@@ -272,13 +267,13 @@ const isSuccessfulRequest = (code) => httpSuccessCodes.includes(code);
 
 // WealthSimple Trade API returns some custom HTTP codes
 const wealthSimpleHttpCodes = {
-  ORDER_FILLED: 201
+  ORDER_CREATED: 201
 }
 
 // Successful HTTP codes to be used for determining the status of the request
 const httpSuccessCodes = [
   status.OK,
-  wealthSimpleHttpCodes.ORDER_FILLED
+  wealthSimpleHttpCodes.ORDER_CREATED
 ]
 
 /*

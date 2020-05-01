@@ -65,14 +65,11 @@ var WealthSimpleTradeEndpoints = {
     url: "https://trade-service.wealthsimple.com/account/list",
     onSuccess: async function onSuccess(request) {
       var data = await request.response.json();
-      var ids = [];
 
       // Collect all account ids registered under this WealthSimple Trade Account
-      data.results.map(function (account) {
-        return ids.push(account.id);
+      return data.results.map(function (account) {
+        return account.id;
       });
-
-      return ids;
     },
     onFailure: defaultEndpointBehaviour.onFailure
   },
@@ -263,11 +260,9 @@ var WealthSimpleTradeEndpoints = {
       0: "orderId"
     },
     onSuccess: async function onSuccess(request) {
-      var data = await request.response.json();
-
       return {
         order: request.arguments.orderId,
-        response: data
+        response: await request.response.json()
       };
     },
     onFailure: defaultEndpointBehaviour.onFailure
@@ -294,10 +289,10 @@ var isSuccessfulRequest = function isSuccessfulRequest(code) {
 
 // WealthSimple Trade API returns some custom HTTP codes
 var wealthSimpleHttpCodes = {
-  ORDER_FILLED: 201
+  ORDER_CREATED: 201
 
   // Successful HTTP codes to be used for determining the status of the request
-};var httpSuccessCodes = [_httpStatus2.default.OK, wealthSimpleHttpCodes.ORDER_FILLED];
+};var httpSuccessCodes = [_httpStatus2.default.OK, wealthSimpleHttpCodes.ORDER_CREATED];
 
 /*
  * Fulfill the endpoint request given the endpoint configuration, optional
