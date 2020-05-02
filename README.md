@@ -12,7 +12,7 @@ trading behaviours that can disrupt orderly market functions. This means that yo
 in a fast manner. You might even get banned or locked out by WealthSimple Trade if you abuse their endpoints.
 
 You would be abusing this tool if you are leveraging it to carry out tactics that would provide you
-illegitimate personal gains. For example, [Spoofing](https://en.wikipedia.org/wiki/Spoofing_(finance) is a forbidden tactic that has demonstrable negative effects on the operation of the markets.
+illegitimate personal gains. For example, [Spoofing](https://en.wikipedia.org/wiki/Spoofing_(finance)) is a forbidden tactic that has demonstrable negative effects on the operation of the markets.
 
 My recommendation is to be very conservative on how much orders you place within a small timeframe. I have no idea what
 the maximum amount of orders is by any timeframe, but if you have a gut feeling that it is too much, then it is too much.
