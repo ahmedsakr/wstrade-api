@@ -6,6 +6,17 @@ A tiny Unofficial WealthSimple Trade API Wrapper for JavaScript, supporting the 
 
 **USE AT YOUR OWN RISK**. This is an unofficial WealthSimple Trade API Wrapper, and it is new. While i did (to my best ability) test the functions, there is absolutely no guarantee that there are no bugs in the code. The API Wrapper will be improved over time.
 
+**DO NOT LEVERAGE THIS IN ATTEMPT TO DISRUPT ORDERLY MARKET FUNCTIONS**. This package is provided to you so you can
+build cool shit with it, but you should understand that you have a responsibility to not attempt to conduct illegal
+trading behaviours that can disrupt orderly market functions. This means that you should not flood the API with orders
+in a fast manner. You might even get banned or locked out by WealthSimple Trade if you abuse their endpoints.
+
+You would be abusing this tool if you are leveraging it to carry out tactics that would provide you
+illegitimate personal gains. For example, [Spoofing](https://en.wikipedia.org/wiki/Spoofing_(finance) is a forbidden tactic that has demonstrable negative effects on the operation of the markets.
+
+My recommendation is to be very conservative on how much orders you place within a small timeframe. I have no idea what
+the maximum amount of orders is by any timeframe, but if you have a gut feeling that it is too much, then it is too much.
+
 ## Getting Started
 
 Before playing with **wstrade-api**, you must have a valid
@@ -49,6 +60,7 @@ import trade from 'wstrade-api';
 ## Jump to
 
 * [trade.login()](#login)
+* [trade.refresh()](#refresh)
 * [trade.getAccounts()](#getAccounts)
 * [trade.getAccountData()](#getAccountData)
 * [trade.getHistory()](#getHistory)
@@ -99,7 +111,7 @@ Attempts to login to the WealthSimple Trade platform using the email and passwor
 | username |Yes|
 | password |Yes|
 
-### Return on Success (Promise.resolve())
+### Return on Success
 
 ```javascript
 {
@@ -118,6 +130,31 @@ Attempts to login to the WealthSimple Trade platform using the email and passwor
 [Back to top—>](#index)
 
 
+<a id="refresh"></a>
+
+## **trade**.refresh(*tokens*) -> **Promise\<result\>**
+
+
+Generates a new set of access and refresh tokens.
+
+
+| Parameters|Required|    
+|----------|---------------------|
+| tokens |Yes|
+
+### Return on Success
+
+```javascript
+{
+    // A new generated set of access and refresh tokens
+    access: 'XXXXX',
+    refresh: 'YYYY'
+}
+```
+
+[Back to top—>](#index)
+
+
 <a id="getAccounts"></a>
 
 ## **trade**.getAccounts(*tokens*) -> **Promise\<result\>**
@@ -130,7 +167,7 @@ Grabs all account ids under this WealthSimple Trade account (i.e., all personal,
 |----------|---------------------|
 | tokens |Yes|
 
-### Return on Success (Promise.resolve())
+### Return on Success
 
 ```javascript
 // A list of account ids
@@ -152,7 +189,7 @@ Provides the general state information of the overall WealthSimple Trade account
 |----------|---------------------|
 | tokens |Yes|
 
-### Return on Success (Promise.resolve())
+### Return on Success
 
 ```javascript
 {
@@ -179,7 +216,7 @@ in the provided time interval.
 | interval |Yes|1d, 1w, 1m, 3m, 1y|
 | accountId |Yes||
 
-### Return on Success (Promise.resolve())
+### Return on Success
 
 ```javascript
 {
@@ -221,7 +258,7 @@ Provides a list of the bank accounts that have been linked to the WealthSimple T
 |----------|---------------------|
 | tokens |Yes|
 
-### Return on Success (Promise.resolve())
+### Return on Success
 
 ```javascript
 [
@@ -254,7 +291,7 @@ All deposits (in progress, completed, and cancelled) made to the WealthSimple Tr
 |----------|---------------------|
 | tokens |Yes|
 
-### Return on Success (Promise.resolve())
+### Return on Success
 
 ```javascript
 [
@@ -287,7 +324,7 @@ Provides the current USD/CAD conversion rates for the WealthSimple Trade platfor
 |----------|---------------------|
 | tokens |Yes|
 
-### Return on Success (Promise.resolve())
+### Return on Success
 
 ```javascript
 {
@@ -320,7 +357,7 @@ you specify a page that exceeds the number of pages, the results list will be em
 | accountID|Yes||
 | page|Yes|```>=1```
 
-### Return on Success (Promise.resolve())
+### Return on Success
 
 ```javascript
 {
@@ -360,7 +397,7 @@ Grabs all orders (filled, pending, and cancelled) from a specific account under 
 | tokens |Yes|
 | accountID|Yes|
 
-### Return on Success (Promise.resolve())
+### Return on Success
 
 ```javascript
 {
@@ -402,7 +439,7 @@ Grabs all pending orders for the specified account under the WealthSimple Trade 
 | accountID|Yes|
 | ticker   |No
 
-### Return on Success (Promise.resolve())
+### Return on Success
 
 ```javascript
 {
@@ -444,7 +481,7 @@ Grabs all filled orders for the specified account under the WealthSimple Trade a
 | accountID|Yes|
 | ticker   |No
 
-### Return on Success (Promise.resolve())
+### Return on Success
 
 ```javascript
 {
@@ -486,7 +523,7 @@ Grabs all cancelled orders for the specified account under the WealthSimple Trad
 | accountID|Yes|
 | ticker   |No
 
-### Return on Success (Promise.resolve())
+### Return on Success
 
 ```javascript
 {
@@ -505,7 +542,7 @@ Grabs all cancelled orders for the specified account under the WealthSimple Trad
         ...
     ],
 
-    // Total number of filled orders
+    // Total number of cancelled orders
     total: XXX
 }
 ```
@@ -527,7 +564,7 @@ Attempts to cancel the order associated with the provided orderId.
 | tokens |Yes|
 | orderId|Yes|
 
-### Return on Success (Promise.resolve())
+### Return on Success
 
 ```javascript
 {
@@ -553,7 +590,7 @@ Place a cancellation order for all pending orders in the provided account.
 | tokens |Yes|
 | accountId|Yes|
 
-### Return on Success (Promise.resolve())
+### Return on Success
 
 ```javascript
 [
@@ -588,7 +625,7 @@ Information about a security on the WealthSimple Trade Platform.
 | tokens |Yes|
 | ticker |Yes|
 
-### Return on Success (Promise.resolve())
+### Return on Success
 
 ```javascript
 {

@@ -58,6 +58,21 @@ var WealthSimpleTradeEndpoints = {
   },
 
   /*
+   * Generates a new set of access and refresh tokens.
+   */
+  REFRESH: {
+    method: "POST",
+    url: "https://trade-service.wealthsimple.com/auth/refresh",
+    onSuccess: async function onSuccess(request) {
+      return {
+        access: request.response.headers.get('x-access-token'),
+        refresh: request.response.headers.get('x-refresh-token')
+      };
+    },
+    onFailure: defaultEndpointBehaviour.onFailure
+  },
+
+  /*
    * Grabs all account ids in this WealthSimple Trade account.
    */
   ACCOUNT_IDS: {
@@ -383,6 +398,15 @@ var wealthsimple = {
    */
   login: async function login(email, password) {
     return handleRequest(WealthSimpleTradeEndpoints.LOGIN, { email: email, password: password });
+  },
+
+  /**
+   * Generates a new set of access and refresh tokens.
+   *
+   * @param {*} tokens The access and refresh tokens returned by a successful login.
+   */
+  refresh: async function refresh(tokens) {
+    return handleRequest(WealthSimpleTradeEndpoints.REFRESH, { refresh_token: tokens.refresh }, tokens);
   },
 
   /**
