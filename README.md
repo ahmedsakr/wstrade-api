@@ -7,7 +7,7 @@ A tiny Unofficial WealthSimple Trade API Wrapper for JavaScript, supporting the 
 **USE AT YOUR OWN RISK**. This is an unofficial WealthSimple Trade API Wrapper, and it is new. While i did (to my best ability) test the functions, there is absolutely no guarantee that there are no bugs in the code. The API Wrapper will be improved over time.
 
 **DO NOT LEVERAGE THIS IN ATTEMPT TO DISRUPT ORDERLY MARKET FUNCTIONS**. This package is provided to you so you can
-build cool shit with it, but you should understand that you have a responsibility to not attempt to conduct illegal
+build cool shit with it, but you should understand that you have a responsibility to not engage in illegal
 trading behaviours that can disrupt orderly market functions. This means that you should not flood the API with orders
 in a fast manner. You might even get banned or locked out by WealthSimple Trade if you abuse their endpoints.
 
