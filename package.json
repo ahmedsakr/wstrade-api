@@ -1,10 +1,10 @@
 {
   "name": "wstrade-api",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "WealthSimple Trade API Wrapper for JavaScript",
   "main": "index.js",
   "scripts": {
-    "build": "babel --presets es2015 -d dist src/index.js"
+    "build": "babel --presets es2015 -d dist src"
   },
   "repository": {
     "type": "git",
