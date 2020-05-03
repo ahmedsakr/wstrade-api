@@ -283,7 +283,3 @@ const wealthsimple = {
 }
 
 export default wealthsimple;
-
-wealthsimple.login('ahmed@sakr.ca', '3UuaUUnhJFMpyfEUxF}K')
-  .then(data => wealthsimple.getCancelledOrders(data.tokens, 'non-registered-gic23dhp', 'L'))
-  .then(result => console.log(result));
