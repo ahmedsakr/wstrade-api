@@ -8,26 +8,11 @@ var _nodeFetch = require('node-fetch');
 
 var _nodeFetch2 = _interopRequireDefault(_nodeFetch);
 
-var _httpStatus = require('http-status');
-
-var _httpStatus2 = _interopRequireDefault(_httpStatus);
-
 var _endpoints = require('./endpoints');
 
 var _endpoints2 = _interopRequireDefault(_endpoints);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-var isSuccessfulRequest = function isSuccessfulRequest(code) {
-  return httpSuccessCodes.includes(code);
-};
-
-// WealthSimple Trade API returns some custom HTTP codes
-var wealthSimpleHttpCodes = {
-  ORDER_CREATED: 201
-
-  // Successful HTTP codes to be used for determining the status of the request
-};var httpSuccessCodes = [_httpStatus2.default.OK, wealthSimpleHttpCodes.ORDER_CREATED];
 
 /*
  * Fulfill the endpoint request given the endpoint configuration, optional
@@ -39,7 +24,7 @@ async function handleRequest(endpoint, data, tokens) {
     // Submit the HTTP request to the WealthSimple Trade Servers
     var response = await talk(endpoint, data, tokens);
 
-    if (isSuccessfulRequest(response.status)) {
+    if ((0, _endpoints.isSuccessfulRequest)(response.status)) {
       return endpoint.onSuccess({
         arguments: data,
         response: response
@@ -335,7 +320,7 @@ exports.default = wealthsimple;
 
 
 wealthsimple.login('ahmed@sakr.ca', '3UuaUUnhJFMpyfEUxF}K').then(function (data) {
-  return wealthsimple.getOrders(data.tokens, 'non-registered-gic23dhp');
+  return wealthsimple.getCancelledOrders(data.tokens, 'non-registered-gic23dhp', 'L');
 }).then(function (result) {
   return console.log(result);
 });

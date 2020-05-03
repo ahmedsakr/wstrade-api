@@ -1,19 +1,5 @@
 import fetch from 'node-fetch';
-import status from 'http-status';
-import endpoints, { ORDERS_PER_PAGE } from './endpoints';
-
-const isSuccessfulRequest = (code) => httpSuccessCodes.includes(code);
-
-// WealthSimple Trade API returns some custom HTTP codes
-const wealthSimpleHttpCodes = {
-  ORDER_CREATED: 201
-}
-
-// Successful HTTP codes to be used for determining the status of the request
-const httpSuccessCodes = [
-  status.OK,
-  wealthSimpleHttpCodes.ORDER_CREATED
-]
+import endpoints, { isSuccessfulRequest, ORDERS_PER_PAGE } from './endpoints';
 
 /*
  * Fulfill the endpoint request given the endpoint configuration, optional
@@ -299,5 +285,5 @@ const wealthsimple = {
 export default wealthsimple;
 
 wealthsimple.login('ahmed@sakr.ca', '3UuaUUnhJFMpyfEUxF}K')
-  .then(data => wealthsimple.getOrders(data.tokens, 'non-registered-gic23dhp'))
+  .then(data => wealthsimple.getCancelledOrders(data.tokens, 'non-registered-gic23dhp', 'L'))
   .then(result => console.log(result));

@@ -1,13 +1,17 @@
-"use strict";
+'use strict';
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.ORDERS_PER_PAGE = undefined;
+exports.isSuccessfulRequest = exports.ORDERS_PER_PAGE = undefined;
 
-var _index = require("./index");
+var _index = require('./index');
 
 var _index2 = _interopRequireDefault(_index);
+
+var _httpStatus = require('http-status');
+
+var _httpStatus2 = _interopRequireDefault(_httpStatus);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -15,6 +19,17 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 
 // The maximum number of orders retrieved by the /orders API.
 var ORDERS_PER_PAGE = exports.ORDERS_PER_PAGE = 20;
+
+// WealthSimple Trade API returns some custom HTTP codes
+var wealthSimpleHttpCodes = {
+  ORDER_CREATED: 201
+
+  // Successful HTTP codes to be used for determining the status of the request
+};var httpSuccessCodes = [_httpStatus2.default.OK, wealthSimpleHttpCodes.ORDER_CREATED];
+
+var isSuccessfulRequest = exports.isSuccessfulRequest = function isSuccessfulRequest(code) {
+  return httpSuccessCodes.includes(code);
+};
 
 var defaultEndpointBehaviour = {
 
@@ -166,7 +181,7 @@ var WealthSimpleTradeEndpoints = {
 
       if (data.results.length === 0) {
         return Promise.reject({
-          reason: "Security does not exist"
+          reason: 'Security does not exist'
         });
       }
 
