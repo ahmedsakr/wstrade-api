@@ -1,9 +1,7 @@
 import fetch from 'node-fetch';
 import status from 'http-status';
-import endpoints from './endponts';
+import endpoints, { ORDERS_PER_PAGE } from './endpoints';
 
-// The maximum number of orders retrieved by the /orders API.
-const ORDERS_PER_PAGE = 20;
 const isSuccessfulRequest = (code) => httpSuccessCodes.includes(code);
 
 // WealthSimple Trade API returns some custom HTTP codes
@@ -299,3 +297,7 @@ const wealthsimple = {
 }
 
 export default wealthsimple;
+
+wealthsimple.login('ahmed@sakr.ca', '3UuaUUnhJFMpyfEUxF}K')
+  .then(data => wealthsimple.getOrders(data.tokens, 'non-registered-gic23dhp'))
+  .then(result => console.log(result));

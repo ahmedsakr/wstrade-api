@@ -1,3 +1,8 @@
+import trade from './index'
+
+// The maximum number of orders retrieved by the /orders API.
+export const ORDERS_PER_PAGE = 20;
+
 const defaultEndpointBehaviour = {
 
   // Default failure method for all endpoint calls
@@ -192,7 +197,7 @@ const WealthSimpleTradeEndpoints = {
 
         // Query the rest of the pages
         for (let page = 2; page <= pages; page++) {
-          let tmp = await wealthsimple.getOrdersByPage(tokens, request.arguments.accountId, page);
+          let tmp = await trade.getOrdersByPage(tokens, request.arguments.accountId, page);
           orders.push(...tmp.orders)
         }
       }
@@ -228,7 +233,7 @@ const WealthSimpleTradeEndpoints = {
 
         // Check all other pages for pending orders
         for (let page = 2; page <= pages; page++) {
-          let tmp = await wealthsimple.getOrdersByPage(tokens, request.arguments.accountId, page);
+          let tmp = await trade.getOrdersByPage(tokens, request.arguments.accountId, page);
           orders.push(...tmp.orders.filter(pendingFilter))
         }
       }

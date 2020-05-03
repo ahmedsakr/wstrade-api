@@ -3,8 +3,18 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+exports.ORDERS_PER_PAGE = undefined;
+
+var _index = require("./index");
+
+var _index2 = _interopRequireDefault(_index);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
+
+// The maximum number of orders retrieved by the /orders API.
+var ORDERS_PER_PAGE = exports.ORDERS_PER_PAGE = 20;
 
 var defaultEndpointBehaviour = {
 
@@ -204,7 +214,7 @@ var WealthSimpleTradeEndpoints = {
 
         // Query the rest of the pages
         for (var page = 2; page <= pages; page++) {
-          var tmp = await wealthsimple.getOrdersByPage(tokens, request.arguments.accountId, page);
+          var tmp = await _index2.default.getOrdersByPage(tokens, request.arguments.accountId, page);
           orders.push.apply(orders, _toConsumableArray(tmp.orders));
         }
       }
@@ -242,7 +252,7 @@ var WealthSimpleTradeEndpoints = {
 
         // Check all other pages for pending orders
         for (var page = 2; page <= pages; page++) {
-          var tmp = await wealthsimple.getOrdersByPage(tokens, request.arguments.accountId, page);
+          var tmp = await _index2.default.getOrdersByPage(tokens, request.arguments.accountId, page);
           orders.push.apply(orders, _toConsumableArray(tmp.orders.filter(pendingFilter)));
         }
       }

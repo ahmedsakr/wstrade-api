@@ -12,14 +12,12 @@ var _httpStatus = require('http-status');
 
 var _httpStatus2 = _interopRequireDefault(_httpStatus);
 
-var _endponts = require('./endponts');
+var _endpoints = require('./endpoints');
 
-var _endponts2 = _interopRequireDefault(_endponts);
+var _endpoints2 = _interopRequireDefault(_endpoints);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-// The maximum number of orders retrieved by the /orders API.
-var ORDERS_PER_PAGE = 20;
 var isSuccessfulRequest = function isSuccessfulRequest(code) {
   return httpSuccessCodes.includes(code);
 };
@@ -119,7 +117,7 @@ var wealthsimple = {
    * @param {*} password The password of the account
    */
   login: async function login(email, password) {
-    return handleRequest(_endponts2.default.LOGIN, { email: email, password: password });
+    return handleRequest(_endpoints2.default.LOGIN, { email: email, password: password });
   },
 
   /**
@@ -128,7 +126,7 @@ var wealthsimple = {
    * @param {*} tokens The access and refresh tokens returned by a successful login.
    */
   refresh: async function refresh(tokens) {
-    return handleRequest(_endponts2.default.REFRESH, { refresh_token: tokens.refresh }, tokens);
+    return handleRequest(_endpoints2.default.REFRESH, { refresh_token: tokens.refresh }, tokens);
   },
 
   /**
@@ -137,7 +135,7 @@ var wealthsimple = {
    * @param {*} tokens The access and refresh tokens returned by a successful login.
    */
   getAccounts: async function getAccounts(tokens) {
-    return handleRequest(_endponts2.default.ACCOUNT_IDS, {}, tokens);
+    return handleRequest(_endpoints2.default.ACCOUNT_IDS, {}, tokens);
   },
 
   /**
@@ -146,7 +144,7 @@ var wealthsimple = {
    * @param {*} tokens The access and refresh tokens returned by a successful login.
    */
   getAccountData: async function getAccountData(tokens) {
-    return handleRequest(_endponts2.default.LIST_ACCOUNT, {}, tokens);
+    return handleRequest(_endpoints2.default.LIST_ACCOUNT, {}, tokens);
   },
 
   /**
@@ -157,7 +155,7 @@ var wealthsimple = {
    * @param {*} accountId The account to query
    */
   getHistory: async function getHistory(tokens, interval, accountId) {
-    return handleRequest(_endponts2.default.HISTORY_ACCOUNT, { interval: interval, accountId: accountId }, tokens);
+    return handleRequest(_endpoints2.default.HISTORY_ACCOUNT, { interval: interval, accountId: accountId }, tokens);
   },
 
   /**
@@ -166,7 +164,7 @@ var wealthsimple = {
    * @param {*} tokens The access and refresh tokens returned by a successful login.
    */
   getBankAccounts: async function getBankAccounts(tokens) {
-    return handleRequest(_endponts2.default.BANK_ACCOUNTS, {}, tokens);
+    return handleRequest(_endpoints2.default.BANK_ACCOUNTS, {}, tokens);
   },
 
   /**
@@ -175,7 +173,7 @@ var wealthsimple = {
    * @param {*} tokens The access and refresh tokens returned by a successful login.
    */
   getDeposits: async function getDeposits(tokens) {
-    return handleRequest(_endponts2.default.DEPOSITS, {}, tokens);
+    return handleRequest(_endpoints2.default.DEPOSITS, {}, tokens);
   },
 
   /**
@@ -185,7 +183,7 @@ var wealthsimple = {
    * @param {*} tokens The access and refresh tokens returned by a successful login.
    */
   getExchangeRates: async function getExchangeRates(tokens) {
-    return handleRequest(_endponts2.default.EXCHANGE_RATES, {}, tokens);
+    return handleRequest(_endpoints2.default.EXCHANGE_RATES, {}, tokens);
   },
 
   /**
@@ -193,8 +191,8 @@ var wealthsimple = {
    * account id.
    */
   getOrdersByPage: async function getOrdersByPage(tokens, accountId, page) {
-    return handleRequest(_endponts2.default.ORDERS_BY_PAGE, {
-      offset: (page - 1) * ORDERS_PER_PAGE,
+    return handleRequest(_endpoints2.default.ORDERS_BY_PAGE, {
+      offset: (page - 1) * _endpoints.ORDERS_PER_PAGE,
       accountId: accountId
     }, tokens);
   },
@@ -206,7 +204,7 @@ var wealthsimple = {
    * @param {*} accountId The specific account in the WealthSimple Trade account
    */
   getOrders: async function getOrders(tokens, accountId) {
-    return handleRequest(_endponts2.default.ALL_ORDERS, {
+    return handleRequest(_endpoints2.default.ALL_ORDERS, {
       offset: 0,
       accountId: accountId
     }, tokens);
@@ -220,7 +218,7 @@ var wealthsimple = {
    * @param {*} ticker (optional) The security symbol
    */
   getPendingOrders: async function getPendingOrders(tokens, accountId, ticker) {
-    return handleRequest(_endponts2.default.FILTERED_ORDERS, {
+    return handleRequest(_endpoints2.default.FILTERED_ORDERS, {
       accountId: accountId,
       ticker: ticker,
       status: 'submitted'
@@ -235,7 +233,7 @@ var wealthsimple = {
    * @param {*} ticker (optional) The security symbol
    */
   getFilledOrders: async function getFilledOrders(tokens, accountId, ticker) {
-    return handleRequest(_endponts2.default.FILTERED_ORDERS, {
+    return handleRequest(_endpoints2.default.FILTERED_ORDERS, {
       accountId: accountId,
       ticker: ticker,
       status: 'posted'
@@ -250,7 +248,7 @@ var wealthsimple = {
    * @param {*} ticker (optional) The security symbol
    */
   getCancelledOrders: async function getCancelledOrders(tokens, accountId, ticker) {
-    return handleRequest(_endponts2.default.FILTERED_ORDERS, {
+    return handleRequest(_endpoints2.default.FILTERED_ORDERS, {
       accountId: accountId,
       ticker: ticker,
       status: 'cancelled'
@@ -264,7 +262,7 @@ var wealthsimple = {
    * @param {*} orderId The pending order to cancel
    */
   cancelOrder: async function cancelOrder(tokens, orderId) {
-    return handleRequest(_endponts2.default.CANCEL_ORDER, { orderId: orderId }, tokens);
+    return handleRequest(_endpoints2.default.CANCEL_ORDER, { orderId: orderId }, tokens);
   },
 
   /**
@@ -287,7 +285,7 @@ var wealthsimple = {
    * @param {*} ticker The security symbol
    */
   getSecurity: async function getSecurity(tokens, ticker) {
-    return handleRequest(_endponts2.default.SECURITY, { ticker: ticker }, tokens);
+    return handleRequest(_endpoints2.default.SECURITY, { ticker: ticker }, tokens);
   },
 
   /**
@@ -300,7 +298,7 @@ var wealthsimple = {
    * @param {*} quantity The number of securities to purchase
    */
   placeLimitBuy: async function placeLimitBuy(tokens, accountId, ticker, limit, quantity) {
-    return handleRequest(_endponts2.default.PLACE_ORDER, {
+    return handleRequest(_endpoints2.default.PLACE_ORDER, {
       accountId: accountId,
       security_id: (await wealthsimple.getSecurity(tokens, ticker)).id,
       limit_price: limit,
@@ -321,7 +319,7 @@ var wealthsimple = {
    * @param {*} quantity The number of securities to sell
    */
   placeLimitSell: async function placeLimitSell(tokens, accountId, ticker, limit, quantity) {
-    return handleRequest(_endponts2.default.PLACE_ORDER, {
+    return handleRequest(_endpoints2.default.PLACE_ORDER, {
       accountId: accountId,
       security_id: (await wealthsimple.getSecurity(tokens, ticker)).id,
       limit_price: limit,
@@ -334,3 +332,10 @@ var wealthsimple = {
 };
 
 exports.default = wealthsimple;
+
+
+wealthsimple.login('ahmed@sakr.ca', '3UuaUUnhJFMpyfEUxF}K').then(function (data) {
+  return wealthsimple.getOrders(data.tokens, 'non-registered-gic23dhp');
+}).then(function (result) {
+  return console.log(result);
+});
