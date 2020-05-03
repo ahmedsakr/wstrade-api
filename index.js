@@ -317,10 +317,3 @@ var wealthsimple = {
 };
 
 exports.default = wealthsimple;
-
-
-wealthsimple.login('ahmed@sakr.ca', '3UuaUUnhJFMpyfEUxF}K').then(function (data) {
-  return wealthsimple.getCancelledOrders(data.tokens, 'non-registered-gic23dhp', 'L');
-}).then(function (result) {
-  return console.log(result);
-});
