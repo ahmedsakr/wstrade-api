@@ -55,12 +55,21 @@ After installing **wstrade-api** from the npm registry, import it into your Java
 import trade from 'wstrade-api';
 ```
 
+## Server-Side Limitation
+
+This wrapper will not work when executed on the client-side due to the underlying CORS security limitation imposed by the WealthSimple Trade endpoints.
+If you wish to build a front-end application, you will have to design an architecture where the server
+does all of the API calls.
+
 <a id="index"></a>
 
 ## Jump to
 
 * [trade.login()](#login)
 * [trade.refresh()](#refresh)
+* [trade.addHeader()](#addHeader)
+* [trade.removeHeader()](#removeHeader)
+* [trade.clearHeaders()](#clearHeaders)
 * [trade.getAccounts()](#getAccounts)
 * [trade.getAccountData()](#getAccountData)
 * [trade.getHistory()](#getHistory)
@@ -151,6 +160,46 @@ Generates a new set of access and refresh tokens.
     refresh: 'YYYY'
 }
 ```
+
+[Back to top—>](#index)
+
+<a id="addHeader"></a>
+
+## **trade**.addHeader(*name*, *value*) -> **void**
+
+
+Appends a custom header to all requests made with this wrapper.
+
+
+| Parameters|Required|    
+|----------|---------------------|
+| name |Yes|
+| value |Yes|
+
+[Back to top—>](#index)
+
+
+<a id="removeHeader"></a>
+
+## **trade**.removeHeader(*name*) -> **void**
+
+
+Removes a custom header.
+
+
+| Parameters|Required|    
+|----------|---------------------|
+| name |Yes|
+
+[Back to top—>](#index)
+
+
+<a id="clearHeaders"></a>
+
+## **trade**.clearHeaders() -> **void**
+
+
+Deletes all custom headers.
 
 [Back to top—>](#index)
 

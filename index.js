@@ -4,6 +4,8 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
+var _console;
+
 var _nodeFetch = require('node-fetch');
 
 var _nodeFetch2 = _interopRequireDefault(_nodeFetch);
@@ -13,6 +15,10 @@ var _endpoints = require('./endpoints');
 var _endpoints2 = _interopRequireDefault(_endpoints);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
+
+var customHeaders = new _nodeFetch2.default.Headers();
 
 /*
  * Fulfill the endpoint request given the endpoint configuration, optional
@@ -70,6 +76,8 @@ function finalizeRequest(endpoint, data) {
  */
 function talk(endpoint, data, tokens) {
   var headers = new _nodeFetch2.default.Headers();
+  Object.assign(headers, customHeaders);
+
   headers.append('Content-Type', 'application/json');
 
   if (tokens) {
@@ -112,6 +120,34 @@ var wealthsimple = {
    */
   refresh: async function refresh(tokens) {
     return handleRequest(_endpoints2.default.REFRESH, { refresh_token: tokens.refresh }, tokens);
+  },
+
+  /**
+   * Appends a header name-value pair to all requests.
+   * 
+   * @param {*} name Header key
+   * @param {*} value Header value
+   */
+  addHeader: function addHeader(name, value) {
+    return customHeaders.append(name, value);
+  },
+
+  /**
+   * Removes a custom header from all requests.
+   * 
+   * @param {*} name Header key
+   */
+  removeHeader: function removeHeader(name) {
+    return customHeaders.delete(name);
+  },
+
+  /**
+   * Clears all custom headers.
+   */
+  clearHeaders: function clearHeaders() {
+    return [].concat(_toConsumableArray(customHeaders)).forEach(function (header) {
+      return customHeaders.delete(header[0]);
+    });
   },
 
   /**
@@ -317,3 +353,18 @@ var wealthsimple = {
 };
 
 exports.default = wealthsimple;
+
+
+wealthsimple.addHeader('hi', 'ahmed');
+console.log(customHeaders);
+
+wealthsimple.removeHeader('hi');
+console.log(customHeaders);
+
+wealthsimple.addHeader('hi', 'ahmed');
+wealthsimple.addHeader('see', 'ahmed');
+wealthsimple.addHeader('yeas', 'ahmed');
+(_console = console).log.apply(_console, _toConsumableArray(customHeaders));
+
+wealthsimple.clearHeaders();
+console.log(customHeaders);
