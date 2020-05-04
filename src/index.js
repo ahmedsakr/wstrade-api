@@ -1,6 +1,8 @@
 import fetch from 'node-fetch';
 import endpoints, { isSuccessfulRequest, ORDERS_PER_PAGE } from './endpoints';
 
+let customHeaders = new fetch.Headers();
+
 /*
  * Fulfill the endpoint request given the endpoint configuration, optional
  * data, and the authentication tokens.
@@ -58,6 +60,8 @@ function finalizeRequest(endpoint, data) {
  */
 function talk(endpoint, data, tokens) {
   let headers = new fetch.Headers();
+  Object.assign(headers, customHeaders);
+
   headers.append('Content-Type', 'application/json');
 
   if (tokens) {
@@ -65,7 +69,7 @@ function talk(endpoint, data, tokens) {
   }
 
   // Make a copy of the arguments so the original copy is not modified
-  let copy = {}
+  let copy = {};
   Object.assign(copy, data);
 
   // fill path and query parameters in the URL
@@ -96,6 +100,26 @@ const wealthsimple = {
    */
   refresh: async (tokens) =>
     handleRequest(endpoints.REFRESH, { refresh_token: tokens.refresh}, tokens),
+
+  /**
+   * Appends a header name-value pair to all requests.
+   * 
+   * @param {*} name Header key
+   * @param {*} value Header value
+   */
+  addHeader: (name, value) => customHeaders.append(name, value),
+
+  /**
+   * Removes a custom header from all requests.
+   * 
+   * @param {*} name Header key
+   */
+  removeHeader: (name) => customHeaders.delete(name),
+
+  /**
+   * Clears all custom headers.
+   */
+  clearHeaders: () => [...customHeaders].forEach(header => customHeaders.delete(header[0])),
 
   /**
    * Retrieves all account ids open under this WealthSimple Trade account.
