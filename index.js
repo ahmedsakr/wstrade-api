@@ -4,8 +4,6 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _console;
-
 var _nodeFetch = require('node-fetch');
 
 var _nodeFetch2 = _interopRequireDefault(_nodeFetch);
@@ -353,18 +351,3 @@ var wealthsimple = {
 };
 
 exports.default = wealthsimple;
-
-
-wealthsimple.addHeader('hi', 'ahmed');
-console.log(customHeaders);
-
-wealthsimple.removeHeader('hi');
-console.log(customHeaders);
-
-wealthsimple.addHeader('hi', 'ahmed');
-wealthsimple.addHeader('see', 'ahmed');
-wealthsimple.addHeader('yeas', 'ahmed');
-(_console = console).log.apply(_console, _toConsumableArray(customHeaders));
-
-wealthsimple.clearHeaders();
-console.log(customHeaders);

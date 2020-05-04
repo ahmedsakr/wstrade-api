@@ -307,17 +307,3 @@ const wealthsimple = {
 }
 
 export default wealthsimple;
-
-wealthsimple.addHeader('hi', 'ahmed');
-console.log(customHeaders);
-
-wealthsimple.removeHeader('hi');
-console.log(customHeaders);
-
-wealthsimple.addHeader('hi', 'ahmed');
-wealthsimple.addHeader('see', 'ahmed');
-wealthsimple.addHeader('yeas', 'ahmed');
-console.log(...customHeaders);
-
-wealthsimple.clearHeaders();
-console.log(customHeaders);
