@@ -85,7 +85,9 @@ does all of the API calls.
 * [trade.cancelPendingOrders()](#cancelPendingOrders)
 * [trade.getSecurity()](#getSecurity)
 * [trade.placeLimitBuy()](#placeLimitBuy)
+* [trade.placeStopLimitBuy()](#placeStopLimitBuy)
 * [trade.placeLimitSell()](#placeLimitSell)
+* [trade.placeStopLimitSell()](#placeStopLimitSell)
 
 
 ## Failure return
@@ -716,6 +718,38 @@ Attempts to purchase a given quantity of a security at a maximum price.
 [Back to top—>](#index)
 
 
+<a id="placeStopLimitBuy"></a>
+
+## **trade**.placeStopLimitBuy(*tokens*,*accountId*, *ticker*, *stop*, *limit*, *quantity*) -> **Promise\<result\>** ##
+
+Attempts to stop limit purchase a given quantity of a security at the provided stop and limit prices.
+
+**Note**: TSX and TSX-V securities must have an equivalent stop and limit price.
+
+| Parameters|Required|
+|----------|---------------------|
+| tokens |Yes|
+| accountId |Yes|
+| ticker |Yes|
+| stop |Yes|
+| limit |Yes|
+| quantity |Yes|
+
+
+
+
+### Return on Success
+
+```javascript
+{
+    // Confirmation and details of the stop limit buy
+    ...
+}
+```
+
+[Back to top—>](#index)
+
+
 <a id="placeLimitSell"></a>
 
 ## **trade**.placeLimitSell(*tokens*, *accountId*, *ticker*, *limit*, *quantity*) -> **Promise\<result\>** ##
@@ -737,6 +771,36 @@ Attempts to sell a given quantity of a security at a minimum price.
 ```javascript
 {
     // Confirmation and details of the limit sell
+    ...
+}
+```
+
+[Back to top—>](#index)
+
+
+<a id="placeStopLimitSell"></a>
+
+## **trade**.placeStopLimitSell(*tokens*, *accountId*, *ticker*, *limit*, *stop*, *quantity*) -> **Promise\<result\>** ##
+
+Attempts to stop limit sell a given quantity of a security at the provided stop and limit prices.
+
+**Note**: TSX and TSX-V securities must have an equivalent stop and limit price.
+
+| Parameters|Required|
+|----------|---------------------|
+| tokens |Yes|
+| accountId |Yes|
+| ticker |Yes|
+| stop | Yes|
+| limit |Yes|
+| quantity |Yes|
+
+
+### Return on Success
+
+```javascript
+{
+    // Confirmation and details of the stop limit sell
     ...
 }
 ```
