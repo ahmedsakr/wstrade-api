@@ -60,17 +60,17 @@ function finalizeRequest(endpoint, data) {
  */
 function talk(endpoint, data, tokens) {
   let headers = new fetch.Headers();
-  Object.assign(headers, customHeaders);
-
   headers.append('Content-Type', 'application/json');
+
+  // Apply all custom headers
+  [...customHeaders].forEach(header => headers.append(...header));
 
   if (tokens) {
     headers.append('Authorization', `${tokens.access}`)
   }
 
   // Make a copy of the arguments so the original copy is not modified
-  let copy = {};
-  Object.assign(copy, data);
+  let copy = Object.assign({}, data);
 
   // fill path and query parameters in the URL
   let { url, payload } = finalizeRequest(endpoint, copy);
