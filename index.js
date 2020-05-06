@@ -16,6 +16,11 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
 
+// Checks if a security trades on TSX or TSX-V
+var isCanadianSecurity = function isCanadianSecurity(exchange) {
+  return ['TSX', 'TSX-V'].includes(exchange);
+};
+
 var customHeaders = new _nodeFetch2.default.Headers();
 
 /*
@@ -331,6 +336,37 @@ var wealthsimple = {
   },
 
   /**
+   * Stop limit buy a security through the WealthSimple Trade application.
+   *
+   * @param {*} tokens The access and refresh tokens returned by a successful login.
+   * @param {*} accountId The account to make the transaction from
+   * @param {*} ticker The security symbol
+   * @param {*} stop The price at which the order converts to a limit order
+   * @param {*} limit The maximum price to purchase the security at
+   * @param {*} quantity The number of securities to purchase
+   */
+  placeStopLimitBuy: async function placeStopLimitBuy(tokens, accountId, ticker, stop, limit, quantity) {
+
+    var security = await wealthsimple.getSecurity(tokens, ticker);
+
+    // The WealthSimple Trade backend doesn't check for this, even though the app does..
+    if (isCanadianSecurity(security.stock.primary_exchange) && stop !== limit) {
+      return Promise.reject({ reason: "TSX/TSX-V securities must have an equivalent stop and limit price." });
+    }
+
+    return handleRequest(_endpoints2.default.PLACE_ORDER, {
+      accountId: accountId,
+      security_id: (await wealthsimple.getSecurity(tokens, ticker)).id,
+      stop_price: stop,
+      limit_price: limit,
+      quantity: quantity,
+      order_type: "buy_quantity",
+      order_sub_type: "stop_limit",
+      time_in_force: "day"
+    }, tokens);
+  },
+
+  /**
    * Limit sell a security through the WealthSimple Trade application.
    *
    * @param {*} tokens The access and refresh tokens returned by a successful login.
@@ -347,6 +383,37 @@ var wealthsimple = {
       quantity: quantity,
       order_type: "sell_quantity",
       order_sub_type: "limit",
+      time_in_force: "day"
+    }, tokens);
+  },
+
+  /**
+   * Stop limit sell a security through the WealthSimple Trade application.
+   *
+   * @param {*} tokens The access and refresh tokens returned by a successful login.
+   * @param {*} accountId The account to make the transaction from
+   * @param {*} ticker The security symbol
+   * @param {*} stop The price at which the order converts to a limit order
+   * @param {*} limit The minimum price to sell the security at
+   * @param {*} quantity The number of securities to sell
+   */
+  placeStopLimitSell: async function placeStopLimitSell(tokens, accountId, ticker, stop, limit, quantity) {
+
+    var security = await wealthsimple.getSecurity(tokens, ticker);
+
+    // The WealthSimple Trade backend doesn't check for this, even though the app does..
+    if (isCanadianSecurity(security.stock.primary_exchange) && stop !== limit) {
+      return Promise.reject({ reason: "TSX/TSX-V securities must have an equivalent stop and limit price." });
+    }
+
+    return handleRequest(_endpoints2.default.PLACE_ORDER, {
+      accountId: accountId,
+      security_id: security.id,
+      stop_price: stop,
+      limit_price: limit,
+      quantity: quantity,
+      order_type: "sell_quantity",
+      order_sub_type: "stop_limit",
       time_in_force: "day"
     }, tokens);
   }

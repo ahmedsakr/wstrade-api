@@ -1,6 +1,9 @@
 import fetch from 'node-fetch';
 import endpoints, { isSuccessfulRequest, ORDERS_PER_PAGE } from './endpoints';
 
+// Checks if a security trades on TSX or TSX-V
+const isCanadianSecurity = (exchange) => ['TSX', 'TSX-V'].includes(exchange)
+
 let customHeaders = new fetch.Headers();
 
 /*
@@ -286,6 +289,37 @@ const wealthsimple = {
     }, tokens),
 
   /**
+   * Stop limit buy a security through the WealthSimple Trade application.
+   *
+   * @param {*} tokens The access and refresh tokens returned by a successful login.
+   * @param {*} accountId The account to make the transaction from
+   * @param {*} ticker The security symbol
+   * @param {*} stop The price at which the order converts to a limit order
+   * @param {*} limit The maximum price to purchase the security at
+   * @param {*} quantity The number of securities to purchase
+   */
+  placeStopLimitBuy: async(tokens, accountId, ticker, stop, limit, quantity) => {
+    
+    let security = await wealthsimple.getSecurity(tokens, ticker);
+
+    // The WealthSimple Trade backend doesn't check for this, even though the app does..
+    if (isCanadianSecurity(security.stock.primary_exchange) && stop !== limit) {
+      return Promise.reject({ reason: "TSX/TSX-V securities must have an equivalent stop and limit price." });
+    }
+
+    return handleRequest(endpoints.PLACE_ORDER, {
+      accountId,
+      security_id: (await wealthsimple.getSecurity(tokens, ticker)).id,
+      stop_price: stop,
+      limit_price: limit,
+      quantity,
+      order_type: "buy_quantity",
+      order_sub_type: "stop_limit",
+      time_in_force: "day"
+    }, tokens);
+  },
+
+  /**
    * Limit sell a security through the WealthSimple Trade application.
    *
    * @param {*} tokens The access and refresh tokens returned by a successful login.
@@ -303,7 +337,38 @@ const wealthsimple = {
       order_type: "sell_quantity",
       order_sub_type: "limit",
       time_in_force: "day"
-    }, tokens)
+    }, tokens),
+
+  /**
+   * Stop limit sell a security through the WealthSimple Trade application.
+   *
+   * @param {*} tokens The access and refresh tokens returned by a successful login.
+   * @param {*} accountId The account to make the transaction from
+   * @param {*} ticker The security symbol
+   * @param {*} stop The price at which the order converts to a limit order
+   * @param {*} limit The minimum price to sell the security at
+   * @param {*} quantity The number of securities to sell
+   */
+  placeStopLimitSell: async (tokens, accountId, ticker, stop, limit, quantity) => {
+
+    let security = await wealthsimple.getSecurity(tokens, ticker);
+
+    // The WealthSimple Trade backend doesn't check for this, even though the app does..
+    if (isCanadianSecurity(security.stock.primary_exchange) && stop !== limit) {
+      return Promise.reject({ reason: "TSX/TSX-V securities must have an equivalent stop and limit price." });
+    }
+
+    return handleRequest(endpoints.PLACE_ORDER, {
+      accountId,
+      security_id: security.id,
+      stop_price: stop,
+      limit_price: limit,
+      quantity,
+      order_type: "sell_quantity",
+      order_sub_type: "stop_limit",
+      time_in_force: "day"
+    }, tokens);
+  }
 }
 
 export default wealthsimple;
