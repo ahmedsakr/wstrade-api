@@ -74,17 +74,19 @@ function finalizeRequest(endpoint, data) {
  */
 function talk(endpoint, data, tokens) {
   var headers = new _nodeFetch2.default.Headers();
-  Object.assign(headers, customHeaders);
-
   headers.append('Content-Type', 'application/json');
+
+  // Apply all custom headers
+  [].concat(_toConsumableArray(customHeaders)).forEach(function (header) {
+    return headers.append.apply(headers, _toConsumableArray(header));
+  });
 
   if (tokens) {
     headers.append('Authorization', '' + tokens.access);
   }
 
   // Make a copy of the arguments so the original copy is not modified
-  var copy = {};
-  Object.assign(copy, data);
+  var copy = Object.assign({}, data);
 
   // fill path and query parameters in the URL
 
