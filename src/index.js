@@ -179,7 +179,7 @@ const wealthsimple = {
    * Lists all positions in the specified trading account under the WealthSimple Trade Account.
    * 
    * @param {*} tokens The access and refresh tokens returned by a successful login.
-   * @param {*}
+   * @param {*} accountId The specific account in the WealthSimple Trade account
    */
   getPositions: async (tokens, accountId) =>
     handleRequest(endpoints.POSITIONS, { accountId }, tokens),
