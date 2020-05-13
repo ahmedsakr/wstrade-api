@@ -182,7 +182,7 @@ const wealthsimple = {
    * @param {*}
    */
   getPositions: async (tokens, accountId) =>
-    handleRequest(endpoints.POSITIONS, { accountId}, tokens),
+    handleRequest(endpoints.POSITIONS, { accountId }, tokens),
 
   /**
    * Collects orders (filled, pending, cancelled) for the provided page and
