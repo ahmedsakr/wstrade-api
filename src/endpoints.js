@@ -173,6 +173,22 @@ const WealthSimpleTradeEndpoints = {
   },
 
   /*
+   * Lists all positions under a trading account.
+   */
+  POSITIONS: {
+    method: "GET",
+    url: "https://trade-service.wealthsimple.com/account/positions?account_id={0}",
+    parameters: {
+      0: "accountId"
+    },
+    onSuccess: async (request) => {
+      const data = await request.response.json();
+      return data.results;
+    },
+    onFailure: defaultEndpointBehaviour.onFailure
+  },
+
+  /*
    * Grab a page of orders (20 orders).
    */
   ORDERS_BY_PAGE: {
