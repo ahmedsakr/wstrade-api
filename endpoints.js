@@ -1,55 +1,64 @@
-'use strict';
+"use strict";
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.isSuccessfulRequest = exports.ORDERS_PER_PAGE = undefined;
+exports.default = exports.isSuccessfulRequest = exports.ORDERS_PER_PAGE = void 0;
 
-var _index = require('./index');
+var _index = _interopRequireDefault(require("./index"));
 
-var _index2 = _interopRequireDefault(_index);
-
-var _httpStatus = require('http-status');
-
-var _httpStatus2 = _interopRequireDefault(_httpStatus);
+var _httpStatus = _interopRequireDefault(require("http-status"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
 
 // The maximum number of orders retrieved by the /orders API.
-var ORDERS_PER_PAGE = exports.ORDERS_PER_PAGE = 20;
+const ORDERS_PER_PAGE = 20; // WealthSimple Trade API returns some custom HTTP codes
 
-// WealthSimple Trade API returns some custom HTTP codes
-var wealthSimpleHttpCodes = {
+exports.ORDERS_PER_PAGE = ORDERS_PER_PAGE;
+const wealthSimpleHttpCodes = {
   ORDER_CREATED: 201
+}; // Successful HTTP codes to be used for determining the status of the request
 
-  // Successful HTTP codes to be used for determining the status of the request
-};var httpSuccessCodes = [_httpStatus2.default.OK, wealthSimpleHttpCodes.ORDER_CREATED];
+const httpSuccessCodes = [_httpStatus.default.OK, wealthSimpleHttpCodes.ORDER_CREATED];
 
-var isSuccessfulRequest = exports.isSuccessfulRequest = function isSuccessfulRequest(code) {
-  return httpSuccessCodes.includes(code);
-};
+const isSuccessfulRequest = code => httpSuccessCodes.includes(code);
 
-var defaultEndpointBehaviour = {
-
+exports.isSuccessfulRequest = isSuccessfulRequest;
+const defaultEndpointBehaviour = {
   // Default failure method for all endpoint calls
-  onFailure: async function onFailure(response) {
-    return {
-      status: response.status,
-      reason: response.statusText,
-      body: await response.json()
-    };
-  },
+  onFailure: function () {
+    var _onFailure = _asyncToGenerator(function* (response) {
+      return {
+        status: response.status,
+        reason: response.statusText,
+        body: yield response.json()
+      };
+    });
 
+    function onFailure(_x) {
+      return _onFailure.apply(this, arguments);
+    }
+
+    return onFailure;
+  }(),
   // Default success method for all endpoint calls
-  onSuccess: async function onSuccess(request) {
-    return await request.response.json();
-  }
+  onSuccess: function () {
+    var _onSuccess = _asyncToGenerator(function* (request) {
+      return yield request.response.json();
+    });
+
+    function onSuccess(_x2) {
+      return _onSuccess.apply(this, arguments);
+    }
+
+    return onSuccess;
+  }()
 };
-
-var WealthSimpleTradeEndpoints = {
-
+const WealthSimpleTradeEndpoints = {
   /*
    * The LOGIN endpoint intializes a new session for the given email and
    * password set. If the login is successful, access and refresh tokens
@@ -59,16 +68,23 @@ var WealthSimpleTradeEndpoints = {
   LOGIN: {
     method: "POST",
     url: "https://trade-service.wealthsimple.com/auth/login",
-    onSuccess: async function onSuccess(request) {
-      return {
-        tokens: {
-          access: request.response.headers.get('x-access-token'),
-          refresh: request.response.headers.get('x-refresh-token')
-        },
+    onSuccess: function () {
+      var _onSuccess2 = _asyncToGenerator(function* (request) {
+        return {
+          tokens: {
+            access: request.response.headers.get('x-access-token'),
+            refresh: request.response.headers.get('x-refresh-token')
+          },
+          accountInfo: yield request.response.json()
+        };
+      });
 
-        accountInfo: await request.response.json()
-      };
-    },
+      function onSuccess(_x3) {
+        return _onSuccess2.apply(this, arguments);
+      }
+
+      return onSuccess;
+    }(),
     onFailure: defaultEndpointBehaviour.onFailure
   },
 
@@ -78,12 +94,20 @@ var WealthSimpleTradeEndpoints = {
   REFRESH: {
     method: "POST",
     url: "https://trade-service.wealthsimple.com/auth/refresh",
-    onSuccess: async function onSuccess(request) {
-      return {
-        access: request.response.headers.get('x-access-token'),
-        refresh: request.response.headers.get('x-refresh-token')
-      };
-    },
+    onSuccess: function () {
+      var _onSuccess3 = _asyncToGenerator(function* (request) {
+        return {
+          access: request.response.headers.get('x-access-token'),
+          refresh: request.response.headers.get('x-refresh-token')
+        };
+      });
+
+      function onSuccess(_x4) {
+        return _onSuccess3.apply(this, arguments);
+      }
+
+      return onSuccess;
+    }(),
     onFailure: defaultEndpointBehaviour.onFailure
   },
 
@@ -93,14 +117,19 @@ var WealthSimpleTradeEndpoints = {
   ACCOUNT_IDS: {
     method: "GET",
     url: "https://trade-service.wealthsimple.com/account/list",
-    onSuccess: async function onSuccess(request) {
-      var data = await request.response.json();
+    onSuccess: function () {
+      var _onSuccess4 = _asyncToGenerator(function* (request) {
+        const data = yield request.response.json(); // Collect all account ids registered under this WealthSimple Trade Account
 
-      // Collect all account ids registered under this WealthSimple Trade Account
-      return data.results.map(function (account) {
-        return account.id;
+        return data.results.map(account => account.id);
       });
-    },
+
+      function onSuccess(_x5) {
+        return _onSuccess4.apply(this, arguments);
+      }
+
+      return onSuccess;
+    }(),
     onFailure: defaultEndpointBehaviour.onFailure
   },
 
@@ -137,10 +166,18 @@ var WealthSimpleTradeEndpoints = {
   DEPOSITS: {
     method: "GET",
     url: "https://trade-service.wealthsimple.com/deposits",
-    onSuccess: async function onSuccess(request) {
-      var data = await request.response.json();
-      return data.results;
-    },
+    onSuccess: function () {
+      var _onSuccess5 = _asyncToGenerator(function* (request) {
+        const data = yield request.response.json();
+        return data.results;
+      });
+
+      function onSuccess(_x6) {
+        return _onSuccess5.apply(this, arguments);
+      }
+
+      return onSuccess;
+    }(),
     onFailure: defaultEndpointBehaviour.onFailure
   },
 
@@ -150,10 +187,18 @@ var WealthSimpleTradeEndpoints = {
   BANK_ACCOUNTS: {
     method: "GET",
     url: "https://trade-service.wealthsimple.com/bank-accounts",
-    onSuccess: async function onSuccess(request) {
-      var data = await request.response.json();
-      return data.results;
-    },
+    onSuccess: function () {
+      var _onSuccess6 = _asyncToGenerator(function* (request) {
+        const data = yield request.response.json();
+        return data.results;
+      });
+
+      function onSuccess(_x7) {
+        return _onSuccess6.apply(this, arguments);
+      }
+
+      return onSuccess;
+    }(),
     onFailure: defaultEndpointBehaviour.onFailure
   },
 
@@ -176,17 +221,25 @@ var WealthSimpleTradeEndpoints = {
     parameters: {
       0: "ticker"
     },
-    onSuccess: async function onSuccess(request) {
-      var data = await request.response.json();
+    onSuccess: function () {
+      var _onSuccess7 = _asyncToGenerator(function* (request) {
+        let data = yield request.response.json();
 
-      if (data.results.length === 0) {
-        return Promise.reject({
-          reason: 'Security does not exist'
-        });
+        if (data.results.length === 0) {
+          return Promise.reject({
+            reason: `Security does not exist`
+          });
+        }
+
+        return data.results[0];
+      });
+
+      function onSuccess(_x8) {
+        return _onSuccess7.apply(this, arguments);
       }
 
-      return data.results[0];
-    },
+      return onSuccess;
+    }(),
     onFailure: defaultEndpointBehaviour.onFailure
   },
 
@@ -199,10 +252,18 @@ var WealthSimpleTradeEndpoints = {
     parameters: {
       0: "accountId"
     },
-    onSuccess: async function onSuccess(request) {
-      var data = await request.response.json();
-      return data.results;
-    },
+    onSuccess: function () {
+      var _onSuccess8 = _asyncToGenerator(function* (request) {
+        const data = yield request.response.json();
+        return data.results;
+      });
+
+      function onSuccess(_x9) {
+        return _onSuccess8.apply(this, arguments);
+      }
+
+      return onSuccess;
+    }(),
     onFailure: defaultEndpointBehaviour.onFailure
   },
 
@@ -216,13 +277,21 @@ var WealthSimpleTradeEndpoints = {
       0: "offset",
       1: "accountId"
     },
-    onSuccess: async function onSuccess(request) {
-      var data = await request.response.json();
-      return {
-        total: data.total,
-        orders: data.results
-      };
-    },
+    onSuccess: function () {
+      var _onSuccess9 = _asyncToGenerator(function* (request) {
+        const data = yield request.response.json();
+        return {
+          total: data.total,
+          orders: data.results
+        };
+      });
+
+      function onSuccess(_x10) {
+        return _onSuccess9.apply(this, arguments);
+      }
+
+      return onSuccess;
+    }(),
     onFailure: defaultEndpointBehaviour.onFailure
   },
 
@@ -236,25 +305,32 @@ var WealthSimpleTradeEndpoints = {
     parameters: {
       0: "accountId"
     },
-    onSuccess: async function onSuccess(request, tokens) {
-      var data = await request.response.json();
-      var pages = Math.ceil(data.total / ORDERS_PER_PAGE);
-      var orders = data.results;
+    onSuccess: function () {
+      var _onSuccess10 = _asyncToGenerator(function* (request, tokens) {
+        const data = yield request.response.json();
+        const pages = Math.ceil(data.total / ORDERS_PER_PAGE);
+        let orders = data.results;
 
-      if (pages > 1) {
-
-        // Query the rest of the pages
-        for (var page = 2; page <= pages; page++) {
-          var tmp = await _index2.default.getOrdersByPage(tokens, request.arguments.accountId, page);
-          orders.push.apply(orders, _toConsumableArray(tmp.orders));
+        if (pages > 1) {
+          // Query the rest of the pages
+          for (let page = 2; page <= pages; page++) {
+            let tmp = yield _index.default.getOrdersByPage(tokens, request.arguments.accountId, page);
+            orders.push(...tmp.orders);
+          }
         }
+
+        return {
+          total: orders.length,
+          orders
+        };
+      });
+
+      function onSuccess(_x11, _x12) {
+        return _onSuccess10.apply(this, arguments);
       }
 
-      return {
-        total: orders.length,
-        orders: orders
-      };
-    },
+      return onSuccess;
+    }(),
     onFailure: defaultEndpointBehaviour.onFailure
   },
 
@@ -267,32 +343,34 @@ var WealthSimpleTradeEndpoints = {
     parameters: {
       0: "accountId"
     },
-    onSuccess: async function onSuccess(request, tokens) {
-      var data = await request.response.json();
-      var pages = Math.ceil(data.total / ORDERS_PER_PAGE);
+    onSuccess: function () {
+      var _onSuccess11 = _asyncToGenerator(function* (request, tokens) {
+        const data = yield request.response.json();
+        const pages = Math.ceil(data.total / ORDERS_PER_PAGE); // The ticker symbol restricts the pending orders to a specific security
 
-      // The ticker symbol restricts the pending orders to a specific security
-      var pendingFilter = request.arguments.ticker ? function (order) {
-        return order.symbol === request.arguments.ticker && order.status === request.arguments.status;
-      } : function (order) {
-        return order.status === request.arguments.status;
-      };
+        let pendingFilter = request.arguments.ticker ? order => order.symbol === request.arguments.ticker && order.status === request.arguments.status : order => order.status === request.arguments.status;
+        let orders = data.results.filter(pendingFilter);
 
-      var orders = data.results.filter(pendingFilter);
-      if (pages > 1) {
-
-        // Check all other pages for pending orders
-        for (var page = 2; page <= pages; page++) {
-          var tmp = await _index2.default.getOrdersByPage(tokens, request.arguments.accountId, page);
-          orders.push.apply(orders, _toConsumableArray(tmp.orders.filter(pendingFilter)));
+        if (pages > 1) {
+          // Check all other pages for pending orders
+          for (let page = 2; page <= pages; page++) {
+            let tmp = yield _index.default.getOrdersByPage(tokens, request.arguments.accountId, page);
+            orders.push(...tmp.orders.filter(pendingFilter));
+          }
         }
+
+        return {
+          total: orders.length,
+          orders
+        };
+      });
+
+      function onSuccess(_x13, _x14) {
+        return _onSuccess11.apply(this, arguments);
       }
 
-      return {
-        total: orders.length,
-        orders: orders
-      };
-    },
+      return onSuccess;
+    }(),
     onFailure: defaultEndpointBehaviour.onFailure
   },
 
@@ -305,12 +383,20 @@ var WealthSimpleTradeEndpoints = {
     parameters: {
       0: "orderId"
     },
-    onSuccess: async function onSuccess(request) {
-      return {
-        order: request.arguments.orderId,
-        response: await request.response.json()
-      };
-    },
+    onSuccess: function () {
+      var _onSuccess12 = _asyncToGenerator(function* (request) {
+        return {
+          order: request.arguments.orderId,
+          response: yield request.response.json()
+        };
+      });
+
+      function onSuccess(_x15) {
+        return _onSuccess12.apply(this, arguments);
+      }
+
+      return onSuccess;
+    }(),
     onFailure: defaultEndpointBehaviour.onFailure
   },
 
@@ -327,5 +413,5 @@ var WealthSimpleTradeEndpoints = {
     onFailure: defaultEndpointBehaviour.onFailure
   }
 };
-
-exports.default = WealthSimpleTradeEndpoints;
+var _default = WealthSimpleTradeEndpoints;
+exports.default = _default;
