@@ -213,8 +213,22 @@ var wealthsimple = {
   },
 
   /**
+   * Lists all positions in the specified trading account under the WealthSimple Trade Account.
+   * 
+   * @param {*} tokens The access and refresh tokens returned by a successful login.
+   * @param {*}
+   */
+  getPositions: async function getPositions(tokens, accountId) {
+    return handleRequest(_endpoints2.default.POSITIONS, { accountId: accountId }, tokens);
+  },
+
+  /**
    * Collects orders (filled, pending, cancelled) for the provided page and
    * account id.
+   *
+   * @param {*} tokens The access and refresh tokens returned by a successful login.
+   * @param {*} accountId The specific account in the WealthSimple Trade account
+   * @param {*} page The orders page index to seek to
    */
   getOrdersByPage: async function getOrdersByPage(tokens, accountId, page) {
     return handleRequest(_endpoints2.default.ORDERS_BY_PAGE, {

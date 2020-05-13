@@ -174,10 +174,23 @@ const wealthsimple = {
    */
   getExchangeRates: async (tokens) =>
     handleRequest(endpoints.EXCHANGE_RATES, {}, tokens),
+  
+  /**
+   * Lists all positions in the specified trading account under the WealthSimple Trade Account.
+   * 
+   * @param {*} tokens The access and refresh tokens returned by a successful login.
+   * @param {*}
+   */
+  getPositions: async (tokens, accountId) =>
+    handleRequest(endpoints.POSITIONS, { accountId}, tokens),
 
   /**
    * Collects orders (filled, pending, cancelled) for the provided page and
    * account id.
+   *
+   * @param {*} tokens The access and refresh tokens returned by a successful login.
+   * @param {*} accountId The specific account in the WealthSimple Trade account
+   * @param {*} page The orders page index to seek to
    */
   getOrdersByPage: async (tokens, accountId, page) =>
     handleRequest(endpoints.ORDERS_BY_PAGE, {

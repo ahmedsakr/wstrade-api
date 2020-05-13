@@ -76,6 +76,7 @@ does all of the API calls.
 * [trade.getBankAccounts()](#getBankAccounts)
 * [trade.getDeposits()](#getDeposits)
 * [trade.getExchangeRates()](#getExchangeRates)
+* [trade.getPositions()](#getPositions)
 * [trade.getOrdersByPage()](#getOrdersByPage)
 * [trade.getOrders()](#getOrders)
 * [trade.getPendingOrders()](#getPendingOrders)
@@ -386,6 +387,41 @@ Provides the current USD/CAD conversion rates for the WealthSimple Trade platfor
         "fx_rate": 1.xxx
     }
 }
+```
+
+[Back to top—>](#index)
+
+
+
+<a id="getPositions"></a>
+
+## **trade**.getPositions(*tokens*, *accountId*) -> **Promise\<result\>**
+
+
+Lists all active positions under the trading account associated with the account id.
+
+
+| Parameters|Required|
+|----------|---------------------|
+| tokens |Yes|
+| accountID|Yes|
+
+### Return on Success
+
+```javascript
+[
+    // Position 1 details
+    {
+        ...
+    },
+
+    // Position 2 details
+    {
+        ...
+    },
+    
+    ...
+]
 ```
 
 [Back to top—>](#index)
