@@ -729,7 +729,7 @@ Information about a security on the WealthSimple Trade Platform.
 
 <a id="placeMarketBuy"></a>
 
-## **trade**.placeMarketBuy(*tokens*,*accountId*, *ticker*, *quantity*) -> **Promise\<result\>** ##
+## **trade**.placeMarketBuy(*tokens*, *accountId*, *ticker*, *quantity*) -> **Promise\<result\>** ##
 
 Attempts to market buy a given quantity of a security.
 
@@ -759,7 +759,7 @@ Attempts to market buy a given quantity of a security.
 
 <a id="placeLimitBuy"></a>
 
-## **trade**.placeLimitBuy(*tokens*,*accountId*, *ticker*, *limit*, *quantity*) -> **Promise\<result\>** ##
+## **trade**.placeLimitBuy(*tokens*, *accountId*, *ticker*, *limit*, *quantity*) -> **Promise\<result\>** ##
 
 Attempts to purchase a given quantity of a security at a maximum price.
 
@@ -789,7 +789,7 @@ Attempts to purchase a given quantity of a security at a maximum price.
 
 <a id="placeStopLimitBuy"></a>
 
-## **trade**.placeStopLimitBuy(*tokens*,*accountId*, *ticker*, *stop*, *limit*, *quantity*) -> **Promise\<result\>** ##
+## **trade**.placeStopLimitBuy(*tokens*, *accountId*, *ticker*, *stop*, *limit*, *quantity*) -> **Promise\<result\>** ##
 
 Attempts to stop limit purchase a given quantity of a security at the provided stop and limit prices.
 
@@ -821,7 +821,7 @@ Attempts to stop limit purchase a given quantity of a security at the provided s
 
 <a id="placeMarketSell"></a>
 
-## **trade**.placeMarketSell(*tokens*,*accountId*, *ticker*, *quantity*) -> **Promise\<result\>** ##
+## **trade**.placeMarketSell(*tokens*, *accountId*, *ticker*, *quantity*) -> **Promise\<result\>** ##
 
 Attempts to market sell a given quantity of a security.
 
