@@ -282,6 +282,28 @@ const wealthsimple = {
     handleRequest(endpoints.SECURITY, { ticker }, tokens),
 
   /**
+   * Market buy a security through the WealthSimple Trade application.
+   *
+   * @param {*} tokens The access and refresh tokens returned by a successful login.
+   * @param {*} accountId The account to make the transaction from
+   * @param {*} ticker The security symbol
+   * @param {*} quantity The number of securities to purchase
+   */
+  placeMarketBuy: async(tokens, accountId, ticker, quantity) =>
+    handleRequest(endpoints.PLACE_ORDER, {
+      accountId,
+      security_id: (await wealthsimple.getSecurity(tokens, ticker)).id,
+      quantity,
+
+      // The endpoint requires *any* limit price, even though it doesn't use it...
+      limit_price: 0.01,
+
+      order_type: "buy_quantity",
+      order_sub_type: "market",
+      time_in_force: "day"
+    }, tokens),
+
+  /**
    * Limit buy a security through the WealthSimple Trade application.
    *
    * @param {*} tokens The access and refresh tokens returned by a successful login.
@@ -331,6 +353,24 @@ const wealthsimple = {
       time_in_force: "day"
     }, tokens);
   },
+
+  /**
+   * Market sell a security through the WealthSimple Trade application.
+   *
+   * @param {*} tokens The access and refresh tokens returned by a successful login.
+   * @param {*} accountId The account to make the transaction from
+   * @param {*} ticker The security symbol
+   * @param {*} quantity The number of securities to purchase
+   */
+  placeMarketSell: async(tokens, accountId, ticker, quantity) =>
+    handleRequest(endpoints.PLACE_ORDER, {
+      accountId,
+      security_id: (await wealthsimple.getSecurity(tokens, ticker)).id,
+      quantity,
+      order_type: "sell_quantity",
+      order_sub_type: "market",
+      time_in_force: "day"
+    }, tokens),
 
   /**
    * Limit sell a security through the WealthSimple Trade application.

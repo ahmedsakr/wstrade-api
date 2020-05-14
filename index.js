@@ -485,6 +485,35 @@ const wealthsimple = {
   }(),
 
   /**
+   * Market buy a security through the WealthSimple Trade application.
+   *
+   * @param {*} tokens The access and refresh tokens returned by a successful login.
+   * @param {*} accountId The account to make the transaction from
+   * @param {*} ticker The security symbol
+   * @param {*} quantity The number of securities to purchase
+   */
+  placeMarketBuy: function () {
+    var _placeMarketBuy = _asyncToGenerator(function* (tokens, accountId, ticker, quantity) {
+      return handleRequest(_endpoints.default.PLACE_ORDER, {
+        accountId,
+        security_id: (yield wealthsimple.getSecurity(tokens, ticker)).id,
+        quantity,
+        // The endpoint requires *any* limit price, even though it doesn't use it...
+        limit_price: 0.01,
+        order_type: "buy_quantity",
+        order_sub_type: "market",
+        time_in_force: "day"
+      }, tokens);
+    });
+
+    function placeMarketBuy(_x38, _x39, _x40, _x41) {
+      return _placeMarketBuy.apply(this, arguments);
+    }
+
+    return placeMarketBuy;
+  }(),
+
+  /**
    * Limit buy a security through the WealthSimple Trade application.
    *
    * @param {*} tokens The access and refresh tokens returned by a successful login.
@@ -506,7 +535,7 @@ const wealthsimple = {
       }, tokens);
     });
 
-    function placeLimitBuy(_x38, _x39, _x40, _x41, _x42) {
+    function placeLimitBuy(_x42, _x43, _x44, _x45, _x46) {
       return _placeLimitBuy.apply(this, arguments);
     }
 
@@ -545,11 +574,38 @@ const wealthsimple = {
       }, tokens);
     });
 
-    function placeStopLimitBuy(_x43, _x44, _x45, _x46, _x47, _x48) {
+    function placeStopLimitBuy(_x47, _x48, _x49, _x50, _x51, _x52) {
       return _placeStopLimitBuy.apply(this, arguments);
     }
 
     return placeStopLimitBuy;
+  }(),
+
+  /**
+   * Market sell a security through the WealthSimple Trade application.
+   *
+   * @param {*} tokens The access and refresh tokens returned by a successful login.
+   * @param {*} accountId The account to make the transaction from
+   * @param {*} ticker The security symbol
+   * @param {*} quantity The number of securities to purchase
+   */
+  placeMarketSell: function () {
+    var _placeMarketSell = _asyncToGenerator(function* (tokens, accountId, ticker, quantity) {
+      return handleRequest(_endpoints.default.PLACE_ORDER, {
+        accountId,
+        security_id: (yield wealthsimple.getSecurity(tokens, ticker)).id,
+        quantity,
+        order_type: "sell_quantity",
+        order_sub_type: "market",
+        time_in_force: "day"
+      }, tokens);
+    });
+
+    function placeMarketSell(_x53, _x54, _x55, _x56) {
+      return _placeMarketSell.apply(this, arguments);
+    }
+
+    return placeMarketSell;
   }(),
 
   /**
@@ -574,7 +630,7 @@ const wealthsimple = {
       }, tokens);
     });
 
-    function placeLimitSell(_x49, _x50, _x51, _x52, _x53) {
+    function placeLimitSell(_x57, _x58, _x59, _x60, _x61) {
       return _placeLimitSell.apply(this, arguments);
     }
 
@@ -613,7 +669,7 @@ const wealthsimple = {
       }, tokens);
     });
 
-    function placeStopLimitSell(_x54, _x55, _x56, _x57, _x58, _x59) {
+    function placeStopLimitSell(_x62, _x63, _x64, _x65, _x66, _x67) {
       return _placeStopLimitSell.apply(this, arguments);
     }
 
