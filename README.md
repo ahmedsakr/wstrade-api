@@ -85,8 +85,10 @@ does all of the API calls.
 * [trade.cancelOrder()](#cancelOrder)
 * [trade.cancelPendingOrders()](#cancelPendingOrders)
 * [trade.getSecurity()](#getSecurity)
+* [trade.placeMarketBuy()](#placeMarketBuy)
 * [trade.placeLimitBuy()](#placeLimitBuy)
 * [trade.placeStopLimitBuy()](#placeStopLimitBuy)
+* [trade.placeMarketSell()](#placeMarketSell)
 * [trade.placeLimitSell()](#placeLimitSell)
 * [trade.placeStopLimitSell()](#placeStopLimitSell)
 
@@ -721,6 +723,37 @@ Information about a security on the WealthSimple Trade Platform.
 }
 ```
 
+
+[Back to top—>](#index)
+
+
+<a id="placeMarketBuy"></a>
+
+## **trade**.placeMarketBuy(*tokens*,*accountId*, *ticker*, *quantity*) -> **Promise\<result\>** ##
+
+Attempts to market buy a given quantity of a security.
+
+
+| Parameters|Required|
+|----------|---------------------|
+| tokens |Yes|
+| accountId |Yes|
+| ticker |Yes|
+| quantity |Yes|
+
+
+
+
+### Return on Success
+
+```javascript
+{
+    // Confirmation and details of the market buy
+    ...
+}
+```
+
+
 [Back to top—>](#index)
 
 
@@ -782,6 +815,37 @@ Attempts to stop limit purchase a given quantity of a security at the provided s
     ...
 }
 ```
+
+[Back to top—>](#index)
+
+
+<a id="placeMarketSell"></a>
+
+## **trade**.placeMarketSell(*tokens*,*accountId*, *ticker*, *quantity*) -> **Promise\<result\>** ##
+
+Attempts to market sell a given quantity of a security.
+
+
+| Parameters|Required|
+|----------|---------------------|
+| tokens |Yes|
+| accountId |Yes|
+| ticker |Yes|
+| quantity |Yes|
+
+
+
+
+### Return on Success
+
+```javascript
+{
+    // Confirmation and details of the market sell
+    ...
+}
+```
+
+
 
 [Back to top—>](#index)
 
