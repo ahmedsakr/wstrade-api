@@ -1,3 +1,9 @@
+<div style="max-height: 50px; max-width: 150px;">
+<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6a/JavaScript-logo.png/900px-JavaScript-logo.png" width="50px" height="50px">
+
+<img src="https://cdn.worldvectorlogo.com/logos/typescript.svg" width="50px" height="50px">
+</div>
+
 # wstrade-api
 
 A tiny Unofficial WealthSimple Trade API Wrapper for JavaScript, supporting the core abilities of the WealthSimple Trade application including placing orders, viewing and cancelling orders, and more.
