@@ -1,6 +1,10 @@
+<div style="max-height: 50px; max-width: 150px;">
 <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6a/JavaScript-logo.png/900px-JavaScript-logo.png" style="width: 50px !important; height: 50px !important;">
 
 <img src="https://cdn.worldvectorlogo.com/logos/typescript.svg" style="width: 50px !important; height: 50px !important;">
+</div>
+
+
 
 # wstrade-api
 
