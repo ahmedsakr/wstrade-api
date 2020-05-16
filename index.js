@@ -233,6 +233,23 @@ const wealthsimple = {
   }(),
 
   /**
+   * Retrieves the most recent 20 activities on the WealthSimple Trade Account.
+   *
+   * @param {*} tokens The access and refresh tokens returned by a successful login.ss
+   */
+  getActivities: function () {
+    var _getActivities = _asyncToGenerator(function* (tokens) {
+      return handleRequest(_endpoints.default.ACTIVITIES, {}, tokens);
+    });
+
+    function getActivities(_x12) {
+      return _getActivities.apply(this, arguments);
+    }
+
+    return getActivities;
+  }(),
+
+  /**
    * Retains all bank accounts linked to the WealthSimple Trade account.
    *
    * @param {*} tokens The access and refresh tokens returned by a successful login.
@@ -242,7 +259,7 @@ const wealthsimple = {
       return handleRequest(_endpoints.default.BANK_ACCOUNTS, {}, tokens);
     });
 
-    function getBankAccounts(_x12) {
+    function getBankAccounts(_x13) {
       return _getBankAccounts.apply(this, arguments);
     }
 
@@ -259,7 +276,7 @@ const wealthsimple = {
       return handleRequest(_endpoints.default.DEPOSITS, {}, tokens);
     });
 
-    function getDeposits(_x13) {
+    function getDeposits(_x14) {
       return _getDeposits.apply(this, arguments);
     }
 
@@ -277,7 +294,7 @@ const wealthsimple = {
       return handleRequest(_endpoints.default.EXCHANGE_RATES, {}, tokens);
     });
 
-    function getExchangeRates(_x14) {
+    function getExchangeRates(_x15) {
       return _getExchangeRates.apply(this, arguments);
     }
 
@@ -297,7 +314,7 @@ const wealthsimple = {
       }, tokens);
     });
 
-    function getPositions(_x15, _x16) {
+    function getPositions(_x16, _x17) {
       return _getPositions.apply(this, arguments);
     }
 
@@ -320,7 +337,7 @@ const wealthsimple = {
       }, tokens);
     });
 
-    function getOrdersByPage(_x17, _x18, _x19) {
+    function getOrdersByPage(_x18, _x19, _x20) {
       return _getOrdersByPage.apply(this, arguments);
     }
 
@@ -341,7 +358,7 @@ const wealthsimple = {
       }, tokens);
     });
 
-    function getOrders(_x20, _x21) {
+    function getOrders(_x21, _x22) {
       return _getOrders.apply(this, arguments);
     }
 
@@ -364,7 +381,7 @@ const wealthsimple = {
       }, tokens);
     });
 
-    function getPendingOrders(_x22, _x23, _x24) {
+    function getPendingOrders(_x23, _x24, _x25) {
       return _getPendingOrders.apply(this, arguments);
     }
 
@@ -387,7 +404,7 @@ const wealthsimple = {
       }, tokens);
     });
 
-    function getFilledOrders(_x25, _x26, _x27) {
+    function getFilledOrders(_x26, _x27, _x28) {
       return _getFilledOrders.apply(this, arguments);
     }
 
@@ -410,7 +427,7 @@ const wealthsimple = {
       }, tokens);
     });
 
-    function getCancelledOrders(_x28, _x29, _x30) {
+    function getCancelledOrders(_x29, _x30, _x31) {
       return _getCancelledOrders.apply(this, arguments);
     }
 
@@ -430,7 +447,7 @@ const wealthsimple = {
       }, tokens);
     });
 
-    function cancelOrder(_x31, _x32) {
+    function cancelOrder(_x32, _x33) {
       return _cancelOrder.apply(this, arguments);
     }
 
@@ -451,13 +468,13 @@ const wealthsimple = {
           return yield wealthsimple.cancelOrder(tokens, order.order_id);
         });
 
-        return function (_x35) {
+        return function (_x36) {
           return _ref.apply(this, arguments);
         };
       }()));
     });
 
-    function cancelPendingOrders(_x33, _x34) {
+    function cancelPendingOrders(_x34, _x35) {
       return _cancelPendingOrders.apply(this, arguments);
     }
 
@@ -477,7 +494,7 @@ const wealthsimple = {
       }, tokens);
     });
 
-    function getSecurity(_x36, _x37) {
+    function getSecurity(_x37, _x38) {
       return _getSecurity.apply(this, arguments);
     }
 
@@ -506,7 +523,7 @@ const wealthsimple = {
       }, tokens);
     });
 
-    function placeMarketBuy(_x38, _x39, _x40, _x41) {
+    function placeMarketBuy(_x39, _x40, _x41, _x42) {
       return _placeMarketBuy.apply(this, arguments);
     }
 
@@ -535,7 +552,7 @@ const wealthsimple = {
       }, tokens);
     });
 
-    function placeLimitBuy(_x42, _x43, _x44, _x45, _x46) {
+    function placeLimitBuy(_x43, _x44, _x45, _x46, _x47) {
       return _placeLimitBuy.apply(this, arguments);
     }
 
@@ -574,7 +591,7 @@ const wealthsimple = {
       }, tokens);
     });
 
-    function placeStopLimitBuy(_x47, _x48, _x49, _x50, _x51, _x52) {
+    function placeStopLimitBuy(_x48, _x49, _x50, _x51, _x52, _x53) {
       return _placeStopLimitBuy.apply(this, arguments);
     }
 
@@ -601,7 +618,7 @@ const wealthsimple = {
       }, tokens);
     });
 
-    function placeMarketSell(_x53, _x54, _x55, _x56) {
+    function placeMarketSell(_x54, _x55, _x56, _x57) {
       return _placeMarketSell.apply(this, arguments);
     }
 
@@ -630,7 +647,7 @@ const wealthsimple = {
       }, tokens);
     });
 
-    function placeLimitSell(_x57, _x58, _x59, _x60, _x61) {
+    function placeLimitSell(_x58, _x59, _x60, _x61, _x62) {
       return _placeLimitSell.apply(this, arguments);
     }
 
@@ -669,7 +686,7 @@ const wealthsimple = {
       }, tokens);
     });
 
-    function placeStopLimitSell(_x62, _x63, _x64, _x65, _x66, _x67) {
+    function placeStopLimitSell(_x63, _x64, _x65, _x66, _x67, _x68) {
       return _placeStopLimitSell.apply(this, arguments);
     }
 

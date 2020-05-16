@@ -114,6 +114,20 @@ const WealthSimpleTradeEndpoints = {
   },
 
   /*
+   * Provides the most recent 20 activities (deposits, dividends, orders, etc) on the WealthSimple
+   * Trade account.
+   */
+  ACTIVITIES: {
+    method: "GET",
+    url: "https://trade-service.wealthsimple.com/account/activities",
+    onSuccess: async (request) => {
+      const data = await request.response.json();
+      return data.results;
+    },
+    onFailure: defaultEndpointBehaviour.onFailure
+  },
+
+  /*
    * All deposits under the WealthSimple Trade account
    */
   DEPOSITS: {
