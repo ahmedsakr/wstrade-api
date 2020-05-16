@@ -161,11 +161,12 @@ const WealthSimpleTradeEndpoints = {
   },
 
   /*
-   * All deposits under the WealthSimple Trade account
+   * Provides the most recent 20 activities (deposits, dividends, orders, etc) on the WealthSimple
+   * Trade account.
    */
-  DEPOSITS: {
+  ACTIVITIES: {
     method: "GET",
-    url: "https://trade-service.wealthsimple.com/deposits",
+    url: "https://trade-service.wealthsimple.com/account/activities",
     onSuccess: function () {
       var _onSuccess5 = _asyncToGenerator(function* (request) {
         const data = yield request.response.json();
@@ -182,11 +183,11 @@ const WealthSimpleTradeEndpoints = {
   },
 
   /*
-   * All linked bank accounts under the WealthSimple Trade account
+   * All deposits under the WealthSimple Trade account
    */
-  BANK_ACCOUNTS: {
+  DEPOSITS: {
     method: "GET",
-    url: "https://trade-service.wealthsimple.com/bank-accounts",
+    url: "https://trade-service.wealthsimple.com/deposits",
     onSuccess: function () {
       var _onSuccess6 = _asyncToGenerator(function* (request) {
         const data = yield request.response.json();
@@ -195,6 +196,27 @@ const WealthSimpleTradeEndpoints = {
 
       function onSuccess(_x7) {
         return _onSuccess6.apply(this, arguments);
+      }
+
+      return onSuccess;
+    }(),
+    onFailure: defaultEndpointBehaviour.onFailure
+  },
+
+  /*
+   * All linked bank accounts under the WealthSimple Trade account
+   */
+  BANK_ACCOUNTS: {
+    method: "GET",
+    url: "https://trade-service.wealthsimple.com/bank-accounts",
+    onSuccess: function () {
+      var _onSuccess7 = _asyncToGenerator(function* (request) {
+        const data = yield request.response.json();
+        return data.results;
+      });
+
+      function onSuccess(_x8) {
+        return _onSuccess7.apply(this, arguments);
       }
 
       return onSuccess;
@@ -222,7 +244,7 @@ const WealthSimpleTradeEndpoints = {
       0: "ticker"
     },
     onSuccess: function () {
-      var _onSuccess7 = _asyncToGenerator(function* (request) {
+      var _onSuccess8 = _asyncToGenerator(function* (request) {
         let data = yield request.response.json();
 
         if (data.results.length === 0) {
@@ -234,8 +256,8 @@ const WealthSimpleTradeEndpoints = {
         return data.results[0];
       });
 
-      function onSuccess(_x8) {
-        return _onSuccess7.apply(this, arguments);
+      function onSuccess(_x9) {
+        return _onSuccess8.apply(this, arguments);
       }
 
       return onSuccess;
@@ -253,13 +275,13 @@ const WealthSimpleTradeEndpoints = {
       0: "accountId"
     },
     onSuccess: function () {
-      var _onSuccess8 = _asyncToGenerator(function* (request) {
+      var _onSuccess9 = _asyncToGenerator(function* (request) {
         const data = yield request.response.json();
         return data.results;
       });
 
-      function onSuccess(_x9) {
-        return _onSuccess8.apply(this, arguments);
+      function onSuccess(_x10) {
+        return _onSuccess9.apply(this, arguments);
       }
 
       return onSuccess;
@@ -278,7 +300,7 @@ const WealthSimpleTradeEndpoints = {
       1: "accountId"
     },
     onSuccess: function () {
-      var _onSuccess9 = _asyncToGenerator(function* (request) {
+      var _onSuccess10 = _asyncToGenerator(function* (request) {
         const data = yield request.response.json();
         return {
           total: data.total,
@@ -286,8 +308,8 @@ const WealthSimpleTradeEndpoints = {
         };
       });
 
-      function onSuccess(_x10) {
-        return _onSuccess9.apply(this, arguments);
+      function onSuccess(_x11) {
+        return _onSuccess10.apply(this, arguments);
       }
 
       return onSuccess;
@@ -306,7 +328,7 @@ const WealthSimpleTradeEndpoints = {
       0: "accountId"
     },
     onSuccess: function () {
-      var _onSuccess10 = _asyncToGenerator(function* (request, tokens) {
+      var _onSuccess11 = _asyncToGenerator(function* (request, tokens) {
         const data = yield request.response.json();
         const pages = Math.ceil(data.total / ORDERS_PER_PAGE);
         let orders = data.results;
@@ -325,8 +347,8 @@ const WealthSimpleTradeEndpoints = {
         };
       });
 
-      function onSuccess(_x11, _x12) {
-        return _onSuccess10.apply(this, arguments);
+      function onSuccess(_x12, _x13) {
+        return _onSuccess11.apply(this, arguments);
       }
 
       return onSuccess;
@@ -344,7 +366,7 @@ const WealthSimpleTradeEndpoints = {
       0: "accountId"
     },
     onSuccess: function () {
-      var _onSuccess11 = _asyncToGenerator(function* (request, tokens) {
+      var _onSuccess12 = _asyncToGenerator(function* (request, tokens) {
         const data = yield request.response.json();
         const pages = Math.ceil(data.total / ORDERS_PER_PAGE); // The ticker symbol restricts the pending orders to a specific security
 
@@ -365,8 +387,8 @@ const WealthSimpleTradeEndpoints = {
         };
       });
 
-      function onSuccess(_x13, _x14) {
-        return _onSuccess11.apply(this, arguments);
+      function onSuccess(_x14, _x15) {
+        return _onSuccess12.apply(this, arguments);
       }
 
       return onSuccess;
@@ -384,15 +406,15 @@ const WealthSimpleTradeEndpoints = {
       0: "orderId"
     },
     onSuccess: function () {
-      var _onSuccess12 = _asyncToGenerator(function* (request) {
+      var _onSuccess13 = _asyncToGenerator(function* (request) {
         return {
           order: request.arguments.orderId,
           response: yield request.response.json()
         };
       });
 
-      function onSuccess(_x15) {
-        return _onSuccess12.apply(this, arguments);
+      function onSuccess(_x16) {
+        return _onSuccess13.apply(this, arguments);
       }
 
       return onSuccess;

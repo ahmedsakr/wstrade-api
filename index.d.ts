@@ -73,6 +73,13 @@ declare namespace Trade {
     function getHistory(tokens: AuthTokens, interval: HistoryInterval, accountId: string): Promise<any>;
 
     /**
+     * Retrieves the most recent 20 activities on the WealthSimple Trade Account.
+     *
+     * @param {*} tokens The access and refresh tokens returned by a successful login.ss
+     */
+    function getActivities(tokens: AuthTokens): Promise<Array<any>>;
+
+    /**
      * Retains all bank accounts linked to the WealthSimple Trade account.
      *
      * @param {*} tokens The access and refresh tokens returned by a successful login.

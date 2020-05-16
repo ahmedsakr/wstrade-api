@@ -149,6 +149,14 @@ const wealthsimple = {
    */
   getHistory: async (tokens, interval, accountId) =>
     handleRequest(endpoints.HISTORY_ACCOUNT, { interval, accountId }, tokens),
+  
+  /**
+   * Retrieves the most recent 20 activities on the WealthSimple Trade Account.
+   *
+   * @param {*} tokens The access and refresh tokens returned by a successful login.ss
+   */
+  getActivities: async (tokens) =>
+    handleRequest(endpoints.ACTIVITIES, {}, tokens),
 
   /**
    * Retains all bank accounts linked to the WealthSimple Trade account.

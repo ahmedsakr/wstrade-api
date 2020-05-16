@@ -79,6 +79,7 @@ does all of the API calls.
 * [trade.getAccounts()](#getAccounts)
 * [trade.getAccountData()](#getAccountData)
 * [trade.getHistory()](#getHistory)
+* [trade.getActivities()](#getActivities)
 * [trade.getBankAccounts()](#getBankAccounts)
 * [trade.getDeposits()](#getDeposits)
 * [trade.getExchangeRates()](#getExchangeRates)
@@ -302,7 +303,45 @@ in the provided time interval.
 }
 ```
 
+
 [Back to top—>](#index)
+
+
+<a id="getActivities"></a>
+
+## **trade**.getActivities(*tokens*) -> **Promise\<result\>**
+
+
+Provides the most recent 20 activities (deposits, dividends, orders, etc) on the WealthSimple
+Trade account.
+
+
+| Parameters|Required|   
+|----------|---------------------|
+| tokens |Yes|
+
+### Return on Success
+
+```javascript
+[
+
+    // Activity 1 details
+    {
+        ...
+    },
+
+    // Activity 2 details
+    {
+        ...
+    },
+    
+    ...
+]
+```
+
+
+[Back to top—>](#index)
+
 
 
 <a id="getBankAccounts"></a>
@@ -412,7 +451,7 @@ Lists all active positions under the trading account associated with the account
 | Parameters|Required|
 |----------|---------------------|
 | tokens |Yes|
-| accountID|Yes|
+| accountId|Yes|
 
 ### Return on Success
 
@@ -449,7 +488,7 @@ you specify a page that exceeds the number of pages, the results list will be em
 | Parameters|Required|Acceptable Values|
 |----------|---------------------|----------|
 | tokens |Yes||
-| accountID|Yes||
+| accountId|Yes||
 | page|Yes|```>=1```
 
 ### Return on Success
@@ -490,7 +529,7 @@ Grabs all orders (filled, pending, and cancelled) from a specific account under 
 | Parameters|Required|
 |----------|---------------------|
 | tokens |Yes|
-| accountID|Yes|
+| accountId|Yes|
 
 ### Return on Success
 
@@ -531,7 +570,7 @@ Grabs all pending orders for the specified account under the WealthSimple Trade 
 | Parameters|Required|
 |----------|---------------------|
 | tokens |Yes|
-| accountID|Yes|
+| accountId|Yes|
 | ticker   |No
 
 ### Return on Success
@@ -573,7 +612,7 @@ Grabs all filled orders for the specified account under the WealthSimple Trade a
 | Parameters|Required|
 |----------|---------------------|
 | tokens |Yes|
-| accountID|Yes|
+| accountId|Yes|
 | ticker   |No
 
 ### Return on Success
@@ -615,7 +654,7 @@ Grabs all cancelled orders for the specified account under the WealthSimple Trad
 | Parameters|Required|
 |----------|---------------------|
 | tokens |Yes|
-| accountID|Yes|
+| accountId|Yes|
 | ticker   |No
 
 ### Return on Success
