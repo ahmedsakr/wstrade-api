@@ -325,12 +325,12 @@ Trade account.
 ```javascript
 [
 
-    // Activity 1...
+    // Activity 1 details
     {
         ...
     },
 
-    // Activity 2...
+    // Activity 2 details
     {
         ...
     },
