@@ -285,9 +285,28 @@ const wealthsimple = {
    *
    * @param {*} tokens The access and refresh tokens returned by a successful login.
    * @param {*} ticker The security symbol
+   * @param {*} [exchange] The exchange the security trades in
+   * @param {*} [id] The internal WealthSimple Trade security ID
    */
-  getSecurity: async (tokens, ticker) =>
-    handleRequest(endpoints.SECURITY, { ticker }, tokens),
+  getSecurity: async (tokens, ticker, exchange, id) => {
+    let queryResult = await handleRequest(endpoints.SECURITY, { ticker }, tokens);
+    queryResult = queryResult.filter(security => security.stock.symbol === ticker);
+
+    if (exchange) {
+      queryResult = queryResult.filter(security => security.stock.primary_exchange === exchange);
+    }
+    if (id) {
+      queryResult = queryResult.filter(security => security.id === id);
+    }
+
+    if (queryResult.length > 1) {
+      return Promise.reject({reason: 'Multiple securities matched query.'});
+    } else if (queryResult.length === 0) {
+      return Promise.reject({reason: 'No securities matched query.'});
+    }
+
+    return queryResult[0];
+  },
 
   /**
    * Market buy a security through the WealthSimple Trade application.

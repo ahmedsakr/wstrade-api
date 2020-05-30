@@ -486,15 +486,38 @@ const wealthsimple = {
    *
    * @param {*} tokens The access and refresh tokens returned by a successful login.
    * @param {*} ticker The security symbol
+   * @param {*} [exchange] The exchange the security trades in
+   * @param {*} [id] The internal WealthSimple Trade security ID
    */
   getSecurity: function () {
-    var _getSecurity = _asyncToGenerator(function* (tokens, ticker) {
-      return handleRequest(_endpoints.default.SECURITY, {
+    var _getSecurity = _asyncToGenerator(function* (tokens, ticker, exchange, id) {
+      let queryResult = yield handleRequest(_endpoints.default.SECURITY, {
         ticker
       }, tokens);
+      queryResult = queryResult.filter(security => security.stock.symbol === ticker);
+
+      if (exchange) {
+        queryResult = queryResult.filter(security => security.stock.primary_exchange === exchange);
+      }
+
+      if (id) {
+        queryResult = queryResult.filter(security => security.id === id);
+      }
+
+      if (queryResult.length > 1) {
+        return Promise.reject({
+          reason: 'Multiple securities matched query.'
+        });
+      } else if (queryResult.length === 0) {
+        return Promise.reject({
+          reason: 'No securities matched query.'
+        });
+      }
+
+      return queryResult[0];
     });
 
-    function getSecurity(_x37, _x38) {
+    function getSecurity(_x37, _x38, _x39, _x40) {
       return _getSecurity.apply(this, arguments);
     }
 
@@ -523,7 +546,7 @@ const wealthsimple = {
       }, tokens);
     });
 
-    function placeMarketBuy(_x39, _x40, _x41, _x42) {
+    function placeMarketBuy(_x41, _x42, _x43, _x44) {
       return _placeMarketBuy.apply(this, arguments);
     }
 
@@ -552,7 +575,7 @@ const wealthsimple = {
       }, tokens);
     });
 
-    function placeLimitBuy(_x43, _x44, _x45, _x46, _x47) {
+    function placeLimitBuy(_x45, _x46, _x47, _x48, _x49) {
       return _placeLimitBuy.apply(this, arguments);
     }
 
@@ -591,7 +614,7 @@ const wealthsimple = {
       }, tokens);
     });
 
-    function placeStopLimitBuy(_x48, _x49, _x50, _x51, _x52, _x53) {
+    function placeStopLimitBuy(_x50, _x51, _x52, _x53, _x54, _x55) {
       return _placeStopLimitBuy.apply(this, arguments);
     }
 
@@ -618,7 +641,7 @@ const wealthsimple = {
       }, tokens);
     });
 
-    function placeMarketSell(_x54, _x55, _x56, _x57) {
+    function placeMarketSell(_x56, _x57, _x58, _x59) {
       return _placeMarketSell.apply(this, arguments);
     }
 
@@ -647,7 +670,7 @@ const wealthsimple = {
       }, tokens);
     });
 
-    function placeLimitSell(_x58, _x59, _x60, _x61, _x62) {
+    function placeLimitSell(_x60, _x61, _x62, _x63, _x64) {
       return _placeLimitSell.apply(this, arguments);
     }
 
@@ -686,7 +709,7 @@ const wealthsimple = {
       }, tokens);
     });
 
-    function placeStopLimitSell(_x63, _x64, _x65, _x66, _x67, _x68) {
+    function placeStopLimitSell(_x65, _x66, _x67, _x68, _x69, _x70) {
       return _placeStopLimitSell.apply(this, arguments);
     }
 

@@ -175,8 +175,10 @@ declare namespace Trade {
      *
      * @param {*} tokens The access and refresh tokens returned by a successful login.
      * @param {*} ticker The security symbol
+     * @param {*} exchange (optional) The exchange the security trades in
+     * @param {*} id (optional) The internal WealthSimple Trade security ID
      */
-    function getSecurity(tokens: AuthTokens, ticker: string): Promise<any>;
+    function getSecurity(tokens: AuthTokens, ticker: string, exchange?: string, id?: string): Promise<any>;
 
     /**
      * Market buy a security through the WealthSimple Trade application.

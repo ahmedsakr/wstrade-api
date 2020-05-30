@@ -253,7 +253,7 @@ const WealthSimpleTradeEndpoints = {
           });
         }
 
-        return data.results[0];
+        return data.results;
       });
 
       function onSuccess(_x9) {
