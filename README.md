@@ -754,10 +754,17 @@ Place a cancellation order for all pending orders in the provided account.
 Information about a security on the WealthSimple Trade Platform.
 
 
-| Parameters|Required|
-|----------|---------------------|
-| tokens |Yes|
-| ticker |Yes|
+| Parameters|Required|Notes|
+|----------|---------------------|-|
+| tokens |Yes| |
+| ticker |Yes| The exchange the security trades on may be included after a colon. For example, `RMD:NYSE`|
+
+The `ticker` parameter may also be an object with the following keys:
+| Key | Required | Notes |
+| --- | -------- | ----- |
+| symbol | Yes | See the `ticker` parameter above. If an exchange is included, it must not conflict with an exchange below. |
+| exchange | No | The exchange the security trades on. |
+| id | No | The internal WealthSimple ID of the security |
 
 ### Return on Success
 

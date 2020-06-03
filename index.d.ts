@@ -5,6 +5,20 @@ export type AuthTokens = {
 
 export type HistoryInterval = '1d'|'1w'|'1m'|'3m'|'1y';
 
+/**
+ * Identifies a security.
+ *
+ * @param {string} symbol The security symbol. An exchange may be added as a suffix, separated from the symbol with a colon.
+ *                        If an exchange suffix is present, then ticker.exchange may only be passed if it references the same exchange.
+ * @param {string} [exchange] (optional) the exchange the security trades in
+ * @param {string} [id] (optional) The internal WealthSimple Trade security ID
+ */
+export type SecurityIdentifier = {
+    symbol: string,
+    exchange?: string,
+    string?: id
+};
+
 declare namespace Trade {
 
     // The standard failure return for all API calls
@@ -170,15 +184,14 @@ declare namespace Trade {
      */
     function cancelPendingOrders(tokens: AuthTokens, accountId: string): Promise<any>;
 
+
     /**
      * Information about a security on the WealthSimple Trade Platform.
      *
      * @param {*} tokens The access and refresh tokens returned by a successful login.
-     * @param {*} ticker The security symbol
-     * @param {*} exchange (optional) The exchange the security trades in
-     * @param {*} id (optional) The internal WealthSimple Trade security ID
+     * @param {string|object} ticker The security symbol. An exchange may be added as a suffix, separated from the symbol with a colon.
      */
-    function getSecurity(tokens: AuthTokens, ticker: string, exchange?: string, id?: string): Promise<any>;
+    function getSecurity(tokens: AuthTokens, ticker: string | SecurityIdentifier): Promise<any>;
 
     /**
      * Market buy a security through the WealthSimple Trade application.

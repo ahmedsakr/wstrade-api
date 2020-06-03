@@ -284,19 +284,39 @@ const wealthsimple = {
    * Information about a security on the WealthSimple Trade Platform.
    *
    * @param {*} tokens The access and refresh tokens returned by a successful login.
-   * @param {*} ticker The security symbol
-   * @param {*} [exchange] The exchange the security trades in
-   * @param {*} [id] The internal WealthSimple Trade security ID
+   * @param {string|object} ticker The security symbol. An exchange may be added as a suffix, separated from the symbol with a colon.
+   * @param {string} ticker.symbol The security symbol. An exchange may be added as a suffix, separated from the symbol with a colon.
+   *                               If an exchange suffix is present, then ticker.exchange may only be passed if it references the same exchange.
+   * @param {string} [ticker.exchange] (optional) the exchange the security trades in
+   * @param {string} [ticker.id] (optional) The internal WealthSimple Trade security ID
    */
-  getSecurity: async (tokens, ticker, exchange, id) => {
-    let queryResult = await handleRequest(endpoints.SECURITY, { ticker }, tokens);
-    queryResult = queryResult.filter(security => security.stock.symbol === ticker);
-
-    if (exchange) {
-      queryResult = queryResult.filter(security => security.stock.primary_exchange === exchange);
+  getSecurity: async (tokens, ticker) => {
+    if (typeof (ticker) === 'string') {
+      ticker = {
+        symbol: ticker
+      }
     }
-    if (id) {
-      queryResult = queryResult.filter(security => security.id === id);
+
+    let tickerParts = ticker.symbol.split(':');
+    if (tickerParts.length > 2) {
+      return Promise.reject({reason: `Illegal ticker: ${ticker.symbol}`});
+    } else if (tickerParts.length === 2) {
+      // ticker is exchange suffixed
+      if (ticker.exchange && tickerParts[1] !== ticker.exchange) {
+        return Promise.reject({reason: `Exchanges provided conflict: ${ticker.exchange}, ${tickerParts[1]}`});
+      }
+      ticker.exchange = tickerParts[1];
+      ticker.symbol = tickerParts[0];
+    }
+
+    let queryResult = await handleRequest(endpoints.SECURITY, { ticker: ticker.symbol }, tokens);
+    queryResult = queryResult.filter(security => security.stock.symbol === ticker.symbol);
+
+    if (ticker.exchange) {
+      queryResult = queryResult.filter(security => security.stock.primary_exchange === ticker.exchange);
+    }
+    if (ticker.id) {
+      queryResult = queryResult.filter(security => security.id === ticker.id);
     }
 
     if (queryResult.length > 1) {

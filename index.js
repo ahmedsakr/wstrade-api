@@ -485,23 +485,49 @@ const wealthsimple = {
    * Information about a security on the WealthSimple Trade Platform.
    *
    * @param {*} tokens The access and refresh tokens returned by a successful login.
-   * @param {*} ticker The security symbol
-   * @param {*} [exchange] The exchange the security trades in
-   * @param {*} [id] The internal WealthSimple Trade security ID
+   * @param {string|object} ticker The security symbol. An exchange may be added as a suffix, separated from the symbol with a colon.
+   * @param {string} ticker.symbol The security symbol. An exchange may be added as a suffix, separated from the symbol with a colon.
+   *                               If an exchange suffix is present, then ticker.exchange may only be passed if it references the same exchange.
+   * @param {string} [ticker.exchange] (optional) the exchange the security trades in
+   * @param {string} [ticker.id] (optional) The internal WealthSimple Trade security ID
    */
   getSecurity: function () {
-    var _getSecurity = _asyncToGenerator(function* (tokens, ticker, exchange, id) {
-      let queryResult = yield handleRequest(_endpoints.default.SECURITY, {
-        ticker
-      }, tokens);
-      queryResult = queryResult.filter(security => security.stock.symbol === ticker);
-
-      if (exchange) {
-        queryResult = queryResult.filter(security => security.stock.primary_exchange === exchange);
+    var _getSecurity = _asyncToGenerator(function* (tokens, ticker) {
+      if (typeof ticker === 'string') {
+        ticker = {
+          symbol: ticker
+        };
       }
 
-      if (id) {
-        queryResult = queryResult.filter(security => security.id === id);
+      let tickerParts = ticker.symbol.split(':');
+
+      if (tickerParts.length > 2) {
+        return Promise.reject({
+          reason: `Illegal ticker: ${ticker.symbol}`
+        });
+      } else if (tickerParts.length === 2) {
+        // ticker is exchange suffixed
+        if (ticker.exchange && tickerParts[1] !== ticker.exchange) {
+          return Promise.reject({
+            reason: `Exchanges provided conflict: ${ticker.exchange}, ${tickerParts[1]}`
+          });
+        }
+
+        ticker.exchange = tickerParts[1];
+        ticker.symbol = tickerParts[0];
+      }
+
+      let queryResult = yield handleRequest(_endpoints.default.SECURITY, {
+        ticker: ticker.symbol
+      }, tokens);
+      queryResult = queryResult.filter(security => security.stock.symbol === ticker.symbol);
+
+      if (ticker.exchange) {
+        queryResult = queryResult.filter(security => security.stock.primary_exchange === ticker.exchange);
+      }
+
+      if (ticker.id) {
+        queryResult = queryResult.filter(security => security.id === ticker.id);
       }
 
       if (queryResult.length > 1) {
@@ -517,7 +543,7 @@ const wealthsimple = {
       return queryResult[0];
     });
 
-    function getSecurity(_x37, _x38, _x39, _x40) {
+    function getSecurity(_x37, _x38) {
       return _getSecurity.apply(this, arguments);
     }
 
@@ -546,7 +572,7 @@ const wealthsimple = {
       }, tokens);
     });
 
-    function placeMarketBuy(_x41, _x42, _x43, _x44) {
+    function placeMarketBuy(_x39, _x40, _x41, _x42) {
       return _placeMarketBuy.apply(this, arguments);
     }
 
@@ -575,7 +601,7 @@ const wealthsimple = {
       }, tokens);
     });
 
-    function placeLimitBuy(_x45, _x46, _x47, _x48, _x49) {
+    function placeLimitBuy(_x43, _x44, _x45, _x46, _x47) {
       return _placeLimitBuy.apply(this, arguments);
     }
 
@@ -614,7 +640,7 @@ const wealthsimple = {
       }, tokens);
     });
 
-    function placeStopLimitBuy(_x50, _x51, _x52, _x53, _x54, _x55) {
+    function placeStopLimitBuy(_x48, _x49, _x50, _x51, _x52, _x53) {
       return _placeStopLimitBuy.apply(this, arguments);
     }
 
@@ -641,7 +667,7 @@ const wealthsimple = {
       }, tokens);
     });
 
-    function placeMarketSell(_x56, _x57, _x58, _x59) {
+    function placeMarketSell(_x54, _x55, _x56, _x57) {
       return _placeMarketSell.apply(this, arguments);
     }
 
@@ -670,7 +696,7 @@ const wealthsimple = {
       }, tokens);
     });
 
-    function placeLimitSell(_x60, _x61, _x62, _x63, _x64) {
+    function placeLimitSell(_x58, _x59, _x60, _x61, _x62) {
       return _placeLimitSell.apply(this, arguments);
     }
 
@@ -709,7 +735,7 @@ const wealthsimple = {
       }, tokens);
     });
 
-    function placeStopLimitSell(_x65, _x66, _x67, _x68, _x69, _x70) {
+    function placeStopLimitSell(_x63, _x64, _x65, _x66, _x67, _x68) {
       return _placeStopLimitSell.apply(this, arguments);
     }
 
