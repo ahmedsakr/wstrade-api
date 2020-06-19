@@ -24,7 +24,7 @@ My recommendation is to be very conservative on how many orders you place within
 the maximum amount of orders is by any timeframe, but if you have a gut feeling that it is too much, then it is too much.
 
 A user of wstrade-api has observed that trades in excess of 7 per hour are rejected by the WealthSimple Trade servers. You
-can use this observation as a baseline of how many trade you can perform on an hourly basis.
+can use this observation as a baseline of how many trades you can perform on an hourly basis.
 
 ## Getting Started
 
