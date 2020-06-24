@@ -765,9 +765,9 @@ Information about a security on the WealthSimple Trade Platform.
 The `ticker` parameter may also be an object with the following keys:
 | Key | Required | Notes |
 | --- | -------- | ----- |
-| symbol | Yes | See the `ticker` parameter above. If an exchange is included, it must not conflict with an exchange below. |
+| symbol | Yes | See the `ticker` parameter above. |
 | exchange | No | The exchange the security trades on. |
-| id | No | The internal WealthSimple ID of the security |
+| id | No | The internal WealthSimple ID of the security. |
 
 ### Return on Success
 
