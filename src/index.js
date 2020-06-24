@@ -284,9 +284,8 @@ const wealthsimple = {
    * Information about a security on the WealthSimple Trade Platform.
    *
    * @param {*} tokens The access and refresh tokens returned by a successful login.
-   * @param {string|object} ticker The security symbol. An exchange may be added as a suffix, separated from the symbol with a colon.
-   * @param {string} ticker.symbol The security symbol. An exchange may be added as a suffix, separated from the symbol with a colon.
-   *                               If an exchange suffix is present, then ticker.exchange may only be passed if it references the same exchange.
+   * @param {string|object} ticker The security symbol. An exchange may be added as a suffix, separated from the symbol with a colon, for example: AAPL:NASDAQ, ENB:TSX
+   * @param {string} ticker.symbol The security symbol.
    * @param {string} [ticker.exchange] (optional) the exchange the security trades in
    * @param {string} [ticker.id] (optional) The internal WealthSimple Trade security ID
    */
@@ -294,16 +293,10 @@ const wealthsimple = {
     if (typeof (ticker) === 'string') {
       ticker = {
         symbol: ticker
-      }
-    }
-
-    let tickerParts = ticker.symbol.split(':');
-    if (tickerParts.length > 2) {
-      return Promise.reject({reason: `Illegal ticker: ${ticker.symbol}`});
-    } else if (tickerParts.length === 2) {
-      // ticker is exchange suffixed
-      if (ticker.exchange && tickerParts[1] !== ticker.exchange) {
-        return Promise.reject({reason: `Exchanges provided conflict: ${ticker.exchange}, ${tickerParts[1]}`});
+      };
+      let tickerParts = ticker.symbol.split(':');
+      if (tickerParts.length > 2) {
+        return Promise.reject({reason: `Illegal ticker: ${ticker.symbol}`});
       }
       ticker.exchange = tickerParts[1];
       ticker.symbol = tickerParts[0];

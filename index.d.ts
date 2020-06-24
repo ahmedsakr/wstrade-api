@@ -8,8 +8,7 @@ export type HistoryInterval = '1d'|'1w'|'1m'|'3m'|'1y';
 /**
  * Identifies a security.
  *
- * @param {string} symbol The security symbol. An exchange may be added as a suffix, separated from the symbol with a colon.
- *                        If an exchange suffix is present, then ticker.exchange may only be passed if it references the same exchange.
+ * @param {string} symbol The security symbol.
  * @param {string} [exchange] (optional) the exchange the security trades in
  * @param {string} [id] (optional) The internal WealthSimple Trade security ID
  */
@@ -189,7 +188,7 @@ declare namespace Trade {
      * Information about a security on the WealthSimple Trade Platform.
      *
      * @param {*} tokens The access and refresh tokens returned by a successful login.
-     * @param {string|object} ticker The security symbol. An exchange may be added as a suffix, separated from the symbol with a colon.
+     * @param {string|object} ticker The security symbol. An exchange may be added as a suffix, separated from the symbol with a colon. For example, AAPL:NASDAQ, ENB:TSX
      */
     function getSecurity(tokens: AuthTokens, ticker: string | SecurityIdentifier): Promise<any>;
 
