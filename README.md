@@ -756,6 +756,16 @@ Place a cancellation order for all pending orders in the provided account.
 
 Information about a security on the WealthSimple Trade Platform.
 
+##### Specifying an exchange
+You are allowed to specify the exchange for securities as part of the `ticker` parameter through a `<symbol>:<exchange>` postfixing format. The supported exchanges id are:
+* **NASDAQ** (NASDAQ exchange)
+* **TSX** (Toronto Stock exchange)
+* **TSX-V** (Toronto Stock exchange (Venture))
+* **NYSE** (New York Stock exchange)
+
+For example, `PSI` trades on the NYSE and TSX stock exchanges. If you wish to retrieve the TSX stock, specify the ticker as `PSI:TSX`. Otherwise, specify the ticker as `PSI:NYSE`.
+
+You could also specify the `ticker` parameter as an object if you prefer not to deal with the string postfixing technique. Back to the previous example for the TSX version of `PSI`, you can specify the ticker parameter as `{symbol: "PSI", exchange: "TSX"}`.
 
 | Parameters|Required|Notes|
 |----------|---------------------|-|
@@ -974,6 +984,7 @@ We use [SemVer](http://semver.org/) for versioning. For the versions available, 
 ## Authors
 
 * **Ahmed Sakr** - *Owner* - [@ahmedsakr](https://github.com/ahmedsakr)
+* **Mitchell Sawatzky** - *Contributor* - [@bufutda](https://github.com/bufutda)
 
 ## License
 

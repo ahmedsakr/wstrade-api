@@ -15,7 +15,7 @@ export type HistoryInterval = '1d'|'1w'|'1m'|'3m'|'1y';
 export type SecurityIdentifier = {
     symbol: string,
     exchange?: string,
-    string?: id
+    id?: string
 };
 
 declare namespace Trade {
