@@ -5,6 +5,19 @@ export type AuthTokens = {
 
 export type HistoryInterval = '1d'|'1w'|'1m'|'3m'|'1y';
 
+/**
+ * Identifies a security.
+ *
+ * @param {string} symbol The security symbol.
+ * @param {string} [exchange] (optional) the exchange the security trades in
+ * @param {string} [id] (optional) The internal WealthSimple Trade security ID
+ */
+export type SecurityIdentifier = {
+    symbol: string,
+    exchange?: string,
+    id?: string
+};
+
 declare namespace Trade {
 
     // The standard failure return for all API calls
@@ -134,7 +147,7 @@ declare namespace Trade {
      * @param {*} accountId The specific account in the WealthSimple Trade account
      * @param {*} ticker (optional) The security symbol
      */
-    function getPendingOrders(tokens: AuthTokens, accountId: string, ticker?: string): Promise<any>;
+    function getPendingOrders(tokens: AuthTokens, accountId: string, ticker?: string | SecurityIdentifier): Promise<any>;
   
     /**
      * Retrieves filled orders for the specified security in the account.
@@ -143,7 +156,7 @@ declare namespace Trade {
      * @param {*} accountId The specific account in the WealthSimple Trade account
      * @param {*} ticker (optional) The security symbol
      */
-    function getFilledOrders(tokens: AuthTokens, accountId: string, ticker?: string): Promise<any>;
+    function getFilledOrders(tokens: AuthTokens, accountId: string, ticker?: string | SecurityIdentifier): Promise<any>;
 
     /**
      * Retrieves cancelled orders for the specified security in the account.
@@ -152,7 +165,7 @@ declare namespace Trade {
      * @param {*} accountId The specific account in the WealthSimple Trade account
      * @param {*} ticker (optional) The security symbol
      */
-    function getCancelledOrders(tokens: AuthTokens, accountId: string, ticker?: string): Promise<any>;
+    function getCancelledOrders(tokens: AuthTokens, accountId: string, ticker?: string | SecurityIdentifier): Promise<any>;
 
     /**
      * Cancels the pending order specified by the order id.
@@ -170,13 +183,14 @@ declare namespace Trade {
      */
     function cancelPendingOrders(tokens: AuthTokens, accountId: string): Promise<any>;
 
+
     /**
      * Information about a security on the WealthSimple Trade Platform.
      *
      * @param {*} tokens The access and refresh tokens returned by a successful login.
-     * @param {*} ticker The security symbol
+     * @param {string|object} ticker The security symbol. An exchange may be added as a suffix, separated from the symbol with a colon. For example, AAPL:NASDAQ, ENB:TSX
      */
-    function getSecurity(tokens: AuthTokens, ticker: string): Promise<any>;
+    function getSecurity(tokens: AuthTokens, ticker: string | SecurityIdentifier): Promise<any>;
 
     /**
      * Market buy a security through the WealthSimple Trade application.
@@ -186,7 +200,7 @@ declare namespace Trade {
      * @param {*} ticker The security symbol
      * @param {*} quantity The number of securities to purchase
      */
-    function placeMarketBuy(tokens: AuthTokens, accountId: string, ticker: string, quantity: number): Promise<any>;
+    function placeMarketBuy(tokens: AuthTokens, accountId: string, ticker: string | SecurityIdentifier, quantity: number): Promise<any>;
 
     /**
      * Limit buy a security through the WealthSimple Trade application.
@@ -198,7 +212,7 @@ declare namespace Trade {
      * @param {*} quantity The number of securities to purchase
      */
     function placeLimitBuy(tokens: AuthTokens,
-        accountId: string, ticker: string, limit: number, quantity: number): Promise<any>;
+        accountId: string, ticker: string | SecurityIdentifier, limit: number, quantity: number): Promise<any>;
 
     /**
      * Stop limit buy a security through the WealthSimple Trade application.
@@ -211,7 +225,7 @@ declare namespace Trade {
      * @param {*} quantity The number of securities to purchase
      */
     function placeStopLimitBuy(tokens: AuthTokens,
-        accountId: string, ticker: string, stop: number, limit: number, quantity: number): Promise<any>;
+        accountId: string, ticker: string | SecurityIdentifier, stop: number, limit: number, quantity: number): Promise<any>;
 
     /**
      * Market sell a security through the WealthSimple Trade application.
@@ -221,7 +235,7 @@ declare namespace Trade {
      * @param {*} ticker The security symbol
      * @param {*} quantity The number of securities to purchase
      */
-    function placeMarketSell(tokens: AuthTokens, accountId: string, ticker: string, quantity: number): Promise<any>;
+    function placeMarketSell(tokens: AuthTokens, accountId: string, ticker: string | SecurityIdentifier, quantity: number): Promise<any>;
 
     /**
      * Limit sell a security through the WealthSimple Trade application.
@@ -233,7 +247,7 @@ declare namespace Trade {
      * @param {*} quantity The number of securities to sell
      */
     function placeLimitSell(tokens: AuthTokens,
-        accountId: string, ticker: string, limit: number, quantity: number): Promise<any>;
+        accountId: string, ticker: string | SecurityIdentifier, limit: number, quantity: number): Promise<any>;
 
     /**
      * Stop limit sell a security through the WealthSimple Trade application.
@@ -246,7 +260,7 @@ declare namespace Trade {
      * @param {*} quantity The number of securities to sell
      */
     function placeStopLimitSell(tokens: AuthTokens,
-        accountId: string, ticker: string, stop: number, limit: number, quantity: number): Promise<any>;
+        accountId: string, ticker: string | SecurityIdentifier, stop: number, limit: number, quantity: number): Promise<any>;
 }
 
 export default Trade;

@@ -485,13 +485,53 @@ const wealthsimple = {
    * Information about a security on the WealthSimple Trade Platform.
    *
    * @param {*} tokens The access and refresh tokens returned by a successful login.
-   * @param {*} ticker The security symbol
+   * @param {string|object} ticker The security symbol. An exchange may be added as a suffix, separated from the symbol with a colon, for example: AAPL:NASDAQ, ENB:TSX
+   * @param {string} ticker.symbol The security symbol.
+   * @param {string} [ticker.exchange] (optional) the exchange the security trades in
+   * @param {string} [ticker.id] (optional) The internal WealthSimple Trade security ID
    */
   getSecurity: function () {
     var _getSecurity = _asyncToGenerator(function* (tokens, ticker) {
-      return handleRequest(_endpoints.default.SECURITY, {
-        ticker
+      if (typeof ticker === 'string') {
+        ticker = {
+          symbol: ticker
+        };
+        let tickerParts = ticker.symbol.split(':');
+
+        if (tickerParts.length > 2) {
+          return Promise.reject({
+            reason: `Illegal ticker: ${ticker.symbol}`
+          });
+        }
+
+        ticker.exchange = tickerParts[1];
+        ticker.symbol = tickerParts[0];
+      }
+
+      let queryResult = yield handleRequest(_endpoints.default.SECURITY, {
+        ticker: ticker.symbol
       }, tokens);
+      queryResult = queryResult.filter(security => security.stock.symbol === ticker.symbol);
+
+      if (ticker.exchange) {
+        queryResult = queryResult.filter(security => security.stock.primary_exchange === ticker.exchange);
+      }
+
+      if (ticker.id) {
+        queryResult = queryResult.filter(security => security.id === ticker.id);
+      }
+
+      if (queryResult.length > 1) {
+        return Promise.reject({
+          reason: 'Multiple securities matched query.'
+        });
+      } else if (queryResult.length === 0) {
+        return Promise.reject({
+          reason: 'No securities matched query.'
+        });
+      }
+
+      return queryResult[0];
     });
 
     function getSecurity(_x37, _x38) {
