@@ -427,10 +427,7 @@ const WealthSimpleTradeEndpoints = {
    */
   PLACE_ORDER: {
     method: "POST",
-    url: "https://trade-service.wealthsimple.com/orders?account_id={0}",
-    parameters: {
-      0: "accountId"
-    },
+    url: "https://trade-service.wealthsimple.com/orders",
     onSuccess: defaultEndpointBehaviour.onSuccess,
     onFailure: defaultEndpointBehaviour.onFailure
   }
