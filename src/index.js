@@ -340,7 +340,8 @@ const wealthsimple = {
 
       order_type: "buy_quantity",
       order_sub_type: "market",
-      time_in_force: "day"
+      time_in_force: "day",
+      account_id: accountId
     }, tokens),
 
   /**
@@ -360,7 +361,8 @@ const wealthsimple = {
       quantity,
       order_type: "buy_quantity",
       order_sub_type: "limit",
-      time_in_force: "day"
+      time_in_force: "day",
+      account_id: accountId
     }, tokens),
 
   /**
@@ -390,7 +392,8 @@ const wealthsimple = {
       quantity,
       order_type: "buy_quantity",
       order_sub_type: "stop_limit",
-      time_in_force: "day"
+      time_in_force: "day",
+      account_id: accountId
     }, tokens);
   },
 
@@ -409,7 +412,8 @@ const wealthsimple = {
       quantity,
       order_type: "sell_quantity",
       order_sub_type: "market",
-      time_in_force: "day"
+      time_in_force: "day",
+      account_id: accountId
     }, tokens),
 
   /**
@@ -429,7 +433,8 @@ const wealthsimple = {
       quantity,
       order_type: "sell_quantity",
       order_sub_type: "limit",
-      time_in_force: "day"
+      time_in_force: "day",
+      account_id: accountId
     }, tokens),
 
   /**
@@ -459,7 +464,8 @@ const wealthsimple = {
       quantity,
       order_type: "sell_quantity",
       order_sub_type: "stop_limit",
-      time_in_force: "day"
+      time_in_force: "day",
+      account_id: accountId
     }, tokens);
   }
 }

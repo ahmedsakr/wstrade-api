@@ -26,6 +26,12 @@ the maximum amount of orders is by any timeframe, but if you have a gut feeling 
 A user of wstrade-api has observed that trades in excess of 7 per hour are rejected by the WealthSimple Trade servers. You
 can use this observation as a baseline of how many trades you can perform on an hourly basis.
 
+## Deprecated Versions
+
+* Versions `<= v0.9.0` are deprecated due to a WS Trade architecture change in handling buy and sell APIs. These old versions
+will work for everything except buying and selling. Upgrade to a later version if you wish to use the buying and selling
+APIs.
+
 ## Getting Started
 
 Before playing with **wstrade-api**, you must have a valid
