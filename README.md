@@ -28,7 +28,7 @@ can use this observation as a baseline of how many trades you can perform on an 
 
 ## Deprecated Versions
 
-`<= v0.9.0` is deprecated due to a WS Trade architecture change in handling buy and sell APIs. These old versions
+* Versions `<= v0.9.0` are deprecated due to a WS Trade architecture change in handling buy and sell APIs. These old versions
 will work for everything except buying and selling. Upgrade to a later version if you wish to use the buying and selling
 APIs.
 
