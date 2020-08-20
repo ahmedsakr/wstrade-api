@@ -758,7 +758,7 @@ Place a cancellation order for all pending orders in the provided account.
 
 <a id="getSecurity"></a>
 
-## **trade**.getSecurity(*tokens*, *ticker*) -> **Promise\<result\>**
+## **trade**.getSecurity(*tokens*, *ticker*, *extensive*) -> **Promise\<result\>**
 
 Information about a security on the WealthSimple Trade Platform.
 
