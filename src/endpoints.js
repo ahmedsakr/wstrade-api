@@ -186,6 +186,11 @@ const WealthSimpleTradeEndpoints = {
     onFailure: defaultEndpointBehaviour.onFailure
   },
 
+  /*
+   * Fetches detailed information about a security using its unique
+   * security identifier. Market quote, bid and ask size, and other information
+   * are returned.
+   */
   EXTENSIVE_SECURITY_DETAILS: {
     method: "GET",
     url: "https://trade-service.wealthsimple.com/securities/{0}",
