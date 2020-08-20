@@ -489,9 +489,10 @@ const wealthsimple = {
    * @param {string} ticker.symbol The security symbol.
    * @param {string} [ticker.exchange] (optional) the exchange the security trades in
    * @param {string} [ticker.id] (optional) The internal WealthSimple Trade security ID
+   * @param {boolean} extensive Pulls a more detailed report of the security using the /securities/{id} API
    */
   getSecurity: function () {
-    var _getSecurity = _asyncToGenerator(function* (tokens, ticker) {
+    var _getSecurity = _asyncToGenerator(function* (tokens, ticker, extensive) {
       if (typeof ticker === 'string') {
         ticker = {
           symbol: ticker
@@ -508,6 +509,17 @@ const wealthsimple = {
         ticker.symbol = tickerParts[0];
       }
 
+      if (ticker.id) {
+        /*
+         * There is no need to filter results based on exchange because we are given the unique id.
+         * 
+         * We will immediately call the extensive details API since we have the id.
+         */
+        return yield handleRequest(_endpoints.default.EXTENSIVE_SECURITY_DETAILS, {
+          id: ticker.id
+        }, tokens);
+      }
+
       let queryResult = yield handleRequest(_endpoints.default.SECURITY, {
         ticker: ticker.symbol
       }, tokens);
@@ -515,10 +527,6 @@ const wealthsimple = {
 
       if (ticker.exchange) {
         queryResult = queryResult.filter(security => security.stock.primary_exchange === ticker.exchange);
-      }
-
-      if (ticker.id) {
-        queryResult = queryResult.filter(security => security.id === ticker.id);
       }
 
       if (queryResult.length > 1) {
@@ -531,10 +539,17 @@ const wealthsimple = {
         });
       }
 
+      if (extensive) {
+        // The caller has opted to receive the extensive details about the security.
+        return yield handleRequest(_endpoints.default.EXTENSIVE_SECURITY_DETAILS, {
+          id: queryResult[0].id
+        }, tokens);
+      }
+
       return queryResult[0];
     });
 
-    function getSecurity(_x37, _x38) {
+    function getSecurity(_x37, _x38, _x39) {
       return _getSecurity.apply(this, arguments);
     }
 
@@ -551,12 +566,11 @@ const wealthsimple = {
    */
   placeMarketBuy: function () {
     var _placeMarketBuy = _asyncToGenerator(function* (tokens, accountId, ticker, quantity) {
+      let extensive_details = yield wealthsimple.getSecurity(tokens, ticker, true);
       return handleRequest(_endpoints.default.PLACE_ORDER, {
-        accountId,
-        security_id: (yield wealthsimple.getSecurity(tokens, ticker)).id,
+        security_id: extensive_details.id,
+        limit_price: extensive_details.quote.amount,
         quantity,
-        // The endpoint requires *any* limit price, even though it doesn't use it...
-        limit_price: 0.01,
         order_type: "buy_quantity",
         order_sub_type: "market",
         time_in_force: "day",
@@ -564,7 +578,7 @@ const wealthsimple = {
       }, tokens);
     });
 
-    function placeMarketBuy(_x39, _x40, _x41, _x42) {
+    function placeMarketBuy(_x40, _x41, _x42, _x43) {
       return _placeMarketBuy.apply(this, arguments);
     }
 
@@ -583,7 +597,6 @@ const wealthsimple = {
   placeLimitBuy: function () {
     var _placeLimitBuy = _asyncToGenerator(function* (tokens, accountId, ticker, limit, quantity) {
       return handleRequest(_endpoints.default.PLACE_ORDER, {
-        accountId,
         security_id: (yield wealthsimple.getSecurity(tokens, ticker)).id,
         limit_price: limit,
         quantity,
@@ -594,7 +607,7 @@ const wealthsimple = {
       }, tokens);
     });
 
-    function placeLimitBuy(_x43, _x44, _x45, _x46, _x47) {
+    function placeLimitBuy(_x44, _x45, _x46, _x47, _x48) {
       return _placeLimitBuy.apply(this, arguments);
     }
 
@@ -622,7 +635,6 @@ const wealthsimple = {
       }
 
       return handleRequest(_endpoints.default.PLACE_ORDER, {
-        accountId,
         security_id: (yield wealthsimple.getSecurity(tokens, ticker)).id,
         stop_price: stop,
         limit_price: limit,
@@ -634,7 +646,7 @@ const wealthsimple = {
       }, tokens);
     });
 
-    function placeStopLimitBuy(_x48, _x49, _x50, _x51, _x52, _x53) {
+    function placeStopLimitBuy(_x49, _x50, _x51, _x52, _x53, _x54) {
       return _placeStopLimitBuy.apply(this, arguments);
     }
 
@@ -651,10 +663,11 @@ const wealthsimple = {
    */
   placeMarketSell: function () {
     var _placeMarketSell = _asyncToGenerator(function* (tokens, accountId, ticker, quantity) {
+      let extensive_details = yield wealthsimple.getSecurity(tokens, ticker, true);
       return handleRequest(_endpoints.default.PLACE_ORDER, {
-        accountId,
-        security_id: (yield wealthsimple.getSecurity(tokens, ticker)).id,
-        quantity,
+        security_id: extensive_details.id,
+        market_value: extensive_details.quote.amount,
+        quantity: quantity,
         order_type: "sell_quantity",
         order_sub_type: "market",
         time_in_force: "day",
@@ -662,7 +675,7 @@ const wealthsimple = {
       }, tokens);
     });
 
-    function placeMarketSell(_x54, _x55, _x56, _x57) {
+    function placeMarketSell(_x55, _x56, _x57, _x58) {
       return _placeMarketSell.apply(this, arguments);
     }
 
@@ -681,7 +694,6 @@ const wealthsimple = {
   placeLimitSell: function () {
     var _placeLimitSell = _asyncToGenerator(function* (tokens, accountId, ticker, limit, quantity) {
       return handleRequest(_endpoints.default.PLACE_ORDER, {
-        accountId,
         security_id: (yield wealthsimple.getSecurity(tokens, ticker)).id,
         limit_price: limit,
         quantity,
@@ -692,7 +704,7 @@ const wealthsimple = {
       }, tokens);
     });
 
-    function placeLimitSell(_x58, _x59, _x60, _x61, _x62) {
+    function placeLimitSell(_x59, _x60, _x61, _x62, _x63) {
       return _placeLimitSell.apply(this, arguments);
     }
 
@@ -720,7 +732,6 @@ const wealthsimple = {
       }
 
       return handleRequest(_endpoints.default.PLACE_ORDER, {
-        accountId,
         security_id: security.id,
         stop_price: stop,
         limit_price: limit,
@@ -732,7 +743,7 @@ const wealthsimple = {
       }, tokens);
     });
 
-    function placeStopLimitSell(_x63, _x64, _x65, _x66, _x67, _x68) {
+    function placeStopLimitSell(_x64, _x65, _x66, _x67, _x68, _x69) {
       return _placeStopLimitSell.apply(this, arguments);
     }
 
