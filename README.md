@@ -773,10 +773,15 @@ For example, `PSI` trades on the NYSE and TSX stock exchanges. If you wish to re
 
 You could also specify the `ticker` parameter as an object if you prefer not to deal with the string postfixing technique. Back to the previous example for the TSX version of `PSI`, you can specify the ticker parameter as `{symbol: "PSI", exchange: "TSX"}`.
 
+### Extensive details
+If you specify the `extensive` parameter as true (or provide the security id), `getSecurity()` will return detailed information about the security, including the market quote.
+
+
 | Parameters|Required|Notes|
 |----------|---------------------|-|
 | tokens |Yes| |
 | ticker |Yes| The exchange the security trades on may be included after a colon. For example, `RMD:NYSE`|
+| extensive |No| Detailed information about the security including quote
 
 The `ticker` parameter may also be an object with the following keys:
 | Key | Required | Notes |

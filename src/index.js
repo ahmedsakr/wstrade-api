@@ -288,8 +288,9 @@ const wealthsimple = {
    * @param {string} ticker.symbol The security symbol.
    * @param {string} [ticker.exchange] (optional) the exchange the security trades in
    * @param {string} [ticker.id] (optional) The internal WealthSimple Trade security ID
+   * @param {boolean} extensive Pulls a more detailed report of the security using the /securities/{id} API
    */
-  getSecurity: async (tokens, ticker) => {
+  getSecurity: async (tokens, ticker, extensive) => {
     if (typeof (ticker) === 'string') {
       ticker = {
         symbol: ticker
@@ -302,20 +303,33 @@ const wealthsimple = {
       ticker.symbol = tickerParts[0];
     }
 
+    if (ticker.id) {
+      
+      /*
+       * There is no need to filter results based on exchange because we are given the unique id.
+       * 
+       * We will immediately call the extensive details API since we have the id.
+       */
+      return await handleRequest(endpoints.EXTENSIVE_SECURITY_DETAILS, { id: ticker.id }, tokens);
+    }
+
     let queryResult = await handleRequest(endpoints.SECURITY, { ticker: ticker.symbol }, tokens);
     queryResult = queryResult.filter(security => security.stock.symbol === ticker.symbol);
 
     if (ticker.exchange) {
       queryResult = queryResult.filter(security => security.stock.primary_exchange === ticker.exchange);
     }
-    if (ticker.id) {
-      queryResult = queryResult.filter(security => security.id === ticker.id);
-    }
 
     if (queryResult.length > 1) {
       return Promise.reject({reason: 'Multiple securities matched query.'});
     } else if (queryResult.length === 0) {
       return Promise.reject({reason: 'No securities matched query.'});
+    }
+
+    if (extensive) {
+
+      // The caller has opted to receive the extensive details about the security.
+      return await handleRequest(endpoints.EXTENSIVE_SECURITY_DETAILS, { id: queryResult[0].id }, tokens);
     }
 
     return queryResult[0];
@@ -329,20 +343,19 @@ const wealthsimple = {
    * @param {*} ticker The security symbol
    * @param {*} quantity The number of securities to purchase
    */
-  placeMarketBuy: async(tokens, accountId, ticker, quantity) =>
-    handleRequest(endpoints.PLACE_ORDER, {
-      accountId,
-      security_id: (await wealthsimple.getSecurity(tokens, ticker)).id,
+  placeMarketBuy: async(tokens, accountId, ticker, quantity) => {
+    let extensive_details = await wealthsimple.getSecurity(tokens, ticker, true);
+
+    return handleRequest(endpoints.PLACE_ORDER, {
+      security_id: extensive_details.id,
+      limit_price: extensive_details.quote.amount,
       quantity,
-
-      // The endpoint requires *any* limit price, even though it doesn't use it...
-      limit_price: 0.01,
-
       order_type: "buy_quantity",
       order_sub_type: "market",
       time_in_force: "day",
       account_id: accountId
-    }, tokens),
+    }, tokens);
+  },
 
   /**
    * Limit buy a security through the WealthSimple Trade application.
@@ -355,7 +368,6 @@ const wealthsimple = {
    */
   placeLimitBuy: async(tokens, accountId, ticker, limit, quantity) =>
     handleRequest(endpoints.PLACE_ORDER, {
-      accountId,
       security_id: (await wealthsimple.getSecurity(tokens, ticker)).id,
       limit_price: limit,
       quantity,
@@ -385,7 +397,6 @@ const wealthsimple = {
     }
 
     return handleRequest(endpoints.PLACE_ORDER, {
-      accountId,
       security_id: (await wealthsimple.getSecurity(tokens, ticker)).id,
       stop_price: stop,
       limit_price: limit,
@@ -405,16 +416,20 @@ const wealthsimple = {
    * @param {*} ticker The security symbol
    * @param {*} quantity The number of securities to purchase
    */
-  placeMarketSell: async(tokens, accountId, ticker, quantity) =>
-    handleRequest(endpoints.PLACE_ORDER, {
-      accountId,
-      security_id: (await wealthsimple.getSecurity(tokens, ticker)).id,
-      quantity,
+  placeMarketSell: async(tokens, accountId, ticker, quantity) => {
+
+    let extensive_details = await wealthsimple.getSecurity(tokens, ticker, true);
+    
+    return handleRequest(endpoints.PLACE_ORDER, {
+      security_id: extensive_details.id,
+      market_value: extensive_details.quote.amount,
+      quantity: quantity,
       order_type: "sell_quantity",
       order_sub_type: "market",
       time_in_force: "day",
-      account_id: accountId
-    }, tokens),
+      account_id: accountId,
+    }, tokens);
+  },
 
   /**
    * Limit sell a security through the WealthSimple Trade application.
@@ -427,7 +442,6 @@ const wealthsimple = {
    */
   placeLimitSell: async (tokens, accountId, ticker, limit, quantity) =>
     handleRequest(endpoints.PLACE_ORDER, {
-      accountId,
       security_id: (await wealthsimple.getSecurity(tokens, ticker)).id,
       limit_price: limit,
       quantity,
@@ -457,7 +471,6 @@ const wealthsimple = {
     }
 
     return handleRequest(endpoints.PLACE_ORDER, {
-      accountId,
       security_id: security.id,
       stop_price: stop,
       limit_price: limit,

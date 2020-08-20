@@ -186,6 +186,17 @@ const WealthSimpleTradeEndpoints = {
     onFailure: defaultEndpointBehaviour.onFailure
   },
 
+  EXTENSIVE_SECURITY_DETAILS: {
+    method: "GET",
+    url: "https://trade-service.wealthsimple.com/securities/{0}",
+    parameters: {
+      0: "id"
+    },
+    onSuccess: async (request) => await request.response.json(),
+    onFailure: defaultEndpointBehaviour.onFailure
+  },
+
+  
   /*
    * Lists all positions under a trading account.
    */
