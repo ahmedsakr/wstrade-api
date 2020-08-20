@@ -188,9 +188,11 @@ declare namespace Trade {
      * Information about a security on the WealthSimple Trade Platform.
      *
      * @param {*} tokens The access and refresh tokens returned by a successful login.
-     * @param {string|object} ticker The security symbol. An exchange may be added as a suffix, separated from the symbol with a colon. For example, AAPL:NASDAQ, ENB:TSX
+     * @param {string|object} ticker The security symbol. An exchange may be added as a suffix, separated from the
+     *                               symbol with a colon. For example, AAPL:NASDAQ, ENB:TSX
+     * @param {boolean} extensive Pulls a more detailed report of the security using the /securities/{id} API
      */
-    function getSecurity(tokens: AuthTokens, ticker: string | SecurityIdentifier): Promise<any>;
+    function getSecurity(tokens: AuthTokens, ticker: string | SecurityIdentifier, extensive?: Boolean): Promise<any>;
 
     /**
      * Market buy a security through the WealthSimple Trade application.
