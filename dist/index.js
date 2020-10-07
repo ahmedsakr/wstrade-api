@@ -5,15 +5,13 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = void 0;
 
-var _nodeFetch = _interopRequireDefault(require("node-fetch"));
+var _endpoints = _interopRequireWildcard(require("./api/endpoints"));
 
-var _endpoints = _interopRequireWildcard(require("./endpoints"));
+var _https = require("./network/https");
 
 function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function _getRequireWildcardCache() { return cache; }; return cache; }
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
 
@@ -21,99 +19,6 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
 // Checks if a security trades on TSX or TSX-V
 const isCanadianSecurity = exchange => ['TSX', 'TSX-V'].includes(exchange);
-
-let customHeaders = new _nodeFetch.default.Headers();
-/*
- * Fulfill the endpoint request given the endpoint configuration, optional
- * data, and the authentication tokens.
- */
-
-function handleRequest(_x, _x2, _x3) {
-  return _handleRequest.apply(this, arguments);
-}
-/*
- * Complete the URL by filling the parameter placeholders with the
- * data arguments.
- */
-
-
-function _handleRequest() {
-  _handleRequest = _asyncToGenerator(function* (endpoint, data, tokens) {
-    try {
-      // Submit the HTTP request to the WealthSimple Trade Servers
-      const response = yield talk(endpoint, data, tokens);
-
-      if ((0, _endpoints.isSuccessfulRequest)(response.status)) {
-        return endpoint.onSuccess({
-          arguments: data,
-          response
-        }, tokens);
-      } else {
-        return Promise.reject(yield endpoint.onFailure(response));
-      }
-    } catch (error) {
-      // This is likely a network error; throw it to the caller to deal with.
-      throw error;
-    }
-  });
-  return _handleRequest.apply(this, arguments);
-}
-
-function finalizeRequest(endpoint, data) {
-  // No need to do anything if the URL is static (no parameters)
-  if (!endpoint.parameters) {
-    return {
-      url: endpoint.url,
-      payload: data
-    };
-  } // Swap all the parameter placeholders with the arguments.
-
-
-  let url = endpoint.url;
-
-  for (let index = 0; index < Object.keys(endpoint.parameters).length; index++) {
-    if (data[endpoint.parameters[index]] === null || data[endpoint.parameters[index]] === undefined) {
-      throw new Error("URL Path parameter missing");
-    }
-
-    url = url.replace(`{${index}}`, data[endpoint.parameters[index]]);
-    delete data[endpoint.parameters[index]];
-  }
-
-  return {
-    url,
-    payload: data
-  };
-}
-/*
- * Implements the network level protocol for talking to the
- * WealthSimple Trade HTTPS API.
- */
-
-
-function talk(endpoint, data, tokens) {
-  let headers = new _nodeFetch.default.Headers();
-  headers.append('Content-Type', 'application/json'); // Apply all custom headers
-
-  [...customHeaders].forEach(header => headers.append(...header));
-
-  if (tokens) {
-    headers.append('Authorization', `${tokens.access}`);
-  } // Make a copy of the arguments so the original copy is not modified
-
-
-  let copy = Object.assign({}, data); // fill path and query parameters in the URL
-
-  let _finalizeRequest = finalizeRequest(endpoint, copy),
-      url = _finalizeRequest.url,
-      payload = _finalizeRequest.payload;
-
-  return (0, _nodeFetch.default)(url, {
-    body: ['GET', 'DELETE'].includes(endpoint.method) ? undefined : JSON.stringify(payload),
-    method: endpoint.method,
-    headers: headers
-  });
-}
 
 const wealthsimple = {
   /**
@@ -124,13 +29,13 @@ const wealthsimple = {
    */
   login: function () {
     var _login = _asyncToGenerator(function* (email, password) {
-      return handleRequest(_endpoints.default.LOGIN, {
+      return (0, _https.handleRequest)(_endpoints.default.LOGIN, {
         email,
         password
       });
     });
 
-    function login(_x4, _x5) {
+    function login(_x, _x2) {
       return _login.apply(this, arguments);
     }
 
@@ -144,12 +49,12 @@ const wealthsimple = {
    */
   refresh: function () {
     var _refresh = _asyncToGenerator(function* (tokens) {
-      return handleRequest(_endpoints.default.REFRESH, {
+      return (0, _https.handleRequest)(_endpoints.default.REFRESH, {
         refresh_token: tokens.refresh
       }, tokens);
     });
 
-    function refresh(_x6) {
+    function refresh(_x3) {
       return _refresh.apply(this, arguments);
     }
 
@@ -162,19 +67,19 @@ const wealthsimple = {
    * @param {*} name Header key
    * @param {*} value Header value
    */
-  addHeader: (name, value) => customHeaders.append(name, value),
+  addHeader: (name, value) => _https.headers.add(name, value),
 
   /**
    * Removes a custom header from all requests.
    * 
    * @param {*} name Header key
    */
-  removeHeader: name => customHeaders.delete(name),
+  removeHeader: name => _https.headers.remove(name),
 
   /**
    * Clears all custom headers.
    */
-  clearHeaders: () => [...customHeaders].forEach(header => customHeaders.delete(header[0])),
+  clearHeaders: () => _https.headers.clear(),
 
   /**
    * Retrieves all account ids open under this WealthSimple Trade account.
@@ -183,10 +88,10 @@ const wealthsimple = {
    */
   getAccounts: function () {
     var _getAccounts = _asyncToGenerator(function* (tokens) {
-      return handleRequest(_endpoints.default.ACCOUNT_IDS, {}, tokens);
+      return (0, _https.handleRequest)(_endpoints.default.ACCOUNT_IDS, {}, tokens);
     });
 
-    function getAccounts(_x7) {
+    function getAccounts(_x4) {
       return _getAccounts.apply(this, arguments);
     }
 
@@ -200,10 +105,10 @@ const wealthsimple = {
    */
   getAccountData: function () {
     var _getAccountData = _asyncToGenerator(function* (tokens) {
-      return handleRequest(_endpoints.default.LIST_ACCOUNT, {}, tokens);
+      return (0, _https.handleRequest)(_endpoints.default.LIST_ACCOUNT, {}, tokens);
     });
 
-    function getAccountData(_x8) {
+    function getAccountData(_x5) {
       return _getAccountData.apply(this, arguments);
     }
 
@@ -219,13 +124,13 @@ const wealthsimple = {
    */
   getHistory: function () {
     var _getHistory = _asyncToGenerator(function* (tokens, interval, accountId) {
-      return handleRequest(_endpoints.default.HISTORY_ACCOUNT, {
+      return (0, _https.handleRequest)(_endpoints.default.HISTORY_ACCOUNT, {
         interval,
         accountId
       }, tokens);
     });
 
-    function getHistory(_x9, _x10, _x11) {
+    function getHistory(_x6, _x7, _x8) {
       return _getHistory.apply(this, arguments);
     }
 
@@ -239,10 +144,10 @@ const wealthsimple = {
    */
   getActivities: function () {
     var _getActivities = _asyncToGenerator(function* (tokens) {
-      return handleRequest(_endpoints.default.ACTIVITIES, {}, tokens);
+      return (0, _https.handleRequest)(_endpoints.default.ACTIVITIES, {}, tokens);
     });
 
-    function getActivities(_x12) {
+    function getActivities(_x9) {
       return _getActivities.apply(this, arguments);
     }
 
@@ -256,10 +161,10 @@ const wealthsimple = {
    */
   getBankAccounts: function () {
     var _getBankAccounts = _asyncToGenerator(function* (tokens) {
-      return handleRequest(_endpoints.default.BANK_ACCOUNTS, {}, tokens);
+      return (0, _https.handleRequest)(_endpoints.default.BANK_ACCOUNTS, {}, tokens);
     });
 
-    function getBankAccounts(_x13) {
+    function getBankAccounts(_x10) {
       return _getBankAccounts.apply(this, arguments);
     }
 
@@ -273,10 +178,10 @@ const wealthsimple = {
    */
   getDeposits: function () {
     var _getDeposits = _asyncToGenerator(function* (tokens) {
-      return handleRequest(_endpoints.default.DEPOSITS, {}, tokens);
+      return (0, _https.handleRequest)(_endpoints.default.DEPOSITS, {}, tokens);
     });
 
-    function getDeposits(_x14) {
+    function getDeposits(_x11) {
       return _getDeposits.apply(this, arguments);
     }
 
@@ -291,10 +196,10 @@ const wealthsimple = {
    */
   getExchangeRates: function () {
     var _getExchangeRates = _asyncToGenerator(function* (tokens) {
-      return handleRequest(_endpoints.default.EXCHANGE_RATES, {}, tokens);
+      return (0, _https.handleRequest)(_endpoints.default.EXCHANGE_RATES, {}, tokens);
     });
 
-    function getExchangeRates(_x15) {
+    function getExchangeRates(_x12) {
       return _getExchangeRates.apply(this, arguments);
     }
 
@@ -309,12 +214,12 @@ const wealthsimple = {
    */
   getPositions: function () {
     var _getPositions = _asyncToGenerator(function* (tokens, accountId) {
-      return handleRequest(_endpoints.default.POSITIONS, {
+      return (0, _https.handleRequest)(_endpoints.default.POSITIONS, {
         accountId
       }, tokens);
     });
 
-    function getPositions(_x16, _x17) {
+    function getPositions(_x13, _x14) {
       return _getPositions.apply(this, arguments);
     }
 
@@ -331,13 +236,13 @@ const wealthsimple = {
    */
   getOrdersByPage: function () {
     var _getOrdersByPage = _asyncToGenerator(function* (tokens, accountId, page) {
-      return handleRequest(_endpoints.default.ORDERS_BY_PAGE, {
+      return (0, _https.handleRequest)(_endpoints.default.ORDERS_BY_PAGE, {
         offset: (page - 1) * _endpoints.ORDERS_PER_PAGE,
         accountId
       }, tokens);
     });
 
-    function getOrdersByPage(_x18, _x19, _x20) {
+    function getOrdersByPage(_x15, _x16, _x17) {
       return _getOrdersByPage.apply(this, arguments);
     }
 
@@ -352,13 +257,13 @@ const wealthsimple = {
    */
   getOrders: function () {
     var _getOrders = _asyncToGenerator(function* (tokens, accountId) {
-      return handleRequest(_endpoints.default.ALL_ORDERS, {
+      return (0, _https.handleRequest)(_endpoints.default.ALL_ORDERS, {
         offset: 0,
         accountId
       }, tokens);
     });
 
-    function getOrders(_x21, _x22) {
+    function getOrders(_x18, _x19) {
       return _getOrders.apply(this, arguments);
     }
 
@@ -374,14 +279,14 @@ const wealthsimple = {
    */
   getPendingOrders: function () {
     var _getPendingOrders = _asyncToGenerator(function* (tokens, accountId, ticker) {
-      return handleRequest(_endpoints.default.FILTERED_ORDERS, {
+      return (0, _https.handleRequest)(_endpoints.default.FILTERED_ORDERS, {
         accountId,
         ticker,
         status: 'submitted'
       }, tokens);
     });
 
-    function getPendingOrders(_x23, _x24, _x25) {
+    function getPendingOrders(_x20, _x21, _x22) {
       return _getPendingOrders.apply(this, arguments);
     }
 
@@ -397,14 +302,14 @@ const wealthsimple = {
    */
   getFilledOrders: function () {
     var _getFilledOrders = _asyncToGenerator(function* (tokens, accountId, ticker) {
-      return handleRequest(_endpoints.default.FILTERED_ORDERS, {
+      return (0, _https.handleRequest)(_endpoints.default.FILTERED_ORDERS, {
         accountId,
         ticker,
         status: 'posted'
       }, tokens);
     });
 
-    function getFilledOrders(_x26, _x27, _x28) {
+    function getFilledOrders(_x23, _x24, _x25) {
       return _getFilledOrders.apply(this, arguments);
     }
 
@@ -420,14 +325,14 @@ const wealthsimple = {
    */
   getCancelledOrders: function () {
     var _getCancelledOrders = _asyncToGenerator(function* (tokens, accountId, ticker) {
-      return handleRequest(_endpoints.default.FILTERED_ORDERS, {
+      return (0, _https.handleRequest)(_endpoints.default.FILTERED_ORDERS, {
         accountId,
         ticker,
         status: 'cancelled'
       }, tokens);
     });
 
-    function getCancelledOrders(_x29, _x30, _x31) {
+    function getCancelledOrders(_x26, _x27, _x28) {
       return _getCancelledOrders.apply(this, arguments);
     }
 
@@ -442,12 +347,12 @@ const wealthsimple = {
    */
   cancelOrder: function () {
     var _cancelOrder = _asyncToGenerator(function* (tokens, orderId) {
-      return handleRequest(_endpoints.default.CANCEL_ORDER, {
+      return (0, _https.handleRequest)(_endpoints.default.CANCEL_ORDER, {
         orderId
       }, tokens);
     });
 
-    function cancelOrder(_x32, _x33) {
+    function cancelOrder(_x29, _x30) {
       return _cancelOrder.apply(this, arguments);
     }
 
@@ -468,13 +373,13 @@ const wealthsimple = {
           return yield wealthsimple.cancelOrder(tokens, order.order_id);
         });
 
-        return function (_x36) {
+        return function (_x33) {
           return _ref.apply(this, arguments);
         };
       }()));
     });
 
-    function cancelPendingOrders(_x34, _x35) {
+    function cancelPendingOrders(_x31, _x32) {
       return _cancelPendingOrders.apply(this, arguments);
     }
 
@@ -515,12 +420,12 @@ const wealthsimple = {
          * 
          * We will immediately call the extensive details API since we have the id.
          */
-        return yield handleRequest(_endpoints.default.EXTENSIVE_SECURITY_DETAILS, {
+        return yield (0, _https.handleRequest)(_endpoints.default.EXTENSIVE_SECURITY_DETAILS, {
           id: ticker.id
         }, tokens);
       }
 
-      let queryResult = yield handleRequest(_endpoints.default.SECURITY, {
+      let queryResult = yield (0, _https.handleRequest)(_endpoints.default.SECURITY, {
         ticker: ticker.symbol
       }, tokens);
       queryResult = queryResult.filter(security => security.stock.symbol === ticker.symbol);
@@ -541,7 +446,7 @@ const wealthsimple = {
 
       if (extensive) {
         // The caller has opted to receive the extensive details about the security.
-        return yield handleRequest(_endpoints.default.EXTENSIVE_SECURITY_DETAILS, {
+        return yield (0, _https.handleRequest)(_endpoints.default.EXTENSIVE_SECURITY_DETAILS, {
           id: queryResult[0].id
         }, tokens);
       }
@@ -549,7 +454,7 @@ const wealthsimple = {
       return queryResult[0];
     });
 
-    function getSecurity(_x37, _x38, _x39) {
+    function getSecurity(_x34, _x35, _x36) {
       return _getSecurity.apply(this, arguments);
     }
 
@@ -567,7 +472,7 @@ const wealthsimple = {
   placeMarketBuy: function () {
     var _placeMarketBuy = _asyncToGenerator(function* (tokens, accountId, ticker, quantity) {
       let extensive_details = yield wealthsimple.getSecurity(tokens, ticker, true);
-      return handleRequest(_endpoints.default.PLACE_ORDER, {
+      return (0, _https.handleRequest)(_endpoints.default.PLACE_ORDER, {
         security_id: extensive_details.id,
         limit_price: extensive_details.quote.amount,
         quantity,
@@ -578,7 +483,7 @@ const wealthsimple = {
       }, tokens);
     });
 
-    function placeMarketBuy(_x40, _x41, _x42, _x43) {
+    function placeMarketBuy(_x37, _x38, _x39, _x40) {
       return _placeMarketBuy.apply(this, arguments);
     }
 
@@ -596,7 +501,7 @@ const wealthsimple = {
    */
   placeLimitBuy: function () {
     var _placeLimitBuy = _asyncToGenerator(function* (tokens, accountId, ticker, limit, quantity) {
-      return handleRequest(_endpoints.default.PLACE_ORDER, {
+      return (0, _https.handleRequest)(_endpoints.default.PLACE_ORDER, {
         security_id: (yield wealthsimple.getSecurity(tokens, ticker)).id,
         limit_price: limit,
         quantity,
@@ -607,7 +512,7 @@ const wealthsimple = {
       }, tokens);
     });
 
-    function placeLimitBuy(_x44, _x45, _x46, _x47, _x48) {
+    function placeLimitBuy(_x41, _x42, _x43, _x44, _x45) {
       return _placeLimitBuy.apply(this, arguments);
     }
 
@@ -634,7 +539,7 @@ const wealthsimple = {
         });
       }
 
-      return handleRequest(_endpoints.default.PLACE_ORDER, {
+      return (0, _https.handleRequest)(_endpoints.default.PLACE_ORDER, {
         security_id: (yield wealthsimple.getSecurity(tokens, ticker)).id,
         stop_price: stop,
         limit_price: limit,
@@ -646,7 +551,7 @@ const wealthsimple = {
       }, tokens);
     });
 
-    function placeStopLimitBuy(_x49, _x50, _x51, _x52, _x53, _x54) {
+    function placeStopLimitBuy(_x46, _x47, _x48, _x49, _x50, _x51) {
       return _placeStopLimitBuy.apply(this, arguments);
     }
 
@@ -664,7 +569,7 @@ const wealthsimple = {
   placeMarketSell: function () {
     var _placeMarketSell = _asyncToGenerator(function* (tokens, accountId, ticker, quantity) {
       let extensive_details = yield wealthsimple.getSecurity(tokens, ticker, true);
-      return handleRequest(_endpoints.default.PLACE_ORDER, {
+      return (0, _https.handleRequest)(_endpoints.default.PLACE_ORDER, {
         security_id: extensive_details.id,
         market_value: extensive_details.quote.amount,
         quantity: quantity,
@@ -675,7 +580,7 @@ const wealthsimple = {
       }, tokens);
     });
 
-    function placeMarketSell(_x55, _x56, _x57, _x58) {
+    function placeMarketSell(_x52, _x53, _x54, _x55) {
       return _placeMarketSell.apply(this, arguments);
     }
 
@@ -693,7 +598,7 @@ const wealthsimple = {
    */
   placeLimitSell: function () {
     var _placeLimitSell = _asyncToGenerator(function* (tokens, accountId, ticker, limit, quantity) {
-      return handleRequest(_endpoints.default.PLACE_ORDER, {
+      return (0, _https.handleRequest)(_endpoints.default.PLACE_ORDER, {
         security_id: (yield wealthsimple.getSecurity(tokens, ticker)).id,
         limit_price: limit,
         quantity,
@@ -704,7 +609,7 @@ const wealthsimple = {
       }, tokens);
     });
 
-    function placeLimitSell(_x59, _x60, _x61, _x62, _x63) {
+    function placeLimitSell(_x56, _x57, _x58, _x59, _x60) {
       return _placeLimitSell.apply(this, arguments);
     }
 
@@ -731,7 +636,7 @@ const wealthsimple = {
         });
       }
 
-      return handleRequest(_endpoints.default.PLACE_ORDER, {
+      return (0, _https.handleRequest)(_endpoints.default.PLACE_ORDER, {
         security_id: security.id,
         stop_price: stop,
         limit_price: limit,
@@ -743,7 +648,7 @@ const wealthsimple = {
       }, tokens);
     });
 
-    function placeStopLimitSell(_x64, _x65, _x66, _x67, _x68, _x69) {
+    function placeStopLimitSell(_x61, _x62, _x63, _x64, _x65, _x66) {
       return _placeStopLimitSell.apply(this, arguments);
     }
 

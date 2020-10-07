@@ -3,11 +3,9 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = exports.isSuccessfulRequest = exports.ORDERS_PER_PAGE = void 0;
+exports.default = exports.ORDERS_PER_PAGE = void 0;
 
-var _index = _interopRequireDefault(require("./index"));
-
-var _httpStatus = _interopRequireDefault(require("http-status"));
+var _index = _interopRequireDefault(require("../index"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -16,18 +14,8 @@ function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try
 function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
 
 // The maximum number of orders retrieved by the /orders API.
-const ORDERS_PER_PAGE = 20; // WealthSimple Trade API returns some custom HTTP codes
-
+const ORDERS_PER_PAGE = 20;
 exports.ORDERS_PER_PAGE = ORDERS_PER_PAGE;
-const wealthSimpleHttpCodes = {
-  ORDER_CREATED: 201
-}; // Successful HTTP codes to be used for determining the status of the request
-
-const httpSuccessCodes = [_httpStatus.default.OK, wealthSimpleHttpCodes.ORDER_CREATED];
-
-const isSuccessfulRequest = code => httpSuccessCodes.includes(code);
-
-exports.isSuccessfulRequest = isSuccessfulRequest;
 const defaultEndpointBehaviour = {
   // Default failure method for all endpoint calls
   onFailure: function () {

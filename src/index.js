@@ -1,89 +1,8 @@
-import fetch from 'node-fetch';
-import endpoints, { isSuccessfulRequest, ORDERS_PER_PAGE } from './endpoints';
+import endpoints, { ORDERS_PER_PAGE } from './api/endpoints';
+import { handleRequest, headers } from './network/https';
 
 // Checks if a security trades on TSX or TSX-V
 const isCanadianSecurity = (exchange) => ['TSX', 'TSX-V'].includes(exchange)
-
-let customHeaders = new fetch.Headers();
-
-/*
- * Fulfill the endpoint request given the endpoint configuration, optional
- * data, and the authentication tokens.
- */
-async function handleRequest(endpoint, data, tokens) {
-  try {
-
-    // Submit the HTTP request to the WealthSimple Trade Servers
-    const response = await talk(endpoint, data, tokens);
-
-    if (isSuccessfulRequest(response.status)) {
-      return endpoint.onSuccess({
-        arguments: data,
-        response
-      }, tokens);
-    } else {
-      return Promise.reject(await endpoint.onFailure(response));
-    }
-
-  } catch (error) {
-
-    // This is likely a network error; throw it to the caller to deal with.
-    throw error;
-  }
-}
-
-/*
- * Complete the URL by filling the parameter placeholders with the
- * data arguments.
- */
-function finalizeRequest(endpoint, data) {
-
-  // No need to do anything if the URL is static (no parameters)
-  if (!endpoint.parameters) {
-    return { url: endpoint.url, payload: data };
-  }
-
-  // Swap all the parameter placeholders with the arguments.
-  let url = endpoint.url;
-  for (let index = 0; index < Object.keys(endpoint.parameters).length; index++) {
-    if (data[endpoint.parameters[index]] === null || data[endpoint.parameters[index]] === undefined) {
-      throw new Error("URL Path parameter missing");
-    }
-
-    url = url.replace(`{${index}}`, data[endpoint.parameters[index]]);
-    delete data[endpoint.parameters[index]];
-  }
-
-  return { url, payload: data };
-}
-
-/*
- * Implements the network level protocol for talking to the
- * WealthSimple Trade HTTPS API.
- */
-function talk(endpoint, data, tokens) {
-  let headers = new fetch.Headers();
-  headers.append('Content-Type', 'application/json');
-
-  // Apply all custom headers
-  [...customHeaders].forEach(header => headers.append(...header));
-
-  if (tokens) {
-    headers.append('Authorization', `${tokens.access}`)
-  }
-
-  // Make a copy of the arguments so the original copy is not modified
-  let copy = Object.assign({}, data);
-
-  // fill path and query parameters in the URL
-  let { url, payload } = finalizeRequest(endpoint, copy);
-
-  return fetch(url, {
-    body: ['GET', 'DELETE'].includes(endpoint.method) ? undefined : JSON.stringify(payload),
-    method: endpoint.method,
-    headers: headers
-  })
-}
 
 const wealthsimple = {
     
@@ -110,19 +29,19 @@ const wealthsimple = {
    * @param {*} name Header key
    * @param {*} value Header value
    */
-  addHeader: (name, value) => customHeaders.append(name, value),
+  addHeader: (name, value) => headers.add(name, value),
 
   /**
    * Removes a custom header from all requests.
    * 
    * @param {*} name Header key
    */
-  removeHeader: (name) => customHeaders.delete(name),
+  removeHeader: (name) => headers.remove(name),
 
   /**
    * Clears all custom headers.
    */
-  clearHeaders: () => [...customHeaders].forEach(header => customHeaders.delete(header[0])),
+  clearHeaders: () => headers.clear(),
 
   /**
    * Retrieves all account ids open under this WealthSimple Trade account.
