@@ -1,21 +1,7 @@
-import trade from './index'
-import status from 'http-status';
+import trade from '../index'
 
 // The maximum number of orders retrieved by the /orders API.
 export const ORDERS_PER_PAGE = 20;
-
-// WealthSimple Trade API returns some custom HTTP codes
-const wealthSimpleHttpCodes = {
-  ORDER_CREATED: 201
-}
-
-// Successful HTTP codes to be used for determining the status of the request
-const httpSuccessCodes = [
-  status.OK,
-  wealthSimpleHttpCodes.ORDER_CREATED
-]
-
-export const isSuccessfulRequest = (code) => httpSuccessCodes.includes(code);
 
 const defaultEndpointBehaviour = {
 
