@@ -136,7 +136,7 @@ For all API Calls, the failure return is standardized to the following:
 Attempts to login to the WealthSimple Trade platform using the email and password combination.
 
 **One-Time Password**
----
+
 
 WealthSimple Trade has required mandatory OTP authentication for their login APIs. To get the
 OTP code sent to you, you need to first attempt to login without an OTP code. Afterwards, You may provide
