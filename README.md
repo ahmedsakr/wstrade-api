@@ -145,13 +145,16 @@ Here is an automated example:
 
 ```
 // No OTP argument so WealthSimple Trade will dispatch OTP. This promise will fail.
-trade.login('test@example.ca', 'password');
+trade.login('test@example.ca', 'password')
 
-//
+// Now that we have the OTP code, let's try to plug it into the login...
 .catch(trade.login('test@example.ca', 'password', async () => {
     
+    ...
     // somehow get the OTP code automatically..
+    ...
 
+    return '172823';
 })); 
 ```
 
