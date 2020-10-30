@@ -11,9 +11,15 @@ const wealthsimple = {
    *
    * @param {*} email emailed registered by the WealthSimple Trade account
    * @param {*} password The password of the account
+   * @param {*} otp_func otp function (async/sync) that provides the OTP code somehow
    */
-  login: async (email, password) =>
-    handleRequest(endpoints.LOGIN, { email, password }),
+  login: async (email, password, otp_func) => {
+    if (typeof(otp_func) === 'function') {
+      return handleRequest(endpoints.LOGIN, { email, password, otp: await otp_func() });
+    } else {
+      return handleRequest(endpoints.LOGIN, { email, password });
+    }
+  },
 
   /**
    * Generates a new set of access and refresh tokens.

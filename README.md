@@ -135,11 +135,50 @@ For all API Calls, the failure return is standardized to the following:
 
 Attempts to login to the WealthSimple Trade platform using the email and password combination.
 
+**One-Time Password**
+
+
+WealthSimple Trade has required mandatory OTP authentication for their login API. To get the
+OTP code sent to you, you need to first attempt to login without an OTP code. Afterwards, You may provide
+the OTP code as a third argument for the `login` API, `otp_func`; `otp_func` is a parameterless
+function that is expected to return the OTP code as a string.
+
+Here is an automated example:
+
+```
+// No OTP argument so WealthSimple Trade will dispatch OTP. This promise will fail.
+trade.login('test@example.ca', 'password')
+
+// Now that we have the OTP code, let's try to plug it into the login...
+.catch(trade.login('test@example.ca', 'password', async () => {
+    
+    ...
+    // somehow get the OTP code automatically..
+    ...
+
+    return '172823';
+})); 
+```
+
+Or if you prefer to manually input the OTP code, you can just run your program twice: First time
+without the `otp_func` parameter, and the second time with the `otp_func` parameter immediately
+returning the OTP code.
+
+```
+
+// ~~~ First program run ~~~
+// No OTP argument so WealthSimple Trade will dispatch OTP. This promise will fail.
+trade.login('test@example.ca', 'password');
+
+// ~~~ Second program run ~~~
+trade.login('test@example.ca', 'password', () => '162782'); // We should be authenticated now!
+```
 
 | Parameters|Required|    
 |----------|---------------------|
 | username |Yes|
 | password |Yes|
+| otp_func |No|
 
 ### Return on Success
 
