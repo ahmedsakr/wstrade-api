@@ -138,7 +138,7 @@ Attempts to login to the WealthSimple Trade platform using the email and passwor
 **One-Time Password**
 
 
-WealthSimple Trade has required mandatory OTP authentication for their login APIs. To get the
+WealthSimple Trade has required mandatory OTP authentication for their login API. To get the
 OTP code sent to you, you need to first attempt to login without an OTP code. Afterwards, You may provide
 the OTP code as a third argument for the `login` API, `otp_func`; `otp_func` is a parameterless
 function that is expected to return the OTP code as a string.
