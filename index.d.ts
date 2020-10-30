@@ -32,8 +32,9 @@ declare namespace Trade {
      *
      * @param {*} email emailed registered by the WealthSimple Trade account
      * @param {*} password The password of the account
+     * @param {*} otp_func otp function (async/sync) that provides the OTP code somehow
      */
-    function login(email: string, password: string): Promise<{ tokens: AuthTokens, accountInfo: any }>;
+    function login(email: string, password: string, otp_func: () => string): Promise<{ tokens: AuthTokens, accountInfo: any }>;
 
     /**
      * Generates a new set of access and refresh tokens.
