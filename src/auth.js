@@ -1,9 +1,9 @@
 import { handleRequest } from '../network/https';
 import endpoints from '../api/endpoints';
 
-let login = {
+let tokens = null;
 
-  tokens: null,
+export default {
 
   /**
    * Attempts to create a session for the provided email and password.
@@ -12,7 +12,7 @@ let login = {
    * @param {*} password The password of the account
    * @param {*} otp_func otp function (async/sync) that provides the OTP code somehow
    */
-  login: async function (email, password, otp_func) {
+  login: async (email, password, otp_func) => {
     let response = null;
 
     if (typeof(otp_func) === 'function') {
@@ -21,7 +21,7 @@ let login = {
       response = await handleRequest(endpoints.LOGIN, { email, password });
     }
 
-    this.tokens = response.tokens;
+    tokens = response.tokens;
   },
 
   /**
@@ -29,10 +29,8 @@ let login = {
    *
    * @param {*} tokens The access and refresh tokens returned by a successful login.
    */
-  refresh: async function () {
+  refresh: async () => {
     let response = await handleRequest(endpoints.REFRESH, { refresh_token: tokens.refresh }, this.tokens);
-    this.tokens = response.tokens;
+    tokens = response.tokens;
   },
 };
-
-export default login;

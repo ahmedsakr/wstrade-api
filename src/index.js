@@ -1,6 +1,8 @@
 import endpoints, { ORDERS_PER_PAGE } from './api/endpoints';
-import { handleRequest, headers } from './network/https';
-import auth from './auth/login';
+import { handleRequest } from './network/https';
+import auth from './auth';
+import headers from './headers';
+
 
 // Checks if a security trades on TSX or TSX-V
 const isCanadianSecurity = (exchange) => ['TSX', 'TSX-V'].includes(exchange)
@@ -8,26 +10,7 @@ const isCanadianSecurity = (exchange) => ['TSX', 'TSX-V'].includes(exchange)
 const wealthsimple = {
   
   auth,
-
-  /**
-   * Appends a header name-value pair to all requests.
-   * 
-   * @param {*} name Header key
-   * @param {*} value Header value
-   */
-  addHeader: (name, value) => headers.add(name, value),
-
-  /**
-   * Removes a custom header from all requests.
-   * 
-   * @param {*} name Header key
-   */
-  removeHeader: (name) => headers.remove(name),
-
-  /**
-   * Clears all custom headers.
-   */
-  clearHeaders: () => headers.clear(),
+  headers,
 
   /**
    * Retrieves all account ids open under this WealthSimple Trade account.
@@ -389,3 +372,5 @@ const wealthsimple = {
 }
 
 export default wealthsimple;
+
+wealthsimple.headers.values()
