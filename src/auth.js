@@ -1,29 +1,47 @@
 import { handleRequest } from './network/https';
 import endpoints from './api/endpoints';
 
-let tokens = null;
-
-export const getTokens = () => tokens;
-
 export default {
 
+  // Authentication tokens to access privileged endpoints
+  tokens: null,
+
+  // Thunk for retrieving the one-time password.
+  otp: null,
+
   /**
-   * Attempts to create a session for the provided email and password.
+   * Register a function to run on a certain event
+   * @param {*} event The trigger for the function
+   * @param {*} thunk The function block to execute on event trigger
+   */
+  on: function (event, thunk) {
+    this[event] = thunk;
+  },
+
+  /**
+   * Attempts to establish a session for the provided email and password.
    *
    * @param {*} email emailed registered by the WealthSimple Trade account
    * @param {*} password The password of the account
-   * @param {*} otp_func otp function (async/sync) that provides the OTP code somehow
    */
-  login: async (email, password, otp_func) => {
-    let response = null;
+  login: async function (email, password) {
 
-    if (typeof(otp_func) === 'function') {
-      response = await handleRequest(endpoints.LOGIN, { email, password, otp: await otp_func() });
+    // We attempt to login to trigger an One-Time Password (OTP) event.
+    let response = await handleRequest(endpoints.LOGIN, { email, password }).catch(() => {});
+
+    if (typeof(this.otp) === 'function') {
+
+      // Right on - the user has given us a function that we can get the OTP code from.
+      // Let's log in for real this time.
+      response = await handleRequest(endpoints.LOGIN, { email, password, otp: await this.otp() });
     } else {
-      response = await handleRequest(endpoints.LOGIN, { email, password });
+
+      // We don't have a way to get the OTP, so we reject.
+      return Promise.reject("OTP not retrievable!");
     }
 
-    tokens = response.tokens;
+    // Capture the tokens for later usage.
+    this.tokens = response.tokens;
   },
 
   /**
@@ -31,8 +49,8 @@ export default {
    *
    * @param {*} tokens The access and refresh tokens returned by a successful login.
    */
-  refresh: async () => {
+  refresh: async function () {
     let response = await handleRequest(endpoints.REFRESH, { refresh_token: tokens.refresh });
-    tokens = response.tokens;
+    this.tokens = response.tokens;
   },
 };

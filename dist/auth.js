@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = exports.getTokens = void 0;
+exports.default = void 0;
 
 var _https = require("./network/https");
 
@@ -15,40 +15,53 @@ function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try
 
 function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
 
-let tokens = null;
-
-const getTokens = () => tokens;
-
-exports.getTokens = getTokens;
 var _default = {
+  // Authentication tokens to access privileged endpoints
+  tokens: null,
+  // Thunk for retrieving the one-time password.
+  otp: null,
+
   /**
-   * Attempts to create a session for the provided email and password.
+   * Register a function to run on a certain event
+   * @param {*} event The trigger for the function
+   * @param {*} thunk The function block to execute on event trigger
+   */
+  on: function on(event, thunk) {
+    this[event] = thunk;
+  },
+
+  /**
+   * Attempts to establish a session for the provided email and password.
    *
    * @param {*} email emailed registered by the WealthSimple Trade account
    * @param {*} password The password of the account
-   * @param {*} otp_func otp function (async/sync) that provides the OTP code somehow
    */
   login: function () {
-    var _login = _asyncToGenerator(function* (email, password, otp_func) {
-      let response = null;
+    var _login = _asyncToGenerator(function* (email, password) {
+      // We attempt to login to trigger an One-Time Password (OTP) event.
+      let response = yield (0, _https.handleRequest)(_endpoints.default.LOGIN, {
+        email,
+        password
+      }).catch(() => {});
 
-      if (typeof otp_func === 'function') {
+      if (typeof this.otp === 'function') {
+        // Right on - the user has given us a function that we can get the OTP code from.
+        // Let's log in for real this time.
         response = yield (0, _https.handleRequest)(_endpoints.default.LOGIN, {
           email,
           password,
-          otp: yield otp_func()
+          otp: yield this.otp()
         });
       } else {
-        response = yield (0, _https.handleRequest)(_endpoints.default.LOGIN, {
-          email,
-          password
-        });
-      }
+        // We don't have a way to get the OTP, so we reject.
+        return Promise.reject("OTP not retrievable!");
+      } // Capture the tokens for later usage.
 
-      tokens = response.tokens;
+
+      this.tokens = response.tokens;
     });
 
-    function login(_x, _x2, _x3) {
+    function login(_x, _x2) {
       return _login.apply(this, arguments);
     }
 
@@ -65,7 +78,7 @@ var _default = {
       let response = yield (0, _https.handleRequest)(_endpoints.default.REFRESH, {
         refresh_token: tokens.refresh
       });
-      tokens = response.tokens;
+      this.tokens = response.tokens;
     });
 
     function refresh() {

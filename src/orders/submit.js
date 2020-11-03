@@ -1,5 +1,5 @@
-import endpoints from './api/endpoints';
-import { handleRequest } from './network/https';
+import endpoints from '../api/endpoints';
+import { handleRequest } from '../network/https';
 
 export default {
 

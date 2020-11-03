@@ -5,9 +5,9 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = void 0;
 
-var _endpoints = _interopRequireDefault(require("./api/endpoints"));
+var _endpoints = _interopRequireDefault(require("../api/endpoints"));
 
-var _https = require("./network/https");
+var _https = require("../network/https");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 

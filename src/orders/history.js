@@ -1,5 +1,5 @@
-import endpoints, { ORDERS_PER_PAGE } from './api/endpoints';
-import { handleRequest } from './network/https';
+import endpoints, { ORDERS_PER_PAGE } from '../api/endpoints';
+import { handleRequest } from '../network/https';
 
 export default {
 

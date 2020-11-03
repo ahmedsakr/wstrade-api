@@ -12,7 +12,7 @@ var _httpStatus = _interopRequireDefault(require("http-status"));
 
 var _headers = _interopRequireDefault(require("../headers"));
 
-var _auth = require("../auth");
+var _auth = _interopRequireDefault(require("../auth"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -30,7 +30,7 @@ const httpSuccessCodes = [_httpStatus.default.OK, wealthSimpleHttpCodes.ORDER_CR
 const isSuccessfulRequest = code => httpSuccessCodes.includes(code);
 /*
  * Fulfill the endpoint request given the endpoint configuration, optional
- * data, and the authentication tokens.
+ * data.
  */
 
 
@@ -49,7 +49,7 @@ function _handleRequest() {
   _handleRequest = _asyncToGenerator(function* (endpoint, data) {
     try {
       // Retrieve secret tokens
-      let tokens = (0, _auth.getTokens)(); // Submit the HTTP request to the WealthSimple Trade Servers
+      let tokens = _auth.default.tokens; // Submit the HTTP request to the WealthSimple Trade Servers
 
       const response = yield talk(endpoint, data, tokens);
 
