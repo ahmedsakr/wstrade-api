@@ -3,21 +3,16 @@ let quotes = {
     /*
      *
      */
-    providers: {
-        nyse: null,
-        nasdaq: null,
-        tsx: null,
-        tsxv: null
-    },
+    providers: {},
 
     /*
      * Load a custom provider for the exchange.
      */
     use: function (exchange, provider) {
-        this.providers[exchange] = require(`./external/${provider}`).default;
+        this.providers[exchange] = provider;
     },
 
-    getQuote: async function (ticker, exchange) {
+    getQuote: async function (ticker) {
         return this.providers[exchange].getQuote(ticker, exchange);
     }
 }
