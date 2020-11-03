@@ -15,6 +15,8 @@ var _orders = _interopRequireDefault(require("./orders"));
 
 var _data = _interopRequireDefault(require("./data"));
 
+var _quotes = _interopRequireDefault(require("./quotes"));
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var _default = {
@@ -22,6 +24,7 @@ var _default = {
   headers: _headers.default,
   accounts: _accounts.default,
   orders: _orders.default,
+  quotes: _quotes.default,
   data: _data.default
 };
 exports.default = _default;
