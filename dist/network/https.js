@@ -4,11 +4,15 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.handleRequest = handleRequest;
-exports.isSuccessfulRequest = exports.headers = void 0;
+exports.isSuccessfulRequest = void 0;
 
 var _nodeFetch = _interopRequireDefault(require("node-fetch"));
 
 var _httpStatus = _interopRequireDefault(require("http-status"));
+
+var _headers = _interopRequireDefault(require("../headers"));
+
+var _auth = require("../auth");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -16,15 +20,7 @@ function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try
 
 function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
 
-let customHeaders = new _nodeFetch.default.Headers(); // External API to mutate custom headers
-
-const headers = {
-  add: (name, value) => customHeaders.append(name, value),
-  remove: name => customHeaders.delete(name),
-  clear: () => [...customHeaders].forEach(header => customHeaders.delete(header[0]))
-}; // WealthSimple Trade API returns some custom HTTP codes
-
-exports.headers = headers;
+// WealthSimple Trade API returns some custom HTTP codes
 const wealthSimpleHttpCodes = {
   ORDER_CREATED: 201
 }; // Successful HTTP codes to be used for determining the status of the request
@@ -40,7 +36,7 @@ const isSuccessfulRequest = code => httpSuccessCodes.includes(code);
 
 exports.isSuccessfulRequest = isSuccessfulRequest;
 
-function handleRequest(_x, _x2, _x3) {
+function handleRequest(_x, _x2) {
   return _handleRequest.apply(this, arguments);
 }
 /*
@@ -50,9 +46,11 @@ function handleRequest(_x, _x2, _x3) {
 
 
 function _handleRequest() {
-  _handleRequest = _asyncToGenerator(function* (endpoint, data, tokens) {
+  _handleRequest = _asyncToGenerator(function* (endpoint, data) {
     try {
-      // Submit the HTTP request to the WealthSimple Trade Servers
+      // Retrieve secret tokens
+      let tokens = (0, _auth.getTokens)(); // Submit the HTTP request to the WealthSimple Trade Servers
+
       const response = yield talk(endpoint, data, tokens);
 
       if (isSuccessfulRequest(response.status)) {
@@ -110,7 +108,7 @@ function talk(endpoint, data, tokens) {
   let headers = new _nodeFetch.default.Headers();
   headers.append('Content-Type', 'application/json'); // Apply all custom headers
 
-  [...customHeaders].forEach(header => headers.append(...header));
+  _headers.default.values().forEach(header => headers.append(...header));
 
   if (tokens) {
     headers.append('Authorization', tokens.access);

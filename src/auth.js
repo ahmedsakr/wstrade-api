@@ -1,7 +1,9 @@
-import { handleRequest } from '../network/https';
-import endpoints from '../api/endpoints';
+import { handleRequest } from './network/https';
+import endpoints from './api/endpoints';
 
 let tokens = null;
+
+export const getTokens = () => tokens;
 
 export default {
 
@@ -30,7 +32,7 @@ export default {
    * @param {*} tokens The access and refresh tokens returned by a successful login.
    */
   refresh: async () => {
-    let response = await handleRequest(endpoints.REFRESH, { refresh_token: tokens.refresh }, this.tokens);
+    let response = await handleRequest(endpoints.REFRESH, { refresh_token: tokens.refresh });
     tokens = response.tokens;
   },
 };

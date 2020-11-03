@@ -15,170 +15,148 @@ const wealthsimple = {
   /**
    * Retrieves all account ids open under this WealthSimple Trade account.
    *
-   * @param {*} tokens The access and refresh tokens returned by a successful login.
    */
-  getAccounts: async (tokens) =>
-    handleRequest(endpoints.ACCOUNT_IDS, {}, tokens),
+  getAccounts: async () => handleRequest(endpoints.ACCOUNT_IDS, {}),
 
   /**
    * Retrieves the top-level data of the account, including account id, account types, account values, and more.
    *
-   * @param {*} tokens The access and refresh tokens returned by a successful login.
    */
-  getAccountData: async (tokens) =>
-    handleRequest(endpoints.LIST_ACCOUNT, {}, tokens),
+  getAccountData: async () => handleRequest(endpoints.LIST_ACCOUNT, {}),
 
   /**
    * Query the history of the account within a certain time interval.
    *
-   * @param {*} tokens The access and refresh tokens returned by a successful login.
    * @param {*} interval The time interval for the history query
    * @param {*} accountId The account to query
    */
-  getHistory: async (tokens, interval, accountId) =>
-    handleRequest(endpoints.HISTORY_ACCOUNT, { interval, accountId }, tokens),
+  getHistory: async (interval, accountId) =>
+    handleRequest(endpoints.HISTORY_ACCOUNT, { interval, accountId }),
   
   /**
    * Retrieves the most recent 20 activities on the WealthSimple Trade Account.
    *
-   * @param {*} tokens The access and refresh tokens returned by a successful login.ss
    */
-  getActivities: async (tokens) =>
-    handleRequest(endpoints.ACTIVITIES, {}, tokens),
+  getActivities: async () => handleRequest(endpoints.ACTIVITIES, {}),
 
   /**
    * Retains all bank accounts linked to the WealthSimple Trade account.
    *
-   * @param {*} tokens The access and refresh tokens returned by a successful login.
    */
-  getBankAccounts: async (tokens) =>
-    handleRequest(endpoints.BANK_ACCOUNTS, {}, tokens),
+  getBankAccounts: async () => handleRequest(endpoints.BANK_ACCOUNTS, {}),
 
   /**
    * Grab all deposit records on the WealthSimple Trade account.
    *
-   * @param {*} tokens The access and refresh tokens returned by a successful login.
    */
-  getDeposits: async (tokens) =>
-    handleRequest(endpoints.DEPOSITS, {}, tokens),
+  getDeposits: async () => handleRequest(endpoints.DEPOSITS, {}),
 
   /**
    * A snapshots of the current USD/CAD exchange rates on the WealthSimple Trade
    * platform.
    *
-   * @param {*} tokens The access and refresh tokens returned by a successful login.
    */
-  getExchangeRates: async (tokens) =>
-    handleRequest(endpoints.EXCHANGE_RATES, {}, tokens),
+  getExchangeRates: async () => handleRequest(endpoints.EXCHANGE_RATES, {}),
   
   /**
    * Lists all positions in the specified trading account under the WealthSimple Trade Account.
    * 
-   * @param {*} tokens The access and refresh tokens returned by a successful login.
    * @param {*} accountId The specific account in the WealthSimple Trade account
    */
-  getPositions: async (tokens, accountId) =>
-    handleRequest(endpoints.POSITIONS, { accountId }, tokens),
+  getPositions: async (accountId) =>
+    handleRequest(endpoints.POSITIONS, { accountId }),
 
   /**
    * Collects orders (filled, pending, cancelled) for the provided page and
    * account id.
    *
-   * @param {*} tokens The access and refresh tokens returned by a successful login.
    * @param {*} accountId The specific account in the WealthSimple Trade account
    * @param {*} page The orders page index to seek to
    */
-  getOrdersByPage: async (tokens, accountId, page) =>
+  getOrdersByPage: async (accountId, page) =>
     handleRequest(endpoints.ORDERS_BY_PAGE, {
       offset: (page - 1) * ORDERS_PER_PAGE,
       accountId
-    }, tokens),
+    }),
 
   /**
    * Collects all orders (filled, pending, cancelled) for the specific account.
    *
-   * @param {*} tokens The access and refresh tokens returned by a successful login.
    * @param {*} accountId The specific account in the WealthSimple Trade account
    */
-  getOrders: async (tokens, accountId) =>
+  getOrders: async (accountId) =>
     handleRequest(endpoints.ALL_ORDERS, {
       offset: 0,
       accountId
-    }, tokens),
+    }),
 
   /**
    * Retrieves pending orders for the specified security in the account.
    *
-   * @param {*} tokens The access and refresh tokens returned by a successful login.
    * @param {*} accountId The specific account in the WealthSimple Trade account
    * @param {*} ticker (optional) The security symbol
    */
-  getPendingOrders: async (tokens, accountId, ticker) =>
+  getPendingOrders: async (accountId, ticker) =>
     handleRequest(endpoints.FILTERED_ORDERS, {
       accountId,
       ticker,
       status: 'submitted'
-    }, tokens),
+    }),
   
   /**
    * Retrieves filled orders for the specified security in the account.
    *
-   * @param {*} tokens The access and refresh tokens returned by a successful login.
    * @param {*} accountId The specific account in the WealthSimple Trade account
    * @param {*} ticker (optional) The security symbol
    */
-  getFilledOrders: async (tokens, accountId, ticker) =>
+  getFilledOrders: async (accountId, ticker) =>
     handleRequest(endpoints.FILTERED_ORDERS, {
       accountId,
       ticker,
       status: 'posted'
-    }, tokens),
+    }),
 
   /**
    * Retrieves cancelled orders for the specified security in the account.
    *
-   * @param {*} tokens The access and refresh tokens returned by a successful login.
+
    * @param {*} accountId The specific account in the WealthSimple Trade account
    * @param {*} ticker (optional) The security symbol
    */
-  getCancelledOrders: async (tokens, accountId, ticker) =>
+  getCancelledOrders: async (accountId, ticker) =>
     handleRequest(endpoints.FILTERED_ORDERS, {
       accountId,
       ticker,
       status: 'cancelled'
-    }, tokens),
+    }),
 
   /**
    * Cancels the pending order specified by the order id.
    *
-   * @param {*} tokens The access and refresh tokens returned by a successful login.
    * @param {*} orderId The pending order to cancel
    */
-  cancelOrder: async (tokens, orderId) =>
-    handleRequest(endpoints.CANCEL_ORDER, { orderId }, tokens),
+  cancelOrder: async (orderId) => handleRequest(endpoints.CANCEL_ORDER, { orderId }),
 
   /**
    * Cancels all pending orders under the WealthSimple Trade Account.
    *
-   * @param {*} tokens The access and refresh tokens returned by a successful login.
    * @param {*} accountId The specific account in the WealthSimple Trade account
    */
-  cancelPendingOrders: async (tokens, accountId) => {
-    const pending = await wealthsimple.getPendingOrders(tokens, accountId);
-    return Promise.all(pending.orders.map(async (order) => await wealthsimple.cancelOrder(tokens, order.order_id)));
+  cancelPendingOrders: async (accountId) => {
+    const pending = await wealthsimple.getPendingOrders(accountId);
+    return Promise.all(pending.orders.map(async (order) => await wealthsimple.cancelOrder(order.order_id)));
   },
 
   /**
    * Information about a security on the WealthSimple Trade Platform.
    *
-   * @param {*} tokens The access and refresh tokens returned by a successful login.
    * @param {string|object} ticker The security symbol. An exchange may be added as a suffix, separated from the symbol with a colon, for example: AAPL:NASDAQ, ENB:TSX
    * @param {string} ticker.symbol The security symbol.
    * @param {string} [ticker.exchange] (optional) the exchange the security trades in
    * @param {string} [ticker.id] (optional) The internal WealthSimple Trade security ID
    * @param {boolean} extensive Pulls a more detailed report of the security using the /securities/{id} API
    */
-  getSecurity: async (tokens, ticker, extensive) => {
+  getSecurity: async (ticker, extensive) => {
     if (typeof (ticker) === 'string') {
       ticker = {
         symbol: ticker
@@ -198,10 +176,10 @@ const wealthsimple = {
        * 
        * We will immediately call the extensive details API since we have the id.
        */
-      return await handleRequest(endpoints.EXTENSIVE_SECURITY_DETAILS, { id: ticker.id }, tokens);
+      return await handleRequest(endpoints.EXTENSIVE_SECURITY_DETAILS, { id: ticker.id });
     }
 
-    let queryResult = await handleRequest(endpoints.SECURITY, { ticker: ticker.symbol }, tokens);
+    let queryResult = await handleRequest(endpoints.SECURITY, { ticker: ticker.symbol });
     queryResult = queryResult.filter(security => security.stock.symbol === ticker.symbol);
 
     if (ticker.exchange) {
@@ -217,7 +195,7 @@ const wealthsimple = {
     if (extensive) {
 
       // The caller has opted to receive the extensive details about the security.
-      return await handleRequest(endpoints.EXTENSIVE_SECURITY_DETAILS, { id: queryResult[0].id }, tokens);
+      return await handleRequest(endpoints.EXTENSIVE_SECURITY_DETAILS, { id: queryResult[0].id });
     }
 
     return queryResult[0];
@@ -226,13 +204,12 @@ const wealthsimple = {
   /**
    * Market buy a security through the WealthSimple Trade application.
    *
-   * @param {*} tokens The access and refresh tokens returned by a successful login.
    * @param {*} accountId The account to make the transaction from
    * @param {*} ticker The security symbol
    * @param {*} quantity The number of securities to purchase
    */
-  placeMarketBuy: async(tokens, accountId, ticker, quantity) => {
-    let extensive_details = await wealthsimple.getSecurity(tokens, ticker, true);
+  placeMarketBuy: async (accountId, ticker, quantity) => {
+    let extensive_details = await wealthsimple.getSecurity(ticker, true);
 
     return handleRequest(endpoints.PLACE_ORDER, {
       security_id: extensive_details.id,
@@ -242,42 +219,40 @@ const wealthsimple = {
       order_sub_type: "market",
       time_in_force: "day",
       account_id: accountId
-    }, tokens);
+    });
   },
 
   /**
    * Limit buy a security through the WealthSimple Trade application.
    *
-   * @param {*} tokens The access and refresh tokens returned by a successful login.
    * @param {*} accountId The account to make the transaction from
    * @param {*} ticker The security symbol
    * @param {*} limit The maximum price to purchase the security at
    * @param {*} quantity The number of securities to purchase
    */
-  placeLimitBuy: async(tokens, accountId, ticker, limit, quantity) =>
+  placeLimitBuy: async (accountId, ticker, limit, quantity) =>
     handleRequest(endpoints.PLACE_ORDER, {
-      security_id: (await wealthsimple.getSecurity(tokens, ticker)).id,
+      security_id: (await wealthsimple.getSecurity(ticker)).id,
       limit_price: limit,
       quantity,
       order_type: "buy_quantity",
       order_sub_type: "limit",
       time_in_force: "day",
       account_id: accountId
-    }, tokens),
+    }),
 
   /**
    * Stop limit buy a security through the WealthSimple Trade application.
    *
-   * @param {*} tokens The access and refresh tokens returned by a successful login.
    * @param {*} accountId The account to make the transaction from
    * @param {*} ticker The security symbol
    * @param {*} stop The price at which the order converts to a limit order
    * @param {*} limit The maximum price to purchase the security at
    * @param {*} quantity The number of securities to purchase
    */
-  placeStopLimitBuy: async(tokens, accountId, ticker, stop, limit, quantity) => {
+  placeStopLimitBuy: async (accountId, ticker, stop, limit, quantity) => {
     
-    let security = await wealthsimple.getSecurity(tokens, ticker);
+    let security = await wealthsimple.getSecurity(ticker);
 
     // The WealthSimple Trade backend doesn't check for this, even though the app does..
     if (isCanadianSecurity(security.stock.primary_exchange) && stop !== limit) {
@@ -285,7 +260,7 @@ const wealthsimple = {
     }
 
     return handleRequest(endpoints.PLACE_ORDER, {
-      security_id: (await wealthsimple.getSecurity(tokens, ticker)).id,
+      security_id: (await wealthsimple.getSecurity(ticker)).id,
       stop_price: stop,
       limit_price: limit,
       quantity,
@@ -293,20 +268,19 @@ const wealthsimple = {
       order_sub_type: "stop_limit",
       time_in_force: "day",
       account_id: accountId
-    }, tokens);
+    });
   },
 
   /**
    * Market sell a security through the WealthSimple Trade application.
    *
-   * @param {*} tokens The access and refresh tokens returned by a successful login.
    * @param {*} accountId The account to make the transaction from
    * @param {*} ticker The security symbol
    * @param {*} quantity The number of securities to purchase
    */
-  placeMarketSell: async(tokens, accountId, ticker, quantity) => {
+  placeMarketSell: async (accountId, ticker, quantity) => {
 
-    let extensive_details = await wealthsimple.getSecurity(tokens, ticker, true);
+    let extensive_details = await wealthsimple.getSecurity(ticker, true);
     
     return handleRequest(endpoints.PLACE_ORDER, {
       security_id: extensive_details.id,
@@ -316,42 +290,40 @@ const wealthsimple = {
       order_sub_type: "market",
       time_in_force: "day",
       account_id: accountId,
-    }, tokens);
+    });
   },
 
   /**
    * Limit sell a security through the WealthSimple Trade application.
    *
-   * @param {*} tokens The access and refresh tokens returned by a successful login.
    * @param {*} accountId The account to make the transaction from
    * @param {*} ticker The security symbol
    * @param {*} limit The minimum price to sell the security at
    * @param {*} quantity The number of securities to sell
    */
-  placeLimitSell: async (tokens, accountId, ticker, limit, quantity) =>
+  placeLimitSell: async (accountId, ticker, limit, quantity) =>
     handleRequest(endpoints.PLACE_ORDER, {
-      security_id: (await wealthsimple.getSecurity(tokens, ticker)).id,
+      security_id: (await wealthsimple.getSecurity(ticker)).id,
       limit_price: limit,
       quantity,
       order_type: "sell_quantity",
       order_sub_type: "limit",
       time_in_force: "day",
       account_id: accountId
-    }, tokens),
+    }),
 
   /**
    * Stop limit sell a security through the WealthSimple Trade application.
    *
-   * @param {*} tokens The access and refresh tokens returned by a successful login.
    * @param {*} accountId The account to make the transaction from
    * @param {*} ticker The security symbol
    * @param {*} stop The price at which the order converts to a limit order
    * @param {*} limit The minimum price to sell the security at
    * @param {*} quantity The number of securities to sell
    */
-  placeStopLimitSell: async (tokens, accountId, ticker, stop, limit, quantity) => {
+  placeStopLimitSell: async (accountId, ticker, stop, limit, quantity) => {
 
-    let security = await wealthsimple.getSecurity(tokens, ticker);
+    let security = await wealthsimple.getSecurity(ticker);
 
     // The WealthSimple Trade backend doesn't check for this, even though the app does..
     if (isCanadianSecurity(security.stock.primary_exchange) && stop !== limit) {
@@ -367,10 +339,8 @@ const wealthsimple = {
       order_sub_type: "stop_limit",
       time_in_force: "day",
       account_id: accountId
-    }, tokens);
+    });
   }
 }
 
 export default wealthsimple;
-
-wealthsimple.headers.values()

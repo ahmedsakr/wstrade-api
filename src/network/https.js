@@ -1,6 +1,7 @@
 import fetch from 'node-fetch';
 import status from 'http-status';
 import customHeaders from '../headers';
+import { getTokens } from '../auth';
 
 // WealthSimple Trade API returns some custom HTTP codes
 const wealthSimpleHttpCodes = {
@@ -19,8 +20,11 @@ export const isSuccessfulRequest = (code) => httpSuccessCodes.includes(code);
  * Fulfill the endpoint request given the endpoint configuration, optional
  * data, and the authentication tokens.
  */
-export async function handleRequest(endpoint, data, tokens) {
+export async function handleRequest(endpoint, data) {
   try {
+
+    // Retrieve secret tokens
+    let tokens = getTokens();
 
     // Submit the HTTP request to the WealthSimple Trade Servers
     const response = await talk(endpoint, data, tokens);
