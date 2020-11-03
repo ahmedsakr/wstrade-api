@@ -1,14 +1,7 @@
 import fetch from 'node-fetch';
 import status from 'http-status';
-
-let customHeaders = new fetch.Headers();
-
-// External API to mutate custom headers
-export const headers = {
-  add: (name, value) => customHeaders.append(name, value),
-  remove: (name) => customHeaders.delete(name),
-  clear: () => [...customHeaders].forEach(header => customHeaders.delete(header[0])),
-};
+import customHeaders from '../headers';
+import auth from '../auth';
 
 // WealthSimple Trade API returns some custom HTTP codes
 const wealthSimpleHttpCodes = {
@@ -25,10 +18,13 @@ export const isSuccessfulRequest = (code) => httpSuccessCodes.includes(code);
 
 /*
  * Fulfill the endpoint request given the endpoint configuration, optional
- * data, and the authentication tokens.
+ * data.
  */
-export async function handleRequest(endpoint, data, tokens) {
+export async function handleRequest(endpoint, data) {
   try {
+
+    // Retrieve secret tokens
+    let tokens = auth.tokens;
 
     // Submit the HTTP request to the WealthSimple Trade Servers
     const response = await talk(endpoint, data, tokens);
@@ -90,7 +86,7 @@ function talk(endpoint, data, tokens) {
   headers.append('Content-Type', 'application/json');
 
   // Apply all custom headers
-  [...customHeaders].forEach(header => headers.append(...header));
+  customHeaders.values().forEach(header => headers.append(...header));
 
   if (tokens) {
     headers.append('Authorization', tokens.access)
