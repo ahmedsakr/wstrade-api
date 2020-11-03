@@ -1,0 +1,50 @@
+import endpoints from './api/endpoints';
+import { handleRequest } from './network/https';
+
+export default {
+
+  /**
+   * Retrieves all account ids open under this WealthSimple Trade account.
+   *
+   */
+  all: async () => handleRequest(endpoints.ACCOUNT_IDS, {}),
+
+  /**
+   * Retrieves the top-level data of the account, including account id, account types, account values, and more.
+   *
+   */
+  data: async () => handleRequest(endpoints.LIST_ACCOUNT, {}),
+
+  /**
+   * Query the history of the account within a certain time interval.
+   *
+   * @param {*} interval The time interval for the history query
+   * @param {*} accountId The account to query
+   */
+  history: async (interval, accountId) => handleRequest(endpoints.HISTORY_ACCOUNT, { interval, accountId }),
+  
+  /**
+   * Retrieves the most recent 20 activities on the WealthSimple Trade Account.
+   *
+   */
+  activities: async () => handleRequest(endpoints.ACTIVITIES, {}),
+
+  /**
+   * Retains all bank accounts linked to the WealthSimple Trade account.
+   *
+   */
+  getBankAccounts: async () => handleRequest(endpoints.BANK_ACCOUNTS, {}),
+
+  /**
+   * Grab all deposit records on the WealthSimple Trade account.
+   *
+   */
+  deposits: async () => handleRequest(endpoints.DEPOSITS, {}),
+
+  /**
+   * Lists all positions in the specified trading account under the WealthSimple Trade Account.
+   * 
+   * @param {*} accountId The specific account in the WealthSimple Trade account
+   */
+  positions: async (accountId) => handleRequest(endpoints.POSITIONS, { accountId }),
+};
