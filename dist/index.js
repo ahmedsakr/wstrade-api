@@ -9,6 +9,10 @@ var _endpoints = _interopRequireWildcard(require("./api/endpoints"));
 
 var _https = require("./network/https");
 
+var _login = _interopRequireDefault(require("./auth/login"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
 function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function _getRequireWildcardCache() { return cache; }; return cache; }
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
@@ -21,54 +25,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 const isCanadianSecurity = exchange => ['TSX', 'TSX-V'].includes(exchange);
 
 const wealthsimple = {
-  /**
-   * Attempts to create a session for the provided email and password.
-   *
-   * @param {*} email emailed registered by the WealthSimple Trade account
-   * @param {*} password The password of the account
-   * @param {*} otp_func otp function (async/sync) that provides the OTP code somehow
-   */
-  login: function () {
-    var _login = _asyncToGenerator(function* (email, password, otp_func) {
-      if (typeof otp_func === 'function') {
-        return (0, _https.handleRequest)(_endpoints.default.LOGIN, {
-          email,
-          password,
-          otp: yield otp_func()
-        });
-      } else {
-        return (0, _https.handleRequest)(_endpoints.default.LOGIN, {
-          email,
-          password
-        });
-      }
-    });
-
-    function login(_x, _x2, _x3) {
-      return _login.apply(this, arguments);
-    }
-
-    return login;
-  }(),
-
-  /**
-   * Generates a new set of access and refresh tokens.
-   *
-   * @param {*} tokens The access and refresh tokens returned by a successful login.
-   */
-  refresh: function () {
-    var _refresh = _asyncToGenerator(function* (tokens) {
-      return (0, _https.handleRequest)(_endpoints.default.REFRESH, {
-        refresh_token: tokens.refresh
-      }, tokens);
-    });
-
-    function refresh(_x4) {
-      return _refresh.apply(this, arguments);
-    }
-
-    return refresh;
-  }(),
+  auth: _login.default,
 
   /**
    * Appends a header name-value pair to all requests.
@@ -100,7 +57,7 @@ const wealthsimple = {
       return (0, _https.handleRequest)(_endpoints.default.ACCOUNT_IDS, {}, tokens);
     });
 
-    function getAccounts(_x5) {
+    function getAccounts(_x) {
       return _getAccounts.apply(this, arguments);
     }
 
@@ -117,7 +74,7 @@ const wealthsimple = {
       return (0, _https.handleRequest)(_endpoints.default.LIST_ACCOUNT, {}, tokens);
     });
 
-    function getAccountData(_x6) {
+    function getAccountData(_x2) {
       return _getAccountData.apply(this, arguments);
     }
 
@@ -139,7 +96,7 @@ const wealthsimple = {
       }, tokens);
     });
 
-    function getHistory(_x7, _x8, _x9) {
+    function getHistory(_x3, _x4, _x5) {
       return _getHistory.apply(this, arguments);
     }
 
@@ -156,7 +113,7 @@ const wealthsimple = {
       return (0, _https.handleRequest)(_endpoints.default.ACTIVITIES, {}, tokens);
     });
 
-    function getActivities(_x10) {
+    function getActivities(_x6) {
       return _getActivities.apply(this, arguments);
     }
 
@@ -173,7 +130,7 @@ const wealthsimple = {
       return (0, _https.handleRequest)(_endpoints.default.BANK_ACCOUNTS, {}, tokens);
     });
 
-    function getBankAccounts(_x11) {
+    function getBankAccounts(_x7) {
       return _getBankAccounts.apply(this, arguments);
     }
 
@@ -190,7 +147,7 @@ const wealthsimple = {
       return (0, _https.handleRequest)(_endpoints.default.DEPOSITS, {}, tokens);
     });
 
-    function getDeposits(_x12) {
+    function getDeposits(_x8) {
       return _getDeposits.apply(this, arguments);
     }
 
@@ -208,7 +165,7 @@ const wealthsimple = {
       return (0, _https.handleRequest)(_endpoints.default.EXCHANGE_RATES, {}, tokens);
     });
 
-    function getExchangeRates(_x13) {
+    function getExchangeRates(_x9) {
       return _getExchangeRates.apply(this, arguments);
     }
 
@@ -228,7 +185,7 @@ const wealthsimple = {
       }, tokens);
     });
 
-    function getPositions(_x14, _x15) {
+    function getPositions(_x10, _x11) {
       return _getPositions.apply(this, arguments);
     }
 
@@ -251,7 +208,7 @@ const wealthsimple = {
       }, tokens);
     });
 
-    function getOrdersByPage(_x16, _x17, _x18) {
+    function getOrdersByPage(_x12, _x13, _x14) {
       return _getOrdersByPage.apply(this, arguments);
     }
 
@@ -272,7 +229,7 @@ const wealthsimple = {
       }, tokens);
     });
 
-    function getOrders(_x19, _x20) {
+    function getOrders(_x15, _x16) {
       return _getOrders.apply(this, arguments);
     }
 
@@ -295,7 +252,7 @@ const wealthsimple = {
       }, tokens);
     });
 
-    function getPendingOrders(_x21, _x22, _x23) {
+    function getPendingOrders(_x17, _x18, _x19) {
       return _getPendingOrders.apply(this, arguments);
     }
 
@@ -318,7 +275,7 @@ const wealthsimple = {
       }, tokens);
     });
 
-    function getFilledOrders(_x24, _x25, _x26) {
+    function getFilledOrders(_x20, _x21, _x22) {
       return _getFilledOrders.apply(this, arguments);
     }
 
@@ -341,7 +298,7 @@ const wealthsimple = {
       }, tokens);
     });
 
-    function getCancelledOrders(_x27, _x28, _x29) {
+    function getCancelledOrders(_x23, _x24, _x25) {
       return _getCancelledOrders.apply(this, arguments);
     }
 
@@ -361,7 +318,7 @@ const wealthsimple = {
       }, tokens);
     });
 
-    function cancelOrder(_x30, _x31) {
+    function cancelOrder(_x26, _x27) {
       return _cancelOrder.apply(this, arguments);
     }
 
@@ -382,13 +339,13 @@ const wealthsimple = {
           return yield wealthsimple.cancelOrder(tokens, order.order_id);
         });
 
-        return function (_x34) {
+        return function (_x30) {
           return _ref.apply(this, arguments);
         };
       }()));
     });
 
-    function cancelPendingOrders(_x32, _x33) {
+    function cancelPendingOrders(_x28, _x29) {
       return _cancelPendingOrders.apply(this, arguments);
     }
 
@@ -463,7 +420,7 @@ const wealthsimple = {
       return queryResult[0];
     });
 
-    function getSecurity(_x35, _x36, _x37) {
+    function getSecurity(_x31, _x32, _x33) {
       return _getSecurity.apply(this, arguments);
     }
 
@@ -492,7 +449,7 @@ const wealthsimple = {
       }, tokens);
     });
 
-    function placeMarketBuy(_x38, _x39, _x40, _x41) {
+    function placeMarketBuy(_x34, _x35, _x36, _x37) {
       return _placeMarketBuy.apply(this, arguments);
     }
 
@@ -521,7 +478,7 @@ const wealthsimple = {
       }, tokens);
     });
 
-    function placeLimitBuy(_x42, _x43, _x44, _x45, _x46) {
+    function placeLimitBuy(_x38, _x39, _x40, _x41, _x42) {
       return _placeLimitBuy.apply(this, arguments);
     }
 
@@ -560,7 +517,7 @@ const wealthsimple = {
       }, tokens);
     });
 
-    function placeStopLimitBuy(_x47, _x48, _x49, _x50, _x51, _x52) {
+    function placeStopLimitBuy(_x43, _x44, _x45, _x46, _x47, _x48) {
       return _placeStopLimitBuy.apply(this, arguments);
     }
 
@@ -589,7 +546,7 @@ const wealthsimple = {
       }, tokens);
     });
 
-    function placeMarketSell(_x53, _x54, _x55, _x56) {
+    function placeMarketSell(_x49, _x50, _x51, _x52) {
       return _placeMarketSell.apply(this, arguments);
     }
 
@@ -618,7 +575,7 @@ const wealthsimple = {
       }, tokens);
     });
 
-    function placeLimitSell(_x57, _x58, _x59, _x60, _x61) {
+    function placeLimitSell(_x53, _x54, _x55, _x56, _x57) {
       return _placeLimitSell.apply(this, arguments);
     }
 
@@ -657,7 +614,7 @@ const wealthsimple = {
       }, tokens);
     });
 
-    function placeStopLimitSell(_x62, _x63, _x64, _x65, _x66, _x67) {
+    function placeStopLimitSell(_x58, _x59, _x60, _x61, _x62, _x63) {
       return _placeStopLimitSell.apply(this, arguments);
     }
 

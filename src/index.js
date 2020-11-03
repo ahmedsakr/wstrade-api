@@ -1,33 +1,13 @@
 import endpoints, { ORDERS_PER_PAGE } from './api/endpoints';
 import { handleRequest, headers } from './network/https';
+import auth from './auth/login';
 
 // Checks if a security trades on TSX or TSX-V
 const isCanadianSecurity = (exchange) => ['TSX', 'TSX-V'].includes(exchange)
 
 const wealthsimple = {
-    
-  /**
-   * Attempts to create a session for the provided email and password.
-   *
-   * @param {*} email emailed registered by the WealthSimple Trade account
-   * @param {*} password The password of the account
-   * @param {*} otp_func otp function (async/sync) that provides the OTP code somehow
-   */
-  login: async (email, password, otp_func) => {
-    if (typeof(otp_func) === 'function') {
-      return handleRequest(endpoints.LOGIN, { email, password, otp: await otp_func() });
-    } else {
-      return handleRequest(endpoints.LOGIN, { email, password });
-    }
-  },
-
-  /**
-   * Generates a new set of access and refresh tokens.
-   *
-   * @param {*} tokens The access and refresh tokens returned by a successful login.
-   */
-  refresh: async (tokens) =>
-    handleRequest(endpoints.REFRESH, { refresh_token: tokens.refresh}, tokens),
+  
+  auth,
 
   /**
    * Appends a header name-value pair to all requests.
