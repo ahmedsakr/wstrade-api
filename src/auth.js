@@ -26,18 +26,39 @@ export default {
    */
   login: async function (email, password) {
 
-    // We attempt to login to trigger an One-Time Password (OTP) event.
-    let response = await handleRequest(endpoints.LOGIN, { email, password }).catch(() => {});
+    let response = null;
 
+    /*
+     * If we are given a function for otp, then we must fail a log in to
+     * trigger an OTP event with WealthSimple Trade. This will allow the user
+     * otp thunk to retrieve the code.
+     *
+     * If a literal value is provided for otp, it means the user has manually
+     * provided us with the otp code. We can skip this login attempt.
+     */
     if (typeof(this.otp) === 'function') {
+      await handleRequest(endpoints.LOGIN, {
+        email,
+        password
+      }).catch(() => {});
+    }
 
-      // Right on - the user has given us a function that we can get the OTP code from.
-      // Let's log in for real this time.
-      response = await handleRequest(endpoints.LOGIN, { email, password, otp: await this.otp() });
-    } else {
+    // Try to log in for real this time.
+    try {
+      response = await handleRequest(endpoints.LOGIN, {
+        email,
+        password,
+        otp: typeof(this.otp) === 'function'  ? await this.otp() : this.otp
+      });
+    } catch (error) {
 
-      // We don't have a way to get the OTP, so we reject.
-      return Promise.reject("OTP not retrievable!");
+      // we might have failed because OTP was not provided
+      if (!this.otp) {
+        return Promise.reject("OTP not provided!");
+      }
+
+      // Seems to be incorrect credentials or OTP.
+      throw error;
     }
 
     // Capture the tokens for later usage.
@@ -46,11 +67,12 @@ export default {
 
   /**
    * Generates a new set of access and refresh tokens.
-   *
-   * @param {*} tokens The access and refresh tokens returned by a successful login.
    */
   refresh: async function () {
-    let response = await handleRequest(endpoints.REFRESH, { refresh_token: tokens.refresh });
+    let response = await handleRequest(endpoints.REFRESH, {
+      refresh_token: this.tokens.refresh
+    });
+
     this.tokens = response.tokens;
   },
 };

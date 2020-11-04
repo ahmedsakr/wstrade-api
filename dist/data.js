@@ -9,6 +9,8 @@ var _endpoints = _interopRequireDefault(require("./api/endpoints"));
 
 var _https = require("./network/https");
 
+var _ticker = _interopRequireDefault(require("./core/ticker"));
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
@@ -44,21 +46,8 @@ var _default = {
    */
   getSecurity: function () {
     var _getSecurity = _asyncToGenerator(function* (ticker, extensive) {
-      if (typeof ticker === 'string') {
-        ticker = {
-          symbol: ticker
-        };
-        let tickerParts = ticker.symbol.split(':');
-
-        if (tickerParts.length > 2) {
-          return Promise.reject({
-            reason: `Illegal ticker: ${ticker.symbol}`
-          });
-        }
-
-        ticker.exchange = tickerParts[1];
-        ticker.symbol = tickerParts[0];
-      }
+      // Run some validation on the ticker
+      ticker = new _ticker.default(ticker);
 
       if (ticker.id) {
         /*
@@ -66,7 +55,7 @@ var _default = {
          * 
          * We will immediately call the extensive details API since we have the id.
          */
-        return yield (0, _https.handleRequest)(_endpoints.default.EXTENSIVE_SECURITY_DETAILS, {
+        return (0, _https.handleRequest)(_endpoints.default.EXTENSIVE_SECURITY_DETAILS, {
           id: ticker.id
         });
       }
@@ -92,7 +81,7 @@ var _default = {
 
       if (extensive) {
         // The caller has opted to receive the extensive details about the security.
-        return yield (0, _https.handleRequest)(_endpoints.default.EXTENSIVE_SECURITY_DETAILS, {
+        return (0, _https.handleRequest)(_endpoints.default.EXTENSIVE_SECURITY_DETAILS, {
           id: queryResult[0].id
         });
       }
