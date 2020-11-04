@@ -1,3 +1,4 @@
+import Ticker from '../core/ticker';
 import trade from '../index'
 
 // The maximum number of orders retrieved by the /orders API.
@@ -234,7 +235,7 @@ const WealthSimpleTradeEndpoints = {
     parameters: {
       0: "accountId",
     },
-    onSuccess: async (request, tokens) => {
+    onSuccess: async (request) => {
       const data = await request.response.json();
       const pages = Math.ceil(data.total / ORDERS_PER_PAGE);
       let orders = data.results;
@@ -243,7 +244,7 @@ const WealthSimpleTradeEndpoints = {
 
         // Query the rest of the pages
         for (let page = 2; page <= pages; page++) {
-          let tmp = await trade.getOrdersByPage(tokens, request.arguments.accountId, page);
+          let tmp = await trade.orders.page(request.arguments.accountId, page);
           orders.push(...tmp.orders)
         }
       }
@@ -265,21 +266,34 @@ const WealthSimpleTradeEndpoints = {
     parameters: {
       0: "accountId"
     },
-    onSuccess: async (request, tokens) => {
+    onSuccess: async (request) => {
       const data = await request.response.json();
       const pages = Math.ceil(data.total / ORDERS_PER_PAGE);
 
-      // The ticker symbol restricts the pending orders to a specific security
-      let pendingFilter = (request.arguments.ticker) ?
-        order => order.symbol === request.arguments.ticker && order.status === request.arguments.status :
-        order => order.status === request.arguments.status;
+      let pendingFilter = order => {
+        let ticker = request.arguments.ticker;
+        if (ticker) {
+
+          let target = new Ticker({ symbol: order.symbol, id: order.security_id });
+          // order objects don't include exchanges, so we are unable to make
+          // a strong comparison without requiring a linear increase of
+          // endpoint calls (which is not reasonable).
+          //
+          // The user should provide the security id for a strong comparison here.
+          if (!ticker.weakEquals(target)) {
+            return false;
+          }
+        }
+        
+        return order.status === request.arguments.status;
+      };
 
       let orders = data.results.filter(pendingFilter);
       if (pages > 1) {
 
         // Check all other pages for pending orders
         for (let page = 2; page <= pages; page++) {
-          let tmp = await trade.getOrdersByPage(tokens, request.arguments.accountId, page);
+          let tmp = await trade.orders.page(request.arguments.accountId, page);
           orders.push(...tmp.orders.filter(pendingFilter))
         }
       }

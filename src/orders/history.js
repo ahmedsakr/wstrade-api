@@ -1,5 +1,6 @@
 import endpoints, { ORDERS_PER_PAGE } from '../api/endpoints';
 import { handleRequest } from '../network/https';
+import Ticker from '../core/ticker';
 
 export default {
 
@@ -36,7 +37,7 @@ export default {
   pending: async (accountId, ticker) =>
     handleRequest(endpoints.FILTERED_ORDERS, {
       accountId,
-      ticker,
+      ticker: new Ticker(ticker),
       status: 'submitted'
     }),
   
@@ -49,7 +50,7 @@ export default {
   filled: async (accountId, ticker) =>
     handleRequest(endpoints.FILTERED_ORDERS, {
       accountId,
-      ticker,
+      ticker: new Ticker(ticker),
       status: 'posted'
     }),
 
@@ -63,7 +64,7 @@ export default {
   cancelled: async (accountId, ticker) =>
     handleRequest(endpoints.FILTERED_ORDERS, {
       accountId,
-      ticker,
+      ticker: new Ticker(ticker),
       status: 'cancelled'
     }),
 };

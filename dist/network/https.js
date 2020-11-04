@@ -57,7 +57,7 @@ function _handleRequest() {
         return endpoint.onSuccess({
           arguments: data,
           response
-        }, tokens);
+        });
       } else {
         return Promise.reject(yield endpoint.onFailure(response));
       }

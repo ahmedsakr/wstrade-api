@@ -1,5 +1,6 @@
 import endpoints from './api/endpoints';
 import { handleRequest } from './network/https';
+import Ticker from './core/ticker';
 
 export default {
 
@@ -14,23 +15,12 @@ export default {
    * Information about a security on the WealthSimple Trade Platform.
    *
    * @param {string|object} ticker The security symbol. An exchange may be added as a suffix, separated from the symbol with a colon, for example: AAPL:NASDAQ, ENB:TSX
-   * @param {string} ticker.symbol The security symbol.
-   * @param {string} [ticker.exchange] (optional) the exchange the security trades in
-   * @param {string} [ticker.id] (optional) The internal WealthSimple Trade security ID
    * @param {boolean} extensive Pulls a more detailed report of the security using the /securities/{id} API
    */
   getSecurity: async (ticker, extensive) => {
-    if (typeof (ticker) === 'string') {
-      ticker = {
-        symbol: ticker
-      };
-      let tickerParts = ticker.symbol.split(':');
-      if (tickerParts.length > 2) {
-        return Promise.reject({reason: `Illegal ticker: ${ticker.symbol}`});
-      }
-      ticker.exchange = tickerParts[1];
-      ticker.symbol = tickerParts[0];
-    }
+
+    // Run some validation on the ticker
+    ticker = new Ticker(ticker);
 
     if (ticker.id) {
       
@@ -39,7 +29,7 @@ export default {
        * 
        * We will immediately call the extensive details API since we have the id.
        */
-      return await handleRequest(endpoints.EXTENSIVE_SECURITY_DETAILS, { id: ticker.id });
+      return handleRequest(endpoints.EXTENSIVE_SECURITY_DETAILS, { id: ticker.id });
     }
 
     let queryResult = await handleRequest(endpoints.SECURITY, { ticker: ticker.symbol });
@@ -58,7 +48,7 @@ export default {
     if (extensive) {
 
       // The caller has opted to receive the extensive details about the security.
-      return await handleRequest(endpoints.EXTENSIVE_SECURITY_DETAILS, { id: queryResult[0].id });
+      return handleRequest(endpoints.EXTENSIVE_SECURITY_DETAILS, { id: queryResult[0].id });
     }
 
     return queryResult[0];

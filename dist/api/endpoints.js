@@ -5,6 +5,8 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = exports.ORDERS_PER_PAGE = void 0;
 
+var _ticker = _interopRequireDefault(require("../core/ticker"));
+
 var _index = _interopRequireDefault(require("../index"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
@@ -341,7 +343,7 @@ const WealthSimpleTradeEndpoints = {
       0: "accountId"
     },
     onSuccess: function () {
-      var _onSuccess12 = _asyncToGenerator(function* (request, tokens) {
+      var _onSuccess12 = _asyncToGenerator(function* (request) {
         const data = yield request.response.json();
         const pages = Math.ceil(data.total / ORDERS_PER_PAGE);
         let orders = data.results;
@@ -349,7 +351,7 @@ const WealthSimpleTradeEndpoints = {
         if (pages > 1) {
           // Query the rest of the pages
           for (let page = 2; page <= pages; page++) {
-            let tmp = yield _index.default.getOrdersByPage(tokens, request.arguments.accountId, page);
+            let tmp = yield _index.default.orders.page(request.arguments.accountId, page);
             orders.push(...tmp.orders);
           }
         }
@@ -360,7 +362,7 @@ const WealthSimpleTradeEndpoints = {
         };
       });
 
-      function onSuccess(_x13, _x14) {
+      function onSuccess(_x13) {
         return _onSuccess12.apply(this, arguments);
       }
 
@@ -379,17 +381,37 @@ const WealthSimpleTradeEndpoints = {
       0: "accountId"
     },
     onSuccess: function () {
-      var _onSuccess13 = _asyncToGenerator(function* (request, tokens) {
+      var _onSuccess13 = _asyncToGenerator(function* (request) {
         const data = yield request.response.json();
-        const pages = Math.ceil(data.total / ORDERS_PER_PAGE); // The ticker symbol restricts the pending orders to a specific security
+        const pages = Math.ceil(data.total / ORDERS_PER_PAGE);
 
-        let pendingFilter = request.arguments.ticker ? order => order.symbol === request.arguments.ticker && order.status === request.arguments.status : order => order.status === request.arguments.status;
+        let pendingFilter = order => {
+          let ticker = request.arguments.ticker;
+
+          if (ticker) {
+            let target = new _ticker.default({
+              symbol: order.symbol,
+              id: order.security_id
+            }); // order objects don't include exchanges, so we are unable to make
+            // a strong comparison without requiring a linear increase of
+            // endpoint calls (which is not reasonable).
+            //
+            // The user should provide the security id for a strong comparison here.
+
+            if (!ticker.weakEquals(target)) {
+              return false;
+            }
+          }
+
+          return order.status === request.arguments.status;
+        };
+
         let orders = data.results.filter(pendingFilter);
 
         if (pages > 1) {
           // Check all other pages for pending orders
           for (let page = 2; page <= pages; page++) {
-            let tmp = yield _index.default.getOrdersByPage(tokens, request.arguments.accountId, page);
+            let tmp = yield _index.default.orders.page(request.arguments.accountId, page);
             orders.push(...tmp.orders.filter(pendingFilter));
           }
         }
@@ -400,7 +422,7 @@ const WealthSimpleTradeEndpoints = {
         };
       });
 
-      function onSuccess(_x15, _x16) {
+      function onSuccess(_x14) {
         return _onSuccess13.apply(this, arguments);
       }
 
@@ -426,7 +448,7 @@ const WealthSimpleTradeEndpoints = {
         };
       });
 
-      function onSuccess(_x17) {
+      function onSuccess(_x15) {
         return _onSuccess14.apply(this, arguments);
       }
 
