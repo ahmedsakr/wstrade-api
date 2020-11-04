@@ -35,26 +35,23 @@ class Ticker {
    * @param {*} value The security ticker value, provided as a string or an object with symbol, exchange, or id.
    */
   constructor(value) {
+    this.symbol = null;
+    this.exchange = null;
+    this.id = null;
+
     if (typeof value === 'string') {
       let parts = value.split(':');
       this.symbol = parts[0];
       this.exchange = parts[1];
     } else {
-      // This ticker will be identified with the security id - no symbol or exchange
-      // stuff needed.
-      if (value.hasOwnProperty('id')) {
-        this.id = id;
-        return;
-      } // You can't form a ticker without a symbol.
-
-
-      if (!value.hasOwnProperty('symbol')) {
+      // You need at least a symbol or id to form a ticker.
+      if (!value.hasOwnProperty('symbol') && !value.hasOwnProperty('id')) {
         throw new Error(`Invalid ticker '${value}'`);
       }
 
-      this.symbol = value.symbol; // The exchange is not needed, so no need to check if it's defined or not null.
-
+      this.symbol = value.symbol;
       this.exchange = value.exchange;
+      this.id = value.id;
     } // Guarantee that the exchange is valid if not null
 
 
@@ -73,6 +70,18 @@ class Ticker {
     } else {
       return `${this.symbol}${this.exchange ? `:${this.exchange}` : ''}`;
     }
+  }
+  /**
+   * Compares symbol or id with another ticker. This is weak because
+   * exchange is not compared here, allowing for false positives
+   * of symbols on different exchanges.
+   *
+   * @param {*} other Ticker to compare us with
+   */
+
+
+  weakEquals(other) {
+    return this.id === other.id || this.symbol === other.symbol;
   }
 
 }

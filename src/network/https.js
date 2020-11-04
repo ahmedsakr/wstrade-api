@@ -33,7 +33,7 @@ export async function handleRequest(endpoint, data) {
       return endpoint.onSuccess({
         arguments: data,
         response
-      }, tokens);
+      });
     } else {
       return Promise.reject(await endpoint.onFailure(response));
     }
