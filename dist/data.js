@@ -39,9 +39,6 @@ var _default = {
    * Information about a security on the WealthSimple Trade Platform.
    *
    * @param {string|object} ticker The security symbol. An exchange may be added as a suffix, separated from the symbol with a colon, for example: AAPL:NASDAQ, ENB:TSX
-   * @param {string} ticker.symbol The security symbol.
-   * @param {string} [ticker.exchange] (optional) the exchange the security trades in
-   * @param {string} [ticker.id] (optional) The internal WealthSimple Trade security ID
    * @param {boolean} extensive Pulls a more detailed report of the security using the /securities/{id} API
    */
   getSecurity: function () {
