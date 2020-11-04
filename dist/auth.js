@@ -38,23 +38,38 @@ var _default = {
    */
   login: function () {
     var _login = _asyncToGenerator(function* (email, password) {
-      // We attempt to login to trigger an One-Time Password (OTP) event.
-      let response = yield (0, _https.handleRequest)(_endpoints.default.LOGIN, {
-        email,
-        password
-      }).catch(() => {});
+      let response = null;
+      /*
+       * If we are given a function for otp, then we must fail a log in to
+       * trigger an OTP event with WealthSimple Trade. This will allow the user
+       * otp thunk to retrieve the code.
+       *
+       * If a literal value is provided for otp, it means the user has manually
+       * provided us with the otp code. We can skip this login attempt.
+       */
 
       if (typeof this.otp === 'function') {
-        // Right on - the user has given us a function that we can get the OTP code from.
-        // Let's log in for real this time.
+        yield (0, _https.handleRequest)(_endpoints.default.LOGIN, {
+          email,
+          password
+        }).catch(() => {});
+      } // Try to log in for real this time.
+
+
+      try {
         response = yield (0, _https.handleRequest)(_endpoints.default.LOGIN, {
           email,
           password,
-          otp: yield this.otp()
+          otp: typeof this.otp === 'function' ? yield this.otp() : this.otp
         });
-      } else {
-        // We don't have a way to get the OTP, so we reject.
-        return Promise.reject("OTP not retrievable!");
+      } catch (error) {
+        // we might have failed because OTP was not provided
+        if (!this.otp) {
+          return Promise.reject("OTP not provided!");
+        } // Seems to be incorrect credentials or OTP.
+
+
+        throw error;
       } // Capture the tokens for later usage.
 
 
@@ -70,13 +85,11 @@ var _default = {
 
   /**
    * Generates a new set of access and refresh tokens.
-   *
-   * @param {*} tokens The access and refresh tokens returned by a successful login.
    */
   refresh: function () {
     var _refresh = _asyncToGenerator(function* () {
       let response = yield (0, _https.handleRequest)(_endpoints.default.REFRESH, {
-        refresh_token: tokens.refresh
+        refresh_token: this.tokens.refresh
       });
       this.tokens = response.tokens;
     });
