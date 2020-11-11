@@ -3,19 +3,6 @@ import status from 'http-status';
 import customHeaders from '../headers';
 import auth from '../auth';
 
-// WealthSimple Trade API returns some custom HTTP codes
-const wealthSimpleHttpCodes = {
-  ORDER_CREATED: 201
-}
-
-// Successful HTTP codes to be used for determining the status of the request
-const httpSuccessCodes = [
-  status.OK,
-  wealthSimpleHttpCodes.ORDER_CREATED
-]
-
-export const isSuccessfulRequest = (code) => httpSuccessCodes.includes(code);
-
 /*
  * Fulfill the endpoint request given the endpoint configuration, optional
  * data.
@@ -23,13 +10,10 @@ export const isSuccessfulRequest = (code) => httpSuccessCodes.includes(code);
 export async function handleRequest(endpoint, data) {
   try {
 
-    // Retrieve secret tokens
-    let tokens = auth.tokens;
-
     // Submit the HTTP request to the WealthSimple Trade Servers
-    const response = await talk(endpoint, data, tokens);
+    const response = await talk(endpoint, data);
 
-    if (isSuccessfulRequest(response.status)) {
+    if ([status.OK, status.CREATED].includes(response.status)) {
       return endpoint.onSuccess({
         arguments: data,
         response
@@ -50,6 +34,9 @@ export async function handleRequest(endpoint, data) {
  * data arguments.
  */
 function finalizeRequest(endpoint, data) {
+
+  // Make a copy so we don't modify the original one.
+  data = Object.assign({}, data);
 
   let url = endpoint.url;
 
@@ -81,22 +68,19 @@ function finalizeRequest(endpoint, data) {
  * Implements the network level protocol for talking to the
  * WealthSimple Trade HTTPS API.
  */
-function talk(endpoint, data, tokens) {
+function talk(endpoint, data) {
   let headers = new fetch.Headers();
   headers.append('Content-Type', 'application/json');
+
+  if (auth.tokens) {
+    headers.append('Authorization', auth.tokens.access)
+  }
 
   // Apply all custom headers
   customHeaders.values().forEach(header => headers.append(...header));
 
-  if (tokens) {
-    headers.append('Authorization', tokens.access)
-  }
-
-  // Make a copy of the arguments so the original copy is not modified
-  let copy = Object.assign({}, data);
-
   // fill path and query parameters in the URL
-  let { url, payload } = finalizeRequest(endpoint, copy);
+  let { url, payload } = finalizeRequest(endpoint, data);
 
   return fetch(url, {
     body: payload,

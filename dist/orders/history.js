@@ -21,6 +21,23 @@ function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try
 
 function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
 
+/*
+ * Retrieves orders that have the specified status.
+ */
+const filteredOrders = /*#__PURE__*/function () {
+  var _ref = _asyncToGenerator(function* (accountId, ticker, status) {
+    return (0, _https.handleRequest)(_endpoints.default.FILTERED_ORDERS, {
+      accountId,
+      ticker: new _ticker.default(ticker),
+      status
+    });
+  });
+
+  return function filteredOrders(_x, _x2, _x3) {
+    return _ref.apply(this, arguments);
+  };
+}();
+
 var _default = {
   /**
    * Collects orders (filled, pending, cancelled) for the provided page and
@@ -37,7 +54,7 @@ var _default = {
       });
     });
 
-    function page(_x, _x2) {
+    function page(_x4, _x5) {
       return _page2.apply(this, arguments);
     }
 
@@ -57,7 +74,7 @@ var _default = {
       });
     });
 
-    function all(_x3) {
+    function all(_x6) {
       return _all.apply(this, arguments);
     }
 
@@ -72,14 +89,10 @@ var _default = {
    */
   pending: function () {
     var _pending = _asyncToGenerator(function* (accountId, ticker) {
-      return (0, _https.handleRequest)(_endpoints.default.FILTERED_ORDERS, {
-        accountId,
-        ticker: new _ticker.default(ticker),
-        status: 'submitted'
-      });
+      return filteredOrders(accountId, ticker, 'submitted');
     });
 
-    function pending(_x4, _x5) {
+    function pending(_x7, _x8) {
       return _pending.apply(this, arguments);
     }
 
@@ -94,14 +107,10 @@ var _default = {
    */
   filled: function () {
     var _filled = _asyncToGenerator(function* (accountId, ticker) {
-      return (0, _https.handleRequest)(_endpoints.default.FILTERED_ORDERS, {
-        accountId,
-        ticker: new _ticker.default(ticker),
-        status: 'posted'
-      });
+      return filteredOrders(accountID, ticker, 'posted');
     });
 
-    function filled(_x6, _x7) {
+    function filled(_x9, _x10) {
       return _filled.apply(this, arguments);
     }
 
@@ -116,14 +125,10 @@ var _default = {
    */
   cancelled: function () {
     var _cancelled = _asyncToGenerator(function* (accountId, ticker) {
-      return (0, _https.handleRequest)(_endpoints.default.FILTERED_ORDERS, {
-        accountId,
-        ticker: new _ticker.default(ticker),
-        status: 'cancelled'
-      });
+      return filteredOrders(accountId, ticker, 'cancelled');
     });
 
-    function cancelled(_x8, _x9) {
+    function cancelled(_x11, _x12) {
       return _cancelled.apply(this, arguments);
     }
 
