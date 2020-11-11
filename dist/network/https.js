@@ -4,7 +4,6 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.handleRequest = handleRequest;
-exports.isSuccessfulRequest = void 0;
 
 var _nodeFetch = _interopRequireDefault(require("node-fetch"));
 
@@ -20,22 +19,10 @@ function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try
 
 function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
 
-// WealthSimple Trade API returns some custom HTTP codes
-const wealthSimpleHttpCodes = {
-  ORDER_CREATED: 201
-}; // Successful HTTP codes to be used for determining the status of the request
-
-const httpSuccessCodes = [_httpStatus.default.OK, wealthSimpleHttpCodes.ORDER_CREATED];
-
-const isSuccessfulRequest = code => httpSuccessCodes.includes(code);
 /*
  * Fulfill the endpoint request given the endpoint configuration, optional
  * data.
  */
-
-
-exports.isSuccessfulRequest = isSuccessfulRequest;
-
 function handleRequest(_x, _x2) {
   return _handleRequest.apply(this, arguments);
 }
@@ -48,12 +35,10 @@ function handleRequest(_x, _x2) {
 function _handleRequest() {
   _handleRequest = _asyncToGenerator(function* (endpoint, data) {
     try {
-      // Retrieve secret tokens
-      let tokens = _auth.default.tokens; // Submit the HTTP request to the WealthSimple Trade Servers
+      // Submit the HTTP request to the WealthSimple Trade Servers
+      const response = yield talk(endpoint, data);
 
-      const response = yield talk(endpoint, data, tokens);
-
-      if (isSuccessfulRequest(response.status)) {
+      if ([_httpStatus.default.OK, _httpStatus.default.CREATED].includes(response.status)) {
         return endpoint.onSuccess({
           arguments: data,
           response
@@ -70,6 +55,8 @@ function _handleRequest() {
 }
 
 function finalizeRequest(endpoint, data) {
+  // Make a copy so we don't modify the original one.
+  data = Object.assign({}, data);
   let url = endpoint.url; // No need to do anything if the URL is static (no parameters)
 
   if (endpoint.parameters) {
@@ -104,20 +91,19 @@ function finalizeRequest(endpoint, data) {
  */
 
 
-function talk(endpoint, data, tokens) {
+function talk(endpoint, data) {
   let headers = new _nodeFetch.default.Headers();
-  headers.append('Content-Type', 'application/json'); // Apply all custom headers
+  headers.append('Content-Type', 'application/json');
 
-  _headers.default.values().forEach(header => headers.append(...header));
-
-  if (tokens) {
-    headers.append('Authorization', tokens.access);
-  } // Make a copy of the arguments so the original copy is not modified
+  if (_auth.default.tokens) {
+    headers.append('Authorization', _auth.default.tokens.access);
+  } // Apply all custom headers
 
 
-  let copy = Object.assign({}, data); // fill path and query parameters in the URL
+  _headers.default.values().forEach(header => headers.append(...header)); // fill path and query parameters in the URL
 
-  let _finalizeRequest = finalizeRequest(endpoint, copy),
+
+  let _finalizeRequest = finalizeRequest(endpoint, data),
       url = _finalizeRequest.url,
       payload = _finalizeRequest.payload;
 

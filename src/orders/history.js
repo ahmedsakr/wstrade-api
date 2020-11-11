@@ -2,6 +2,17 @@ import endpoints, { ORDERS_PER_PAGE } from '../api/endpoints';
 import { handleRequest } from '../network/https';
 import Ticker from '../core/ticker';
 
+/*
+ * Retrieves orders that have the specified status.
+ */
+const filteredOrders = async (accountId, ticker, status) => {
+    return handleRequest(endpoints.FILTERED_ORDERS, {
+        accountId,
+        ticker: new Ticker(ticker),
+        status
+    });
+}
+
 export default {
 
   /**
@@ -34,12 +45,7 @@ export default {
    * @param {*} accountId The specific account in the WealthSimple Trade account
    * @param {*} ticker (optional) The security symbol
    */
-  pending: async (accountId, ticker) =>
-    handleRequest(endpoints.FILTERED_ORDERS, {
-      accountId,
-      ticker: new Ticker(ticker),
-      status: 'submitted'
-    }),
+  pending: async (accountId, ticker) => filteredOrders(accountId, ticker, 'submitted'),
   
   /**
    * Retrieves filled orders for the specified security in the account.
@@ -47,12 +53,7 @@ export default {
    * @param {*} accountId The specific account in the WealthSimple Trade account
    * @param {*} ticker (optional) The security symbol
    */
-  filled: async (accountId, ticker) =>
-    handleRequest(endpoints.FILTERED_ORDERS, {
-      accountId,
-      ticker: new Ticker(ticker),
-      status: 'posted'
-    }),
+  filled: async (accountId, ticker) => filteredOrders(accountID, ticker, 'posted'),
 
   /**
    * Retrieves cancelled orders for the specified security in the account.
@@ -61,10 +62,5 @@ export default {
    * @param {*} accountId The specific account in the WealthSimple Trade account
    * @param {*} ticker (optional) The security symbol
    */
-  cancelled: async (accountId, ticker) =>
-    handleRequest(endpoints.FILTERED_ORDERS, {
-      accountId,
-      ticker: new Ticker(ticker),
-      status: 'cancelled'
-    }),
+  cancelled: async (accountId, ticker) => filteredOrders(accountId, ticker, 'cancelled'),
 };

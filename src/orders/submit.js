@@ -1,5 +1,10 @@
 import endpoints from '../api/endpoints';
 import { handleRequest } from '../network/https';
+import history from './history';
+import data from '../data';
+import quotes from '../quotes';
+
+const isCanadianSecurity = (exchange) => ["TSX", "TSX-V"].includes(exchange);
 
 export default {
 
@@ -15,9 +20,9 @@ export default {
    *
    * @param {*} accountId The specific account in the WealthSimple Trade account
    */
-  cancelPending: async (accountId) => {
-    const pending = await wealthsimple.getPendingOrders(accountId);
-    return Promise.all(pending.orders.map(async (order) => await wealthsimple.cancelOrder(order.order_id)));
+  cancelPending: async function (accountId) {
+    const pending = await history.pending(accountId);
+    return Promise.all(pending.orders.map(async (order) => await this.cancel(order.order_id)));
   },
 
   /**
@@ -28,11 +33,11 @@ export default {
    * @param {*} quantity The number of securities to purchase
    */
   marketBuy: async (accountId, ticker, quantity) => {
-    let extensive_details = await wealthsimple.getSecurity(ticker, true);
+    let extensive_details = await data.getSecurity(ticker, true);
 
     return handleRequest(endpoints.PLACE_ORDER, {
       security_id: extensive_details.id,
-      limit_price: extensive_details.quote.amount,
+      limit_price: await quotes.get(ticker),
       quantity,
       order_type: "buy_quantity",
       order_sub_type: "market",
@@ -51,7 +56,7 @@ export default {
    */
   limitBuy: async (accountId, ticker, limit, quantity) =>
     handleRequest(endpoints.PLACE_ORDER, {
-      security_id: (await wealthsimple.getSecurity(ticker)).id,
+      security_id: (await data.getSecurity(ticker)).id,
       limit_price: limit,
       quantity,
       order_type: "buy_quantity",
@@ -71,7 +76,7 @@ export default {
    */
   stopLimitBuy: async (accountId, ticker, stop, limit, quantity) => {
     
-    let security = await wealthsimple.getSecurity(ticker);
+    let security = await data.getSecurity(ticker);
 
     // The WealthSimple Trade backend doesn't check for this, even though the app does..
     if (isCanadianSecurity(security.stock.primary_exchange) && stop !== limit) {
@@ -79,7 +84,7 @@ export default {
     }
 
     return handleRequest(endpoints.PLACE_ORDER, {
-      security_id: (await wealthsimple.getSecurity(ticker)).id,
+      security_id: security.id,
       stop_price: stop,
       limit_price: limit,
       quantity,
@@ -99,11 +104,11 @@ export default {
    */
   marketSell: async (accountId, ticker, quantity) => {
 
-    let extensive_details = await wealthsimple.getSecurity(ticker, true);
+    let extensive_details = await data.getSecurity(ticker, true);
     
     return handleRequest(endpoints.PLACE_ORDER, {
       security_id: extensive_details.id,
-      market_value: extensive_details.quote.amount,
+      market_value: await quotes.get(ticker),
       quantity: quantity,
       order_type: "sell_quantity",
       order_sub_type: "market",
@@ -122,7 +127,7 @@ export default {
    */
   limitSell: async (accountId, ticker, limit, quantity) =>
     handleRequest(endpoints.PLACE_ORDER, {
-      security_id: (await wealthsimple.getSecurity(ticker)).id,
+      security_id: (await data.getSecurity(ticker)).id,
       limit_price: limit,
       quantity,
       order_type: "sell_quantity",
@@ -142,7 +147,7 @@ export default {
    */
   stopLimitSell: async (accountId, ticker, stop, limit, quantity) => {
 
-    let security = await wealthsimple.getSecurity(ticker);
+    let security = await data.getSecurity(ticker);
 
     // The WealthSimple Trade backend doesn't check for this, even though the app does..
     if (isCanadianSecurity(security.stock.primary_exchange) && stop !== limit) {

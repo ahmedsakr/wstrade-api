@@ -9,11 +9,19 @@ var _endpoints = _interopRequireDefault(require("../api/endpoints"));
 
 var _https = require("../network/https");
 
+var _history = _interopRequireDefault(require("./history"));
+
+var _data = _interopRequireDefault(require("../data"));
+
+var _quotes = _interopRequireDefault(require("../quotes"));
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
 
 function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+
+const isCanadianSecurity = exchange => ["TSX", "TSX-V"].includes(exchange);
 
 var _default = {
   /**
@@ -42,10 +50,12 @@ var _default = {
    */
   cancelPending: function () {
     var _cancelPending = _asyncToGenerator(function* (accountId) {
-      const pending = yield wealthsimple.getPendingOrders(accountId);
+      var _this = this;
+
+      const pending = yield _history.default.pending(accountId);
       return Promise.all(pending.orders.map( /*#__PURE__*/function () {
         var _ref = _asyncToGenerator(function* (order) {
-          return yield wealthsimple.cancelOrder(order.order_id);
+          return yield _this.cancel(order.order_id);
         });
 
         return function (_x3) {
@@ -70,10 +80,10 @@ var _default = {
    */
   marketBuy: function () {
     var _marketBuy = _asyncToGenerator(function* (accountId, ticker, quantity) {
-      let extensive_details = yield wealthsimple.getSecurity(ticker, true);
+      let extensive_details = yield _data.default.getSecurity(ticker, true);
       return (0, _https.handleRequest)(_endpoints.default.PLACE_ORDER, {
         security_id: extensive_details.id,
-        limit_price: extensive_details.quote.amount,
+        limit_price: yield _quotes.default.get(ticker),
         quantity,
         order_type: "buy_quantity",
         order_sub_type: "market",
@@ -100,7 +110,7 @@ var _default = {
   limitBuy: function () {
     var _limitBuy = _asyncToGenerator(function* (accountId, ticker, limit, quantity) {
       return (0, _https.handleRequest)(_endpoints.default.PLACE_ORDER, {
-        security_id: (yield wealthsimple.getSecurity(ticker)).id,
+        security_id: (yield _data.default.getSecurity(ticker)).id,
         limit_price: limit,
         quantity,
         order_type: "buy_quantity",
@@ -128,7 +138,7 @@ var _default = {
    */
   stopLimitBuy: function () {
     var _stopLimitBuy = _asyncToGenerator(function* (accountId, ticker, stop, limit, quantity) {
-      let security = yield wealthsimple.getSecurity(ticker); // The WealthSimple Trade backend doesn't check for this, even though the app does..
+      let security = yield _data.default.getSecurity(ticker); // The WealthSimple Trade backend doesn't check for this, even though the app does..
 
       if (isCanadianSecurity(security.stock.primary_exchange) && stop !== limit) {
         return Promise.reject({
@@ -137,7 +147,7 @@ var _default = {
       }
 
       return (0, _https.handleRequest)(_endpoints.default.PLACE_ORDER, {
-        security_id: (yield wealthsimple.getSecurity(ticker)).id,
+        security_id: security.id,
         stop_price: stop,
         limit_price: limit,
         quantity,
@@ -164,10 +174,10 @@ var _default = {
    */
   marketSell: function () {
     var _marketSell = _asyncToGenerator(function* (accountId, ticker, quantity) {
-      let extensive_details = yield wealthsimple.getSecurity(ticker, true);
+      let extensive_details = yield _data.default.getSecurity(ticker, true);
       return (0, _https.handleRequest)(_endpoints.default.PLACE_ORDER, {
         security_id: extensive_details.id,
-        market_value: extensive_details.quote.amount,
+        market_value: yield _quotes.default.get(ticker),
         quantity: quantity,
         order_type: "sell_quantity",
         order_sub_type: "market",
@@ -194,7 +204,7 @@ var _default = {
   limitSell: function () {
     var _limitSell = _asyncToGenerator(function* (accountId, ticker, limit, quantity) {
       return (0, _https.handleRequest)(_endpoints.default.PLACE_ORDER, {
-        security_id: (yield wealthsimple.getSecurity(ticker)).id,
+        security_id: (yield _data.default.getSecurity(ticker)).id,
         limit_price: limit,
         quantity,
         order_type: "sell_quantity",
@@ -222,7 +232,7 @@ var _default = {
    */
   stopLimitSell: function () {
     var _stopLimitSell = _asyncToGenerator(function* (accountId, ticker, stop, limit, quantity) {
-      let security = yield wealthsimple.getSecurity(ticker); // The WealthSimple Trade backend doesn't check for this, even though the app does..
+      let security = yield _data.default.getSecurity(ticker); // The WealthSimple Trade backend doesn't check for this, even though the app does..
 
       if (isCanadianSecurity(security.stock.primary_exchange) && stop !== limit) {
         return Promise.reject({
