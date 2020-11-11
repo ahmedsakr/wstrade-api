@@ -22,7 +22,13 @@ var _default = {
    */
   all: function () {
     var _all = _asyncToGenerator(function* () {
-      return (0, _https.handleRequest)(_endpoints.default.ACCOUNT_IDS, {});
+      let accounts = yield (0, _https.handleRequest)(_endpoints.default.ACCOUNT_IDS, {});
+      return {
+        tfsa: accounts.find(account => account.startsWith('tfsa')),
+        rrsp: accounts.find(account => account.startsWith('rrsp')),
+        crypto: accounts.find(account => account.startsWith('non-registered-crypto')),
+        personal: accounts.find(account => account.startsWith('non-registered') && !account.startsWith('non-registered-crypto'))
+      };
     });
 
     function all() {
