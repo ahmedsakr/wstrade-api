@@ -7,7 +7,15 @@ export default {
    * Retrieves all account ids open under this WealthSimple Trade account.
    *
    */
-  all: async () => handleRequest(endpoints.ACCOUNT_IDS, {}),
+  all: async () => {
+      let accounts = await handleRequest(endpoints.ACCOUNT_IDS, {});
+      return {
+        tfsa: accounts.find(account => account.startsWith('tfsa')),
+        rrsp: accounts.find(account => account.startsWith('rrsp')),
+        crypto: accounts.find(account => account.startsWith('non-registered-crypto')),
+        personal: accounts.find(account => account.startsWith('non-registered') && !account.startsWith('non-registered-crypto')),
+      };
+  },
 
   /**
    * Retrieves the top-level data of the account, including account id, account types, account values, and more.
