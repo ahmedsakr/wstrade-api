@@ -1,6 +1,6 @@
-import fetch from 'node-fetch';  
+import { Headers } from 'node-fetch';  
 
-let customHeaders = new fetch.Headers();
+let customHeaders = new Headers();
 
 export default {
 
