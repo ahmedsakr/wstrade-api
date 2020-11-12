@@ -136,6 +136,29 @@ const WealthSimpleTradeEndpoints = {
   },
 
   /*
+   * The ME endpoint retrieves some surface information about you like
+   * your name and email.
+   */
+  ME: {
+    method: "GET",
+    url: "https://trade-service.wealthsimple.com/me",
+    onSuccess: defaultEndpointBehaviour.onSuccess,
+    onFailure: defaultEndpointBehaviour.onFailure
+  },
+
+  /*
+   * The PERSON endpoint retrieves detailed information about you that
+   * you provided on signup, like residential and mailing addresses,
+   * employment, phone numbers, and so on.
+   */
+  PERSON: {
+    method: "GET",
+    url: "https://trade-service.wealthsimple.com/person",
+    onSuccess: defaultEndpointBehaviour.onSuccess,
+    onFailure: defaultEndpointBehaviour.onFailure
+  },
+
+  /*
    * The HISTORY_ACCOUNT endpoint provides historical snapshots of the
    * WealthSimple account for a specified timeframe.
    */
