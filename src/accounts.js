@@ -9,6 +9,7 @@ export default {
    */
   all: async () => {
       let accounts = await handleRequest(endpoints.ACCOUNT_IDS, {});
+
       return {
         tfsa: accounts.find(account => account.startsWith('tfsa')),
         rrsp: accounts.find(account => account.startsWith('rrsp')),
@@ -19,9 +20,20 @@ export default {
 
   /**
    * Retrieves the top-level data of the account, including account id, account types, account values, and more.
-   *
    */
   data: async () => handleRequest(endpoints.LIST_ACCOUNT, {}),
+  
+  /**
+   * Retrieves some surface information about you like your name and email, account
+   * signatures, and other metadata.
+   */
+  me: async () => handleRequest(endpoints.ME, {}),
+
+  /**
+   * Detailed information about you that you provided on signup, like residential and
+   * mailing addresses, employment, phone numbers, and so on.
+   */
+  person: async () => handleRequest(endpoints.PERSON, {}),
 
   /**
    * Query the history of the account within a certain time interval.
@@ -38,14 +50,12 @@ export default {
   activities: async () => handleRequest(endpoints.ACTIVITIES, {}),
 
   /**
-   * Retains all bank accounts linked to the WealthSimple Trade account.
-   *
+   * Retrieves all bank accounts linked to the WealthSimple Trade account.
    */
   getBankAccounts: async () => handleRequest(endpoints.BANK_ACCOUNTS, {}),
 
   /**
    * Grab all deposit records on the WealthSimple Trade account.
-   *
    */
   deposits: async () => handleRequest(endpoints.DEPOSITS, {}),
 

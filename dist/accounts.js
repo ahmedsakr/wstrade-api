@@ -40,7 +40,6 @@ var _default = {
 
   /**
    * Retrieves the top-level data of the account, including account id, account types, account values, and more.
-   *
    */
   data: function () {
     var _data = _asyncToGenerator(function* () {
@@ -52,6 +51,38 @@ var _default = {
     }
 
     return data;
+  }(),
+
+  /**
+   * Retrieves some surface information about you like your name and email, account
+   * signatures, and other metadata.
+   */
+  me: function () {
+    var _me = _asyncToGenerator(function* () {
+      return (0, _https.handleRequest)(_endpoints.default.ME, {});
+    });
+
+    function me() {
+      return _me.apply(this, arguments);
+    }
+
+    return me;
+  }(),
+
+  /**
+   * Detailed information about you that you provided on signup, like residential and
+   * mailing addresses, employment, phone numbers, and so on.
+   */
+  person: function () {
+    var _person = _asyncToGenerator(function* () {
+      return (0, _https.handleRequest)(_endpoints.default.PERSON, {});
+    });
+
+    function person() {
+      return _person.apply(this, arguments);
+    }
+
+    return person;
   }(),
 
   /**
@@ -92,8 +123,7 @@ var _default = {
   }(),
 
   /**
-   * Retains all bank accounts linked to the WealthSimple Trade account.
-   *
+   * Retrieves all bank accounts linked to the WealthSimple Trade account.
    */
   getBankAccounts: function () {
     var _getBankAccounts = _asyncToGenerator(function* () {
@@ -109,7 +139,6 @@ var _default = {
 
   /**
    * Grab all deposit records on the WealthSimple Trade account.
-   *
    */
   deposits: function () {
     var _deposits = _asyncToGenerator(function* () {
