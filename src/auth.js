@@ -69,6 +69,10 @@ export default {
    * Generates a new set of access and refresh tokens.
    */
   refresh: async function () {
+
+    // Dispose of the existing token
+    this.tokens.access = null;
+  
     let response = await handleRequest(endpoints.REFRESH, {
       refresh_token: this.tokens.refresh
     });

@@ -63,16 +63,45 @@ function finalizeRequest(endpoint, data) {
 
   return { url, payload: JSON.stringify(data) };
 }
+
+/*
+ * Validate the auth token for expiry, attempting to refresh it
+ * if we have the refresh token.
+ */
+async function checkAuthTokenExpiry() {
+  const epoch_sec = () => parseInt(Date.now()/1000);
+
+  if (epoch_sec() >= auth.tokens?.expires) {
+    if (auth.tokens?.refresh) {
+      try {
+
+        // Let's implicitly refresh the access token using the refresh token.
+        await auth.refresh();
+      } catch (error) {
+
+        // The refresh token is not valid.
+        return Promise.reject(`Unable to refresh expired token: ${error}`);
+      }
+    } else {
+
+      // We are forced to reject as our access token has expired and we
+      // do not have a refresh token.
+      return Promise.reject('Access token expired');
+    }
+  }
+
+  return true;
+}
   
 /*
  * Implements the network level protocol for talking to the
  * WealthSimple Trade HTTPS API.
  */
-function talk(endpoint, data) {
+async function talk(endpoint, data) {
   let headers = new fetch.Headers();
   headers.append('Content-Type', 'application/json');
 
-  if (auth.tokens) {
+  if (auth.tokens?.access && await checkAuthTokenExpiry()) {
     headers.append('Authorization', auth.tokens.access)
   }
 
