@@ -2,7 +2,7 @@ import fetch from 'node-fetch';
 import status from 'http-status';
 import customHeaders from '../headers';
 import auth from '../auth';
-
+import { configEnabled } from '../config';
 /*
  * Fulfill the endpoint request given the endpoint configuration, optional
  * data.
@@ -69,6 +69,13 @@ function finalizeRequest(endpoint, data) {
  * if we have the refresh token.
  */
 async function checkAuthTokenExpiry() {
+
+  // We won't attempt to implicitly refresh if the user has requested
+  // this.
+  if (!configEnabled('implicit_token_refresh')) {
+    return true;
+  }
+
   const epoch_sec = () => parseInt(Date.now()/1000);
 
   if (epoch_sec() >= auth.tokens?.expires) {
