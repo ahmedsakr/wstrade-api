@@ -4,6 +4,7 @@ import accounts from './accounts';
 import orders from './orders';
 import data from './data';
 import quotes from './quotes';
+import config from './config';
 
 export default {
   auth,
@@ -11,5 +12,6 @@ export default {
   accounts,
   orders,
   quotes,
-  data
+  data,
+  config
 };
