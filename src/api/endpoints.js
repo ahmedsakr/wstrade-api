@@ -34,7 +34,8 @@ const WealthSimpleTradeEndpoints = {
       return {
         tokens: {
           access: request.response.headers.get('x-access-token'),
-          refresh: request.response.headers.get('x-refresh-token')
+          refresh: request.response.headers.get('x-refresh-token'),
+          expires: parseInt(request.response.headers.get('x-access-token-expires'))
         },
 
         accountInfo: await request.response.json()
@@ -51,8 +52,11 @@ const WealthSimpleTradeEndpoints = {
     url: "https://trade-service.wealthsimple.com/auth/refresh",
     onSuccess: async (request) => {
       return {
-        access: request.response.headers.get('x-access-token'),
-        refresh: request.response.headers.get('x-refresh-token')
+        tokens: {
+          access: request.response.headers.get('x-access-token'),
+          refresh: request.response.headers.get('x-refresh-token'),
+          expires: parseInt(request.response.headers.get('x-access-token-expires'))
+        }
       }
     },
     onFailure: defaultEndpointBehaviour.onFailure

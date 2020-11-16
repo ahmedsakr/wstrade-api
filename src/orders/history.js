@@ -8,7 +8,7 @@ import Ticker from '../core/ticker';
 const filteredOrders = async (accountId, ticker, status) => {
     return handleRequest(endpoints.FILTERED_ORDERS, {
         accountId,
-        ticker: new Ticker(ticker),
+        ticker: ticker ? new Ticker(ticker) : undefined,
         status
     });
 }
@@ -53,7 +53,7 @@ export default {
    * @param {*} accountId The specific account in the WealthSimple Trade account
    * @param {*} ticker (optional) The security symbol
    */
-  filled: async (accountId, ticker) => filteredOrders(accountID, ticker, 'posted'),
+  filled: async (accountId, ticker) => filteredOrders(accountId, ticker, 'posted'),
 
   /**
    * Retrieves cancelled orders for the specified security in the account.
