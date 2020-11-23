@@ -17,12 +17,19 @@ let disabled = [];
  */
 export default function config(feature) {
   if (feature?.startsWith('no_')) {
-    disabled.push(feature.substring(feature.indexOf("_") + 1));
+    let cut = feature.substring(feature.indexOf("_") + 1);
+
+    // We will only append this if it isn't already in there.
+    if (!configDisabled(cut)) {
+      disabled.push(cut);
+    }
   } else {
-    if (!configEnabled(feature)) {
+
+    // Only delete the feature if it's already disabled.
+    if (configDisabled(feature)) {
       disabled.splice(disabled.indexOf(feature), 1);
     }
   }
 }
 
-export const configEnabled = (feature) => !disabled.includes(feature);
+export const configDisabled = (feature) => disabled.includes(feature);

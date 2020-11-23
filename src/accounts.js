@@ -5,7 +5,6 @@ export default {
 
   /**
    * Retrieves all account ids open under this WealthSimple Trade account.
-   *
    */
   all: async () => {
       let accounts = await handleRequest(endpoints.ACCOUNT_IDS, {});

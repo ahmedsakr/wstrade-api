@@ -7,7 +7,6 @@ export default {
   /**
    * A snapshots of the current USD/CAD exchange rates on the WealthSimple Trade
    * platform.
-   *
    */
   exchangeRates: async () => handleRequest(endpoints.EXCHANGE_RATES, {}),
 

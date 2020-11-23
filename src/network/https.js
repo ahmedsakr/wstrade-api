@@ -2,7 +2,8 @@ import fetch from 'node-fetch';
 import status from 'http-status';
 import customHeaders from '../headers';
 import auth from '../auth';
-import { configEnabled } from '../config';
+import { configDisabled } from '../config';
+
 /*
  * Fulfill the endpoint request given the endpoint configuration, optional
  * data.
@@ -70,15 +71,21 @@ function finalizeRequest(endpoint, data) {
  */
 async function checkAuthTokenExpiry() {
 
-  // We won't attempt to implicitly refresh if the user has requested
-  // this.
-  if (!configEnabled('implicit_token_refresh')) {
+  // Absence of a token is allowed because non-privileged endpoints (i.e., login, refresh)
+  // do not require an authorization token.
+  if (!auth.tokens?.access) {
     return true;
   }
 
-  const epoch_sec = () => parseInt(Date.now()/1000);
+  // We won't attempt to implicitly refresh if the user has requested
+  // this.
+  if (configDisabled('implicit_token_refresh')) {
+    return true;
+  }
 
-  if (epoch_sec() >= auth.tokens?.expires) {
+  const epochSeconds = () => parseInt(Date.now()/1000);
+
+  if (epochSeconds() >= auth.tokens?.expires) {
     if (auth.tokens?.refresh) {
       try {
 
@@ -108,7 +115,7 @@ async function talk(endpoint, data) {
   let headers = new fetch.Headers();
   headers.append('Content-Type', 'application/json');
 
-  if (auth.tokens?.access && await checkAuthTokenExpiry()) {
+  if (await checkAuthTokenExpiry()) {
     headers.append('Authorization', auth.tokens.access)
   }
 
