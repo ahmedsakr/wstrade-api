@@ -1,12 +1,12 @@
-import auth from './auth';
-import headers from './headers';
-import accounts from './accounts';
-import orders from './orders';
-import data from './data';
-import quotes from './quotes';
-import config from './config';
+const auth = require('./auth').default;
+const headers = require('./headers').default;
+const accounts = require('./accounts').default;
+const orders = require('./orders').default;
+const data = require('./data').default;
+const quotes = require('./quotes').default;
+const config = require('./config').default;
 
-export default {
+module.exports = {
   auth,
   headers,
   accounts,

@@ -34,8 +34,17 @@ export default {
      * @param {*} ticker The security to get a quote for.
      */
     get: async function (ticker) {
-        let info = await data.getSecurity(ticker, false);
-        let exchange = info.stock.primary_exchange;
+        let exchange = null;
+
+        // We need the exchange in the next step if the user has specified
+        // a custom provider for an exchange. So if the user hasn't provided
+        // it, we will have to ping WealthSimple trade to get it.
+        if (ticker.exchange) {
+            exchange = ticker.exchange;
+        } else if (Object.keys(this.providers).length > 0) {
+            let info = await data.getSecurity(ticker, false);
+            exchange = info.stock.primary_exchange;
+        }
 
         // A custom provider will take precedence over the default source
         if (this.providers.hasOwnProperty(exchange)) {

@@ -58,7 +58,6 @@ export default {
   /**
    * Retrieves cancelled orders for the specified security in the account.
    *
-
    * @param {*} accountId The specific account in the WealthSimple Trade account
    * @param {*} ticker (optional) The security symbol
    */
