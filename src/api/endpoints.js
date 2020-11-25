@@ -1,5 +1,5 @@
 import Ticker from '../core/ticker';
-import orders from '../orders';
+import myOrders from '../orders';
 
 // The maximum number of orders retrieved by the /orders API.
 export const ORDERS_PER_PAGE = 20;
@@ -271,7 +271,7 @@ const WealthSimpleTradeEndpoints = {
 
         // Query the rest of the pages
         for (let page = 2; page <= pages; page++) {
-          let tmp = await orders.page(request.arguments.accountId, page);
+          let tmp = await myOrders.page(request.arguments.accountId, page);
           orders.push(...tmp.orders)
         }
       }
@@ -320,7 +320,7 @@ const WealthSimpleTradeEndpoints = {
 
         // Check all other pages for pending orders
         for (let page = 2; page <= pages; page++) {
-          let tmp = await orders.page(request.arguments.accountId, page);
+          let tmp = await myOrders.page(request.arguments.accountId, page);
           orders.push(...tmp.orders.filter(pendingFilter))
         }
       }
