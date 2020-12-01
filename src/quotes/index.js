@@ -5,7 +5,7 @@ export default {
 
     // WealthSimple Trade is our default source for quotes, despite
     // having a 15 min delay
-    default: trade,
+    defaultProvider: trade,
 
     // Maintains quote providers on an exchange basis
     providers: {},
@@ -50,7 +50,7 @@ export default {
         if (this.providers.hasOwnProperty(exchange)) {
             return this.providers[exchange].quote(ticker);
         } else {
-            return this.default.quote(ticker);
+            return this.defaultProvider.quote(ticker);
         }
     }
 };

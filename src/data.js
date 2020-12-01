@@ -5,7 +5,7 @@ import Ticker from './core/ticker';
 export default {
 
   /**
-   * A snapshots of the current USD/CAD exchange rates on the WealthSimple Trade
+   * A snapshot of the current USD/CAD exchange rates on the WealthSimple Trade
    * platform.
    */
   exchangeRates: async () => handleRequest(endpoints.EXCHANGE_RATES, {}),
@@ -13,7 +13,8 @@ export default {
   /**
    * Information about a security on the WealthSimple Trade Platform.
    *
-   * @param {string|object} ticker The security symbol. An exchange may be added as a suffix, separated from the symbol with a colon, for example: AAPL:NASDAQ, ENB:TSX
+   * @param {string|object} ticker The security symbol. An exchange may be added as a suffix, separated from the symbol
+   *                               with a colon, for example: AAPL:NASDAQ, ENB:TSX
    * @param {boolean} extensive Pulls a more detailed report of the security using the /securities/{id} API
    */
   getSecurity: async (ticker, extensive) => {

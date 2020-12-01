@@ -1,269 +1,389 @@
+
 export type AuthTokens = {
-    access: string,
-    refresh: string
+  access: string,
+  refresh: string,
+  expiry: string
 };
 
-export type HistoryInterval = '1d'|'1w'|'1m'|'3m'|'1y';
+// Supported exchanges
+export type Exchange = 'NYSE' | 'NASDAQ' | 'TSX' | 'TSX-V';
 
 /**
- * Identifies a security.
+ * A ticker may be provided to the API as a string or an object with
+ * well-defined attributes of symbol, exchange, or id.
  *
- * @param {string} symbol The security symbol.
- * @param {string} [exchange] (optional) the exchange the security trades in
- * @param {string} [id] (optional) The internal WealthSimple Trade security ID
+ * @param {string} symbol symbol that the security trades under.
+ * @param {string} [exchange] exchange under which the security trades in
+ * @param {string} [id] The internal WealthSimple Trade security id
  */
-export type SecurityIdentifier = {
-    symbol: string,
-    exchange?: string,
-    id?: string
+export type Ticker = string | {
+  symbol: string,
+  exchange?: Exchange,
+  id?: string
 };
 
-declare namespace Trade {
+declare namespace auth {
 
-    // The standard failure return for all API calls
-    type APIFailure = {
-        status: number,
-        reason: string,
-        body: any
-    };
+  /**
+   * Supported Auth Events at this time.
+   */
+  type AuthEvent = 'otp';
 
-    /**
-     * Attempts to create a session for the provided email and password.
-     *
-     * @param {*} email emailed registered by the WealthSimple Trade account
-     * @param {*} password The password of the account
-     * @param {*} otp_func otp function (async/sync) that provides the OTP code somehow
-     */
-    function login(email: string, password: string, otp_func: () => string): Promise<{ tokens: AuthTokens, accountInfo: any }>;
+  /**
+   * You may provide the auth event handler as the following:
+   *
+   * - A function (thunk): If you provide a function, this function is triggered whenever the event associated
+   * with it occurs.
+   *
+   * - A string: Appropriate for simple value passing (e.g., providing OTP manually for logging in)
+   */
+  type AuthEventHandler = string | (() => Promise<string>);
 
-    /**
-     * Generates a new set of access and refresh tokens.
-     *
-     * @param {*} tokens The access and refresh tokens returned by a successful login.
-     */
-    function refresh(tokens: AuthTokens): Promise<AuthTokens>;
+  /**
+   * Authentication tokens associated with your WealthSimple Trade account.
+   * 
+   * The access token is good for 2 hours before it expires. The expiry time is stored in
+   * this object and checked before every API call. If it has expired, the wrapper will
+   * attempt to regenerate an access token using the refresh token.
+   * 
+   * Tip: You can store these tokens and set auth.tokens instead of logging in every single time.
+   */
+  const tokens: AuthTokens;
 
-    /**
-     * Appends a header name-value pair to all requests.
-     *
-     * @param {*} name Header key
-     * @param {*} value Header value
-     */
-    function addHeader(name: string, value: any): void;
+  /**
+   * One-Time Passwords (OTP) are mandatory to login to your WealthSimple Trade account.
+   * However, wstrade-api does not have the ability to get the OTP token for you (for obvious reasons).
+   * So, in order to successfuly login, you must provide the OTP code that wstrade-api can use to
+   * complete a successful login.
+   */
+  const otp: AuthEventHandler;
 
-    /**
-     * Removes a custom header from all requests.
-     * 
-     * @param {*} name Header key
-     */
-    function removeHeader(name: string): void;
+  /**
+   * Attach a handler for the event.
+   *
+   * @param event authentication event to handle
+   * @param thunk Handler for the authentication event
+   */
+  function on(event: AuthEvent, thunk: AuthEventHandler): void;
 
-    /**
-     * Clears all custom headers.
-     */
-    function clearHeaders(): void;
+  /**
+   * Attempt a login with the email and password combination. A successful login
+   * will populate the auth.tokens object.
+   *
+   * @param email Account email
+   * @param password Account password
+   */
+  async function login(email: string, password: string): void;
 
-    /**
-     * Retrieves all account ids open under this WealthSimple Trade account.
-     *
-     * @param {*} tokens The access and refresh tokens returned by a successful login.
-     */
-    function getAccounts(tokens: AuthTokens): Promise<Array<string>>;
-
-    /**
-     * Retrieves the top-level data of the account, including account id, account types, account values, and more.
-     *
-     * @param {*} tokens The access and refresh tokens returned by a successful login.
-     */
-    function getAccountData(tokens: AuthTokens): Promise<any>;
-
-    /**
-     * Query the history of the account within a certain time interval.
-     *
-     * @param {*} tokens The access and refresh tokens returned by a successful login.
-     * @param {*} interval The time interval for the history query
-     * @param {*} accountId The account to query
-     */
-    function getHistory(tokens: AuthTokens, interval: HistoryInterval, accountId: string): Promise<any>;
-
-    /**
-     * Retrieves the most recent 20 activities on the WealthSimple Trade Account.
-     *
-     * @param {*} tokens The access and refresh tokens returned by a successful login.ss
-     */
-    function getActivities(tokens: AuthTokens): Promise<Array<any>>;
-
-    /**
-     * Retains all bank accounts linked to the WealthSimple Trade account.
-     *
-     * @param {*} tokens The access and refresh tokens returned by a successful login.
-     */
-    function getBankAccounts(tokens: AuthTokens): Promise<Array<any>>;
-
-    /**
-     * Grab all deposit records on the WealthSimple Trade account.
-     *
-     * @param {*} tokens The access and refresh tokens returned by a successful login.
-     */
-    function getDeposits(tokens: AuthTokens): Promise<Array<any>>;
-
-    /**
-     * A snapshots of the current USD/CAD exchange rates on the WealthSimple Trade
-     * platform.
-     *
-     * @param {*} tokens The access and refresh tokens returned by a successful login.
-     */
-    function getExchangeRates(tokens: AuthTokens): Promise<any>;
-
-    /**
-     * Lists all positions in the specified trading account under the WealthSimple Trade Account.
-     * 
-     * @param {*} tokens The access and refresh tokens returned by a successful login.
-     * @param {*} accountId The specific account in the WealthSimple Trade account
-     */
-    function getPositions(tokens: AuthTokens, accountId: string): Promise<Array<any>>;
-
-    /**
-     * Collects orders (filled, pending, cancelled) for the provided page and
-     * account id.
-     *
-     * @param {*} tokens The access and refresh tokens returned by a successful login.
-     * @param {*} accountId The specific account in the WealthSimple Trade account
-     * @param {*} page The orders page index to seek to
-     */
-    function getOrdersByPage(tokens: AuthTokens, accountId: string, page: number): Promise<any>;
-
-    /**
-     * Collects all orders (filled, pending, cancelled) for the specific account.
-     *
-     * @param {*} tokens The access and refresh tokens returned by a successful login.
-     * @param {*} accountId The specific account in the WealthSimple Trade account
-     */
-    function getOrders(tokens: AuthTokens, accountId: string): Promise<any>;
-
-    /**
-     * Retrieves pending orders for the specified security in the account.
-     *
-     * @param {*} tokens The access and refresh tokens returned by a successful login.
-     * @param {*} accountId The specific account in the WealthSimple Trade account
-     * @param {*} ticker (optional) The security symbol
-     */
-    function getPendingOrders(tokens: AuthTokens, accountId: string, ticker?: string | SecurityIdentifier): Promise<any>;
-  
-    /**
-     * Retrieves filled orders for the specified security in the account.
-     *
-     * @param {*} tokens The access and refresh tokens returned by a successful login.
-     * @param {*} accountId The specific account in the WealthSimple Trade account
-     * @param {*} ticker (optional) The security symbol
-     */
-    function getFilledOrders(tokens: AuthTokens, accountId: string, ticker?: string | SecurityIdentifier): Promise<any>;
-
-    /**
-     * Retrieves cancelled orders for the specified security in the account.
-     *
-     * @param {*} tokens The access and refresh tokens returned by a successful login.
-     * @param {*} accountId The specific account in the WealthSimple Trade account
-     * @param {*} ticker (optional) The security symbol
-     */
-    function getCancelledOrders(tokens: AuthTokens, accountId: string, ticker?: string | SecurityIdentifier): Promise<any>;
-
-    /**
-     * Cancels the pending order specified by the order id.
-     *
-     * @param {*} tokens The access and refresh tokens returned by a successful login.
-     * @param {*} orderId The pending order to cancel
-     */
-    function cancelOrder(tokens: AuthTokens, orderId: string): Promise<any>;
-
-    /**
-     * Cancels all pending orders under the WealthSimple Trade Account.
-     *
-     * @param {*} tokens The access and refresh tokens returned by a successful login.
-     * @param {*} accountId The specific account in the WealthSimple Trade account
-     */
-    function cancelPendingOrders(tokens: AuthTokens, accountId: string): Promise<any>;
-
-
-    /**
-     * Information about a security on the WealthSimple Trade Platform.
-     *
-     * @param {*} tokens The access and refresh tokens returned by a successful login.
-     * @param {string|object} ticker The security symbol. An exchange may be added as a suffix, separated from the
-     *                               symbol with a colon. For example, AAPL:NASDAQ, ENB:TSX
-     * @param {boolean} extensive Pulls a more detailed report of the security using the /securities/{id} API
-     */
-    function getSecurity(tokens: AuthTokens, ticker: string | SecurityIdentifier, extensive?: Boolean): Promise<any>;
-
-    /**
-     * Market buy a security through the WealthSimple Trade application.
-     *
-     * @param {*} tokens The access and refresh tokens returned by a successful login.
-     * @param {*} accountId The account to make the transaction from
-     * @param {*} ticker The security symbol
-     * @param {*} quantity The number of securities to purchase
-     */
-    function placeMarketBuy(tokens: AuthTokens, accountId: string, ticker: string | SecurityIdentifier, quantity: number): Promise<any>;
-
-    /**
-     * Limit buy a security through the WealthSimple Trade application.
-     *
-     * @param {*} tokens The access and refresh tokens returned by a successful login.
-     * @param {*} accountId The account to make the transaction from
-     * @param {*} ticker The security symbol
-     * @param {*} limit The maximum price to purchase the security at
-     * @param {*} quantity The number of securities to purchase
-     */
-    function placeLimitBuy(tokens: AuthTokens,
-        accountId: string, ticker: string | SecurityIdentifier, limit: number, quantity: number): Promise<any>;
-
-    /**
-     * Stop limit buy a security through the WealthSimple Trade application.
-     *
-     * @param {*} tokens The access and refresh tokens returned by a successful login.
-     * @param {*} accountId The account to make the transaction from
-     * @param {*} ticker The security symbol
-     * @param {*} stop The price at which the order converts to a limit order
-     * @param {*} limit The maximum price to purchase the security at
-     * @param {*} quantity The number of securities to purchase
-     */
-    function placeStopLimitBuy(tokens: AuthTokens,
-        accountId: string, ticker: string | SecurityIdentifier, stop: number, limit: number, quantity: number): Promise<any>;
-
-    /**
-     * Market sell a security through the WealthSimple Trade application.
-     *
-     * @param {*} tokens The access and refresh tokens returned by a successful login.
-     * @param {*} accountId The account to make the transaction from
-     * @param {*} ticker The security symbol
-     * @param {*} quantity The number of securities to purchase
-     */
-    function placeMarketSell(tokens: AuthTokens, accountId: string, ticker: string | SecurityIdentifier, quantity: number): Promise<any>;
-
-    /**
-     * Limit sell a security through the WealthSimple Trade application.
-     *
-     * @param {*} tokens The access and refresh tokens returned by a successful login.
-     * @param {*} accountId The account to make the transaction from
-     * @param {*} ticker The security symbol
-     * @param {*} limit The minimum price to sell the security at
-     * @param {*} quantity The number of securities to sell
-     */
-    function placeLimitSell(tokens: AuthTokens,
-        accountId: string, ticker: string | SecurityIdentifier, limit: number, quantity: number): Promise<any>;
-
-    /**
-     * Stop limit sell a security through the WealthSimple Trade application.
-     *
-     * @param {*} tokens The access and refresh tokens returned by a successful login.
-     * @param {*} accountId The account to make the transaction from
-     * @param {*} ticker The security symbol
-     * @param {*} stop The price at which the order converts to a limit order
-     * @param {*} limit The minimum price to sell the security at
-     * @param {*} quantity The number of securities to sell
-     */
-    function placeStopLimitSell(tokens: AuthTokens,
-        accountId: string, ticker: string | SecurityIdentifier, stop: number, limit: number, quantity: number): Promise<any>;
+  /**
+   * Refreshes the access token in auth.tokens.
+   * 
+   * The auth.tokens.refresh token must be present for this refresh call
+   * to succeed.
+   */
+  async function refresh(): void;
 }
 
-export default Trade;
+declare namespace headers {
+
+  /**
+   * Appends a header name-value pair to all requests.
+   * 
+   * @param {*} name Header key
+   * @param {*} value Header value
+   */
+  function add(name: string, value: string): void;
+
+  /**
+   * Removes a custom header from all requests.
+   * 
+   * @param {*} name Header key
+   */
+  function remove(name: string): void;
+
+  /**
+   * Clears all custom headers.
+   */
+  function clear(): void;
+
+  /**
+   * Produces a list of custom headers.
+   */
+  function values(): Array<String>;
+}
+
+declare namespace accounts {
+
+  /**
+   * A WealthSimple Trade account can have 4 underlying asset accounts: Personal, TFSA, RRSP, and Crypto.
+   * AccountList is the object returned by the accounts.all(), associating any open account types
+   * with their ids.
+   * 
+   * You will need these account ids to perform certain API calls like checking the positions in a specific
+   * account.
+   */
+  type AccountList = {
+    personal?: string,
+    tfsa?: string,
+    rrsp?: string,
+    crypto?: string,
+  };
+
+  /**
+   * The set of time intervals that are supported by the accounts.history() API call.
+   */
+  type HistoryInterval = '1d' | '1w' | '1m' | '3m' | '1y';
+
+  /**
+   * Retrieves all open account ids under this WealthSimple Trade account.
+   */
+  async function all(): Promise<AccountList>;
+
+  /**
+   * Retrieves the top-level data of the account, including WealthSimple Trade account id, account types,
+   * account values, and more.
+   */
+  async function data(): Promise<any>;
+  
+  /**
+   * Retrieves some surface information about you like your name and email, account
+   * signatures, and other metadata.
+   */
+  async function me(): Promise<any>;
+
+  /**
+   * Detailed information about you that you provided on signup, like residential and
+   * mailing addresses, employment, phone numbers, and so on.
+   */
+  async function person(): Promise<any>;
+
+  /**
+   * Query the history of the account within a certain time interval.
+   *
+   * @param {*} interval The time interval for the history query
+   * @param {*} accountId The account to grab history for
+   */
+  async function history(interval: HistoryInterval, accountId: string): Promise<any>;
+  
+  /**
+   * Retrieves the most recent 20 activities on the WealthSimple Trade Account.
+   */
+  async function activities(): Promise<any>;
+
+  /**
+   * Retrieves all bank accounts linked to the WealthSimple Trade account.
+   */
+  async function getBankAccounts(): Promise<any>;
+
+  /**
+   * Grab all deposit records on the WealthSimple Trade account.
+   */
+  async function deposits(): Promise<any>;
+
+  /**
+   * Lists all positions in the specified trading account under the WealthSimple Trade Account.
+   * 
+   * @param {*} accountId The specific account in the WealthSimple Trade account
+   */
+  async function positions(accountId: string): Promise<any>;
+}
+
+declare namespace orders {
+
+  /**
+   * Collects orders (filled, pending, cancelled) for the provided page and
+   * account id.
+   *
+   * @param {*} accountId The specific account in the WealthSimple Trade account
+   * @param {*} page The orders page index to seek to
+   */
+  async function page(accountId: string, page: number): Promise<any>;
+
+  /**
+   * Collects all orders (filled, pending, cancelled) for the specific account.
+   *
+   * @param {*} accountId The specific account in the WealthSimple Trade account
+   */
+  async function all(accountId: string): Promise<any>;
+
+  /**
+   * Retrieves pending orders for the specified security in the account.
+   *
+   * @param {*} accountId The specific account in the WealthSimple Trade account
+   * @param {*} ticker (optional) The security symbol
+   */
+  async function pending(accountId: string, ticker: Ticker): Promise<any>;
+  
+  /**
+   * Retrieves filled orders for the specified security in the account.
+   *
+   * @param {*} accountId The specific account in the WealthSimple Trade account
+   * @param {*} ticker (optional) The security symbol
+   */
+  async function filled(accountId: string, ticker: Ticker): Promise<any>;
+
+  /**
+   * Retrieves cancelled orders for the specified security in the account.
+   *
+   * @param {*} accountId The specific account in the WealthSimple Trade account
+   * @param {*} ticker (optional) The security symbol
+   */
+  async function cancelled(accountId: string, ticker: Ticker): Promise<any>;
+
+  /**
+   * Cancels the pending order specified by the order id.
+   *
+   * @param {*} orderId The pending order to cancel
+   */
+  async function cancel(orderId: string): Promise<any>;
+
+  /**
+   * Cancels all pending orders under the WealthSimple Trade Account.
+   *
+   * @param {*} accountId The specific account in the WealthSimple Trade account
+   */
+  async function cancelPending(accountId: string): Promise<any>;
+
+  /**
+   * Market buy a security through the WealthSimple Trade application.
+   *
+   * @param {*} accountId The account to make the transaction from
+   * @param {*} ticker The security symbol
+   * @param {*} quantity The number of securities to purchase
+   */
+  async function marketBuy(accountId: string, ticker: Ticker, quantity: number): Promise<any>;
+
+  /**
+   * Limit buy a security through the WealthSimple Trade application.
+   *
+   * @param {*} accountId The account to make the transaction from
+   * @param {*} ticker The security symbol
+   * @param {*} limit The maximum price to purchase the security at
+   * @param {*} quantity The number of securities to purchase
+   */
+  async function limitBuy(accountId: string, ticker: Ticker, limit: number, quantity: number): Promise<any>;
+
+  /**
+   * Stop limit buy a security through the WealthSimple Trade application.
+   *
+   * @param {*} accountId The account to make the transaction from
+   * @param {*} ticker The security symbol
+   * @param {*} stop The price at which the order converts to a limit order
+   * @param {*} limit The maximum price to purchase the security at
+   * @param {*} quantity The number of securities to purchase
+   */
+  async function stopLimitBuy(accountId: string, ticker: Ticker, stop: number, limit: number, quantity: number): Promise<any>;
+
+  /**
+   * Market sell a security through the WealthSimple Trade application.
+   *
+   * @param {*} accountId The account to make the transaction from
+   * @param {*} ticker The security symbol
+   * @param {*} quantity The number of securities to purchase
+   */
+  async function marketSell(accountId: string, ticker: Ticker, quantity: number): Promise<any>;
+
+  /**
+   * Limit sell a security through the WealthSimple Trade application.
+   *
+   * @param {*} accountId The account to make the transaction from
+   * @param {*} ticker The security symbol
+   * @param {*} limit The minimum price to sell the security at
+   * @param {*} quantity The number of securities to sell
+   */
+  async function limitSell(accountId: string, ticker: Ticker, limit: number, quantity: number): Promise<any>;
+
+  /**
+   * Stop limit sell a security through the WealthSimple Trade application.
+   *
+   * @param {*} accountId The account to make the transaction from
+   * @param {*} ticker The security symbol
+   * @param {*} stop The price at which the order converts to a limit order
+   * @param {*} limit The minimum price to sell the security at
+   * @param {*} quantity The number of securities to sell
+   */
+  async function stopLimitSell(accountId: string, ticker: Ticker, stop: number, limit: number, quantity: number): Promise<any>;
+}
+
+declare namespace quotes {
+
+  /**
+   * The quotes module provides support for customizing the source of quotes
+   * for specified exchanges through the QuoteProvider type.
+   * 
+   * Pass a QuoteProvider object to quotes.use(), and your custom quote provider
+   * will be used for the exchange you enable it for.
+   */
+  type QuoteProvider = {
+    quote: (ticker: Ticker) => Promise<number>;
+  };
+
+  /**
+   * WealthSimple Trade is our default quote provider for all exchanges,
+   * despite having a 15-minute delay.
+   */
+  const defaultProvider: QuoteProvider;
+
+  /**
+   * Load a custom provider for the exchange.
+   * 
+   * @param {*} exchange The exchange that the provider fetches quotes for
+   * @param {*} provider The provider object containing the quote() implementation.
+   */
+  function use(exchange: Exchange, provider: QuoteProvider): void;
+
+  /**
+   * Obtains a quote for the ticker. The source of the quote may be a custom
+   * provider if a valid provider is registered for the exchange that the
+   * ticker trades on.
+   *
+   * @param {*} ticker The security to get a quote for.
+   */
+  async function get(ticker: Ticker): Promise<number>;
+}
+
+declare namespace data {
+
+  /**
+   * A snapshot of the current USD/CAD exchange rates on the WealthSimple Trade
+   * platform.
+   */
+  async function exchangeRates(): Promise<any>;
+
+  /**
+   * Information about a security on the WealthSimple Trade Platform.
+   *
+   * @param {Ticker} ticker The security symbol.
+   * @param {boolean} extensive Pulls a more detailed report of the security using the /securities/{id} API
+   */
+  async function getSecurity(ticker: Ticker, extensive: boolean): Promise<any>;
+}
+
+declare namespace config {
+
+  /**
+   * Enable or disable a conditional feature within wstrade-api.
+   * 
+   * Examples:
+   * ---
+   * config('pancakes')
+   * Enables the fictitious pancakes feature.
+   * 
+   * config('no_pancakes')
+   * Disables the fictitious pancakes feature.
+   *
+   * @param {*} feature The string identifier for the feature, starting with "no_" if
+   *                    you wish to disable it.
+   */
+  function config(feature): void;
+}
+
+export default {
+  auth,
+  headers,
+  accounts,
+  orders,
+  quotes,
+  data,
+  config
+};
