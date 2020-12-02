@@ -1,12 +1,14 @@
+declare namespace Trade {
 
-export type AuthTokens = {
+
+type AuthTokens = {
   access: string,
   refresh: string,
   expiry: string
 };
 
 // Supported exchanges
-export type Exchange = 'NYSE' | 'NASDAQ' | 'TSX' | 'TSX-V';
+type Exchange = 'NYSE' | 'NASDAQ' | 'TSX' | 'TSX-V';
 
 /**
  * A ticker may be provided to the API as a string or an object with
@@ -16,13 +18,13 @@ export type Exchange = 'NYSE' | 'NASDAQ' | 'TSX' | 'TSX-V';
  * @param {string} [exchange] exchange under which the security trades in
  * @param {string} [id] The internal WealthSimple Trade security id
  */
-export type Ticker = string | {
+type Ticker = string | {
   symbol: string,
   exchange?: Exchange,
   id?: string
 };
 
-declare namespace auth {
+namespace auth {
 
   /**
    * Supported Auth Events at this time.
@@ -73,7 +75,7 @@ declare namespace auth {
    * @param email Account email
    * @param password Account password
    */
-  async function login(email: string, password: string): void;
+  function login(email: string, password: string): Promise<void>;
 
   /**
    * Refreshes the access token in auth.tokens.
@@ -81,10 +83,10 @@ declare namespace auth {
    * The auth.tokens.refresh token must be present for this refresh call
    * to succeed.
    */
-  async function refresh(): void;
+  function refresh(): Promise<void>;
 }
 
-declare namespace headers {
+namespace headers {
 
   /**
    * Appends a header name-value pair to all requests.
@@ -112,7 +114,7 @@ declare namespace headers {
   function values(): Array<String>;
 }
 
-declare namespace accounts {
+namespace accounts {
 
   /**
    * A WealthSimple Trade account can have 4 underlying asset accounts: Personal, TFSA, RRSP, and Crypto.
@@ -137,25 +139,25 @@ declare namespace accounts {
   /**
    * Retrieves all open account ids under this WealthSimple Trade account.
    */
-  async function all(): Promise<AccountList>;
+  function all(): Promise<AccountList>;
 
   /**
    * Retrieves the top-level data of the account, including WealthSimple Trade account id, account types,
    * account values, and more.
    */
-  async function data(): Promise<any>;
+  function data(): Promise<any>;
   
   /**
    * Retrieves some surface information about you like your name and email, account
    * signatures, and other metadata.
    */
-  async function me(): Promise<any>;
+  function me(): Promise<any>;
 
   /**
    * Detailed information about you that you provided on signup, like residential and
    * mailing addresses, employment, phone numbers, and so on.
    */
-  async function person(): Promise<any>;
+  function person(): Promise<any>;
 
   /**
    * Query the history of the account within a certain time interval.
@@ -163,32 +165,32 @@ declare namespace accounts {
    * @param {*} interval The time interval for the history query
    * @param {*} accountId The account to grab history for
    */
-  async function history(interval: HistoryInterval, accountId: string): Promise<any>;
+  function history(interval: HistoryInterval, accountId: string): Promise<any>;
   
   /**
    * Retrieves the most recent 20 activities on the WealthSimple Trade Account.
    */
-  async function activities(): Promise<any>;
+  function activities(): Promise<any>;
 
   /**
    * Retrieves all bank accounts linked to the WealthSimple Trade account.
    */
-  async function getBankAccounts(): Promise<any>;
+  function getBankAccounts(): Promise<any>;
 
   /**
    * Grab all deposit records on the WealthSimple Trade account.
    */
-  async function deposits(): Promise<any>;
+  function deposits(): Promise<any>;
 
   /**
    * Lists all positions in the specified trading account under the WealthSimple Trade Account.
    * 
    * @param {*} accountId The specific account in the WealthSimple Trade account
    */
-  async function positions(accountId: string): Promise<any>;
+  function positions(accountId: string): Promise<any>;
 }
 
-declare namespace orders {
+namespace orders {
 
   /**
    * Collects orders (filled, pending, cancelled) for the provided page and
@@ -197,14 +199,14 @@ declare namespace orders {
    * @param {*} accountId The specific account in the WealthSimple Trade account
    * @param {*} page The orders page index to seek to
    */
-  async function page(accountId: string, page: number): Promise<any>;
+  function page(accountId: string, page: number): Promise<any>;
 
   /**
    * Collects all orders (filled, pending, cancelled) for the specific account.
    *
    * @param {*} accountId The specific account in the WealthSimple Trade account
    */
-  async function all(accountId: string): Promise<any>;
+  function all(accountId: string): Promise<any>;
 
   /**
    * Retrieves pending orders for the specified security in the account.
@@ -212,7 +214,7 @@ declare namespace orders {
    * @param {*} accountId The specific account in the WealthSimple Trade account
    * @param {*} ticker (optional) The security symbol
    */
-  async function pending(accountId: string, ticker: Ticker): Promise<any>;
+  function pending(accountId: string, ticker?: Ticker): Promise<any>;
   
   /**
    * Retrieves filled orders for the specified security in the account.
@@ -220,7 +222,7 @@ declare namespace orders {
    * @param {*} accountId The specific account in the WealthSimple Trade account
    * @param {*} ticker (optional) The security symbol
    */
-  async function filled(accountId: string, ticker: Ticker): Promise<any>;
+  function filled(accountId: string, ticker?: Ticker): Promise<any>;
 
   /**
    * Retrieves cancelled orders for the specified security in the account.
@@ -228,21 +230,21 @@ declare namespace orders {
    * @param {*} accountId The specific account in the WealthSimple Trade account
    * @param {*} ticker (optional) The security symbol
    */
-  async function cancelled(accountId: string, ticker: Ticker): Promise<any>;
+  function cancelled(accountId: string, ticker?: Ticker): Promise<any>;
 
   /**
    * Cancels the pending order specified by the order id.
    *
    * @param {*} orderId The pending order to cancel
    */
-  async function cancel(orderId: string): Promise<any>;
+  function cancel(orderId: string): Promise<any>;
 
   /**
    * Cancels all pending orders under the WealthSimple Trade Account.
    *
    * @param {*} accountId The specific account in the WealthSimple Trade account
    */
-  async function cancelPending(accountId: string): Promise<any>;
+  function cancelPending(accountId: string): Promise<any>;
 
   /**
    * Market buy a security through the WealthSimple Trade application.
@@ -251,7 +253,7 @@ declare namespace orders {
    * @param {*} ticker The security symbol
    * @param {*} quantity The number of securities to purchase
    */
-  async function marketBuy(accountId: string, ticker: Ticker, quantity: number): Promise<any>;
+  function marketBuy(accountId: string, ticker: Ticker, quantity: number): Promise<any>;
 
   /**
    * Limit buy a security through the WealthSimple Trade application.
@@ -261,7 +263,7 @@ declare namespace orders {
    * @param {*} limit The maximum price to purchase the security at
    * @param {*} quantity The number of securities to purchase
    */
-  async function limitBuy(accountId: string, ticker: Ticker, limit: number, quantity: number): Promise<any>;
+  function limitBuy(accountId: string, ticker: Ticker, limit: number, quantity: number): Promise<any>;
 
   /**
    * Stop limit buy a security through the WealthSimple Trade application.
@@ -272,7 +274,7 @@ declare namespace orders {
    * @param {*} limit The maximum price to purchase the security at
    * @param {*} quantity The number of securities to purchase
    */
-  async function stopLimitBuy(accountId: string, ticker: Ticker, stop: number, limit: number, quantity: number): Promise<any>;
+  function stopLimitBuy(accountId: string, ticker: Ticker, stop: number, limit: number, quantity: number): Promise<any>;
 
   /**
    * Market sell a security through the WealthSimple Trade application.
@@ -281,7 +283,7 @@ declare namespace orders {
    * @param {*} ticker The security symbol
    * @param {*} quantity The number of securities to purchase
    */
-  async function marketSell(accountId: string, ticker: Ticker, quantity: number): Promise<any>;
+  function marketSell(accountId: string, ticker: Ticker, quantity: number): Promise<any>;
 
   /**
    * Limit sell a security through the WealthSimple Trade application.
@@ -291,7 +293,7 @@ declare namespace orders {
    * @param {*} limit The minimum price to sell the security at
    * @param {*} quantity The number of securities to sell
    */
-  async function limitSell(accountId: string, ticker: Ticker, limit: number, quantity: number): Promise<any>;
+  function limitSell(accountId: string, ticker: Ticker, limit: number, quantity: number): Promise<any>;
 
   /**
    * Stop limit sell a security through the WealthSimple Trade application.
@@ -302,10 +304,10 @@ declare namespace orders {
    * @param {*} limit The minimum price to sell the security at
    * @param {*} quantity The number of securities to sell
    */
-  async function stopLimitSell(accountId: string, ticker: Ticker, stop: number, limit: number, quantity: number): Promise<any>;
+  function stopLimitSell(accountId: string, ticker: Ticker, stop: number, limit: number, quantity: number): Promise<any>;
 }
 
-declare namespace quotes {
+namespace quotes {
 
   /**
    * The quotes module provides support for customizing the source of quotes
@@ -339,16 +341,16 @@ declare namespace quotes {
    *
    * @param {*} ticker The security to get a quote for.
    */
-  async function get(ticker: Ticker): Promise<number>;
+  function get(ticker: Ticker): Promise<number>;
 }
 
-declare namespace data {
+namespace data {
 
   /**
    * A snapshot of the current USD/CAD exchange rates on the WealthSimple Trade
    * platform.
    */
-  async function exchangeRates(): Promise<any>;
+  function exchangeRates(): Promise<any>;
 
   /**
    * Information about a security on the WealthSimple Trade Platform.
@@ -356,10 +358,10 @@ declare namespace data {
    * @param {Ticker} ticker The security symbol.
    * @param {boolean} extensive Pulls a more detailed report of the security using the /securities/{id} API
    */
-  async function getSecurity(ticker: Ticker, extensive: boolean): Promise<any>;
+  function getSecurity(ticker: Ticker, extensive?: boolean): Promise<any>;
 }
 
-declare namespace config {
+namespace config {
 
   /**
    * Enable or disable a conditional feature within wstrade-api.
@@ -378,12 +380,6 @@ declare namespace config {
   function config(feature): void;
 }
 
-export default {
-  auth,
-  headers,
-  accounts,
-  orders,
-  quotes,
-  data,
-  config
-};
+}
+
+export = Trade;

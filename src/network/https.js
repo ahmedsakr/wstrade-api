@@ -74,7 +74,7 @@ async function checkAuthTokenExpiry() {
   // Absence of a token is allowed because non-privileged endpoints (i.e., login, refresh)
   // do not require an authorization token.
   if (!auth.tokens?.access) {
-    return true;
+    return false;
   }
 
   // We won't attempt to implicitly refresh if the user has requested

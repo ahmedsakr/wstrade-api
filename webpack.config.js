@@ -1,7 +1,7 @@
 const path = require('path');
 
 module.exports = {
-    target: 'node',
+    target: "node",
     output: {
         filename: "wstrade.js",
         library: "wstrade-api",
@@ -23,5 +23,20 @@ module.exports = {
             amd: 'http-status',
             root: '_',
         }
+    },
+    module: {
+        rules: [
+            {
+                test: /\.m?js$/,
+                exclude: /(node_modules|bower_components)/,
+                use: {
+                    loader: 'babel-loader',
+                    options: {
+                        presets: ['@babel/preset-env'],
+                        plugins: ["@babel/plugin-proposal-optional-chaining", "@babel/plugin-transform-runtime"]
+                    }
+                }
+            }
+        ]
     }
 };
