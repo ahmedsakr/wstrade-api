@@ -4,7 +4,7 @@ declare namespace Trade {
 type AuthTokens = {
   access: string,
   refresh: string,
-  expiry: string
+  expires: number
 };
 
 // Supported exchanges
@@ -50,7 +50,7 @@ namespace auth {
    * 
    * Tip: You can store these tokens and set auth.tokens instead of logging in every single time.
    */
-  const tokens: AuthTokens;
+  let tokens: AuthTokens;
 
   /**
    * One-Time Passwords (OTP) are mandatory to login to your WealthSimple Trade account.
