@@ -59,7 +59,7 @@ Supported events
 
 |Events| Description |
 |--|--|
-| `'otp'` | Event for handling one-time passwords. Invoked by `wstrade-api` during a login attempt.|
+| `'otp'` | Event for handling one-time passwords. Invoked by `auth` during a login attempt.|
 
 See also: [auth.`login`](#auth-login)
 
