@@ -1,4 +1,5 @@
 
+
 [Skip to API reference -->](#api-reference)
 
 Authentication
@@ -8,7 +9,7 @@ Most `wstrade-api` API calls are privileged communication with WealthSimple Trad
 
 **Do you store my email and password?**
 
-No. Not at all. WealthSimple Trade operates on an OAuth2.0 framework. Once you invoke the login API with your email and password combination, `access`/`refresh` tokens are returned and stored in `wstrade-api`, specifcally in `auth.tokens`. These tokens are then subsequently used to identify you and invoke all APIs.
+No. Not at all. WealthSimple Trade operates on an OAuth2.0 framework. Once you invoke the login API with your email and password combination, `access`/`refresh` tokens are returned and stored in `auth.tokens`. These tokens are then subsequently used to identify you and invoke all APIs.
 
 One-Time Password (OTP)
 ---
