@@ -38,7 +38,7 @@ auth.tokens = {
 <a id="auth-implicit-refresh"></a>
 **Implicit refresh of access token**
 
-`wstrade-api` will attempt to refresh the `access` token automatically if `expires` indicates that it has expired. The `refresh` token must be available for this to happen. You may disable this automatic refreshing with the [config](/examples/config) module.
+`wstrade-api` will attempt to refresh the `access` token automatically if `expires` indicates that it has expired. The `refresh` token must be available for this to happen. You may disable this automatic refreshing with the [config](/docs/config) module.
 
 <a id="#api-reference"></a>
 
