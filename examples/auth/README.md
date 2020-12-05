@@ -1,3 +1,4 @@
+
 [Skip to API reference -->](#api-reference)
 
 Authentication
@@ -11,7 +12,7 @@ No. Not at all. WealthSimple Trade operates on an OAuth2.0 framework. Once you i
 
 One-Time Password (OTP)
 ---
-OTPs are required for logging into WealthSimple Trade for a while now. Naturally, `wstrade-api` has added support for providing the OTP as part of the login process. The support is exposed in terms of an **authentication event** that can be configured with the `auth.on` API.
+OTPs are required for logging into WealthSimple Trade for a while now. Naturally, `wstrade-api` has added support for providing the OTP as part of the login process. The support is exposed in terms of an **authentication event** that can be configured with the auth.`on` API.
 
 See the API reference for [auth.`on`](#auth-on) below and check examples in this folder for practical guidance.
 
@@ -42,15 +43,15 @@ auth.tokens = {
 
 API Reference
 ---
-* [auth.`on`](#auth-on)
-* [auth.`login`](#auth-login)
-* [auth.`refresh`](#auth-refresh)
+* ### [auth.`on`](#auth-on)
+* ### [auth.`login`](#auth-login)
+* ### [auth.`refresh`](#auth-refresh)
 
 ---
 
 <a id="auth-on"></a>
 ```javascript
-auth.on(event: string, thunk: string|function) -> Promise<void>
+auth.on(event, thunk) -> Promise<void>
 ```
 Registers a string literal or handler (dubbed here "thunk") for an event. The handler could be async.
 
@@ -60,11 +61,13 @@ Supported events
 |--|--|
 | `'otp'` | Event for handling one-time passwords. Invoked by `wstrade-api` during a login attempt.|
 
+See also: [auth.`login`](#auth-login)
+
 ---
 
 <a id="auth-login"></a>
 ```javascript
-auth.login(email: string, password: string) -> Promise<void>
+auth.login(email, password) -> Promise<void>
 ```
 
 Attempts to login to the WealthSimple Trade platform using the email and password combination. 
