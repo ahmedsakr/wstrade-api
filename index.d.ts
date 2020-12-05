@@ -361,7 +361,6 @@ namespace data {
   function getSecurity(ticker: Ticker, extensive?: boolean): Promise<any>;
 }
 
-namespace config {
 
   /**
    * Enable or disable a conditional feature within wstrade-api.
@@ -378,7 +377,6 @@ namespace config {
    *                    you wish to disable it.
    */
   function config(feature): void;
-}
 
 }
 
