@@ -33,7 +33,7 @@ console.log(headers.values());
 // []
 
 
-// We will not add more than 1 custom header, and invoke
+// We will now add more than 1 custom header, and invoke
 // the headers.clear() API to remove them all.
 headers.add('Content-type', 'application/json');
 headers.add('device', 'iphone');
