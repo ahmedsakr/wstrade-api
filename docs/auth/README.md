@@ -2,6 +2,8 @@
 
 [Skip to API reference -->](#api-reference)
 
+[See Examples in Code](/docs/auth/examples.js)
+
 Authentication
 ===
 

@@ -19,9 +19,8 @@ auth.on('otp', '172829');
 
 // The OTP value here is brought into the system automatically at run-time.
 //
-// Over here I have a stubbed function called getCodeFromGmail. This is supposed
-// to resemble a function that can connect to Gmail API and get the OTP code
-// automatically.
+// This stubbed function is supposed to resemble a function that can
+// connect to Gmail API and get the OTP code automatically.
 const getCodeFromGmail = async () => {
     let gmail_otp = null;
 
