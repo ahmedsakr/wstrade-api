@@ -12,6 +12,7 @@ Getting started with `wstrade-api`
 and a lot more usecases. `wstrade-api` is developed to provide you with the progamming autonomy to control your WealthSimple Trade account.
 
 **Architecture overview**
+
 `wstrade-api` is broken down into 7 modules, with each module addressing a domain of operation. Below is a table of the modules and a brief description of their domain.
 
 | module | Description |
@@ -26,7 +27,7 @@ and a lot more usecases. `wstrade-api` is developed to provide you with the prog
 
 Click on any of the modules above to view examples of using the available APIs. It is recommended to go through the table of modules in order if you are new to `wstrade-api`.
 
-Import.ing `wstrade-api`: CommonJS, ES6
+Importing `wstrade-api`: CommonJS, ES6
 ===
 There is no default export in `wstrade-api`. Instead, the `wstrade-api` exports the modules independently. Below are examples of importing `wstrade-api` with CommonJS or ES6 notations.
 
