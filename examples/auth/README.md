@@ -60,6 +60,7 @@ Supported events
 |--|--|
 | `'otp'` | Event for handling one-time passwords. Invoked by `wstrade-api` during a login attempt.|
 
+---
 
 <a id="auth-login"></a>
 ```javascript
