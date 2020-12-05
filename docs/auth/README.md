@@ -52,7 +52,7 @@ API Reference
 
 <a id="auth-on"></a>
 ```javascript
-auth.on(event, thunk) -> Promise<void>
+auth.on(event, thunk) -> void
 ```
 Registers a string literal or handler (dubbed here "thunk") for an event. The handler could be async.
 

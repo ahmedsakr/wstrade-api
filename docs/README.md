@@ -1,94 +1,99 @@
 
-
-[Skip to API reference -->](#api-reference)
-
-Authentication
+Getting started with `wstrade-api`
 ===
 
-Most `wstrade-api` API calls are privileged communication with WealthSimple Trade servers. You must have authenticated against a valid account before you can unlock all API calls.
+`wstrade-api` is capable of performing all operations that you can manually do through the UI, including:
 
-**Do you store my email and password?**
+* Retrieving current positions in your TFSA
+* Retrieving filled orders in your personal account
+* Placing a limit buy order for 10 shares of AAPL in your TFSA
+* Placing a stop limit sell order for 25 shares of UBER in your personal account
 
-No. Not at all. WealthSimple Trade operates on an OAuth2.0 framework. Once you invoke the login API with your email and password combination, `access`/`refresh` tokens are returned and stored in `auth.tokens`. These tokens are then subsequently used to identify you and invoke all APIs.
+and a lot more usecases. `wstrade-api` is developed to provide you with the progamming autonomy to control your WealthSimple Trade account.
 
-One-Time Password (OTP)
----
-OTPs are required for logging into WealthSimple Trade for a while now. Naturally, `wstrade-api` has added support for providing the OTP as part of the login process. The support is exposed in terms of an **authentication event** that can be configured with the auth.`on` API.
+**Architecture overview**
 
-See the API reference for [auth.`on`](#auth-on) below and check examples in this folder for practical guidance.
+`wstrade-api` is broken down into 7 modules, with each module addressing a domain of operation. Below is a table of the modules and a brief description of their domain.
 
-<a id="authentication-tokens"></a>
-Authentication Tokens
----
-
-Once you have successfully logged in, the 0Auth2.0 tokens are stored in the `auth.tokens` object:
-
-```javascript
-auth.tokens = {
-  access: 'm8GKZp_wdnnae4JnqUmpNInZli-IkP9escCGcvwEsTQ',
-  refresh: 'O3xScrMpYlPxdaDu2QM-yS-YlJS8s4jwZYZlHbt5RC0',
-  expires: 1607137004
-};
-```
-
-* The `access` token is used in authenticating and granting you access to WealthSimple Trade endpoints. 
-* The `refresh` token can be used to request a new `access` token. This is useful when the access token has expired.
-* The `expires` property is the time (in epoch seconds) when the `access` token is no longer valid.
-
-<a id="auth-implicit-refresh"></a>
-**Implicit refresh of access token**
-
-`wstrade-api` will attempt to refresh the `access` token automatically if `expires` indicates that it has expired. The `refresh` token must be available for this to happen. You may disable this automatic refreshing with the [config](/examples/config) module.
-
-<a id="#api-reference"></a>
-
-API Reference
----
-* ### [auth.`on`](#auth-on)
-* ### [auth.`login`](#auth-login)
-* ### [auth.`refresh`](#auth-refresh)
-
----
-
-<a id="auth-on"></a>
-```javascript
-auth.on(event, thunk) -> void
-```
-Registers a string literal or handler (dubbed here "thunk") for an event. The handler could be async.
-
-Supported events
-
-|Events| Description |
+| module | Description |
 |--|--|
-| `'otp'` | Event for handling one-time passwords. Invoked by `auth` during a login attempt.|
+| [`auth`](/docs/auth) |  Logging in, One-Time Passwords, managing 0Auth2.0 tokens |
+| [`headers`](/docs/headers) |  Custom headers for rogue usecases (*you likely won't use this*) |
+| [`accounts`](/docs/accounts) | Open accounts, positions, meta data, bank accounts, and so on |
+| [`quotes`](/docs/quotes) | Quotes for securities, ability to custom quote source |
+| [`orders`](/docs/orders) | Pending/Filled/Cancelled orders, buying/selling securities |
+| [`data`](/docs/data) | Securities information, exchange rates |
+| [`config`](/docs/config) | Managing conditional features of `wstrade-api` |
 
-See also: [auth.`login`](#auth-login)
+Click on any of the modules above to view examples of using the available APIs. It is recommended to go through the table of modules in order if you are new to `wstrade-api`.
 
----
+Importing `wstrade-api`: CommonJS, ES6
+===
+There is no default export in `wstrade-api`. Instead, the `wstrade-api` exports the modules independently. Below are examples of importing `wstrade-api` with CommonJS or ES6 notations.
 
-<a id="auth-login"></a>
+**CommonJS**
 ```javascript
-auth.login(email, password) -> Promise<void>
+
+/**
+ ** Pattern 1 **
+ **/
+
+const trade = require('wstrade-api');
+
+// All modules are in the trade object.
+console.log(trade);
+//  {
+//    auth:     { .. },
+//    headers:  { .. },
+//    accounts: { .. },
+//    orders:   { .. },
+//    quotes:   { .. },
+//    data:     { .. },
+//    config:   { .. },
+//  }
+
+// You can start accessing modules directly like this.
+trade.auth.<..>;
+trade.orders.<...>;
+
+
+/**
+ ** Pattern 2 **
+ **/
+
+// You can selectively choose what modules to bring in to your
+// file.
+const { auth, orders } = require('wstrade-api');
+
+// and then use them independently!
+auth.<..>;
+orders.<..>;
 ```
 
-Attempts to login to the WealthSimple Trade platform using the email and password combination. 
-If the login was successful, `auth.tokens` will be populated with the retrieved OAauth2.0 tokens and access token expiry time. Otherwise, the return promise is rejected with the appropriate error.
-
-An OTP provider must be configured beforehand with the auth.`on` API for the `otp` event. If the `otp` event was registered with a string literal, it is assumed that you have already obtained the OTP manually and it will be passed along as-is. Otherwise, if you specified a function handler, it is assumed that your handler will automatically retrieve the OTP after we attempt a login without an OTP.  See examples for practical explanation.
-
-**Failure reasons**
-* Incorrect email/password combination
-* OTP is not configured properly
-
-See also: [Authentication Tokens](#authentication-tokens), [auth.`on`](#auth-on)
-
----
-
-<a id="auth-refresh"></a>
+**ES6/TypeScript**
 ```javascript
-auth.refresh() -> Promise<void>
+
+/**
+ ** Pattern 1 **
+ **/
+
+// Since there is no default export, we will have to import
+// all and give it a name.
+import * as trade from 'wstrade-api';
+
+// and then you can start accessing the modules in this namespaced fashion.
+trade.auth.<..>;
+trade.orders.<..>;
+
+
+/**
+ ** Pattern 2 **
+ **/
+
+// Bring in the required modules in this compact destructured notation.
+import { auth, orders } from 'wstrade-api';
+
+// and then use them independently!
+auth.<..>;
+orders.<..>;
 ```
-
-Attempts to refresh the access token. The new access token will automatically be saved back to `auth.tokens`. Please note that this operation requires `auth.tokens.refresh` to be available.
-
-See also: [Implicit refresh of access token](#auth-implicit-refresh)
