@@ -40,7 +40,6 @@ const getCodeFromGmail = async () => {
 // * Attempt to login for a second time with the OTP returned by getCodeFromGmail.
 auth.on('otp', getCodeFromGmail);
 
-
 /**
  * Now that we understand how to specify the OTP, let's talk about
  * using the auth.login API.
@@ -56,7 +55,7 @@ auth.on('otp', getCodeFromGmail);
 
     // If login succeeded, the auth.tokens object will be populated with access
     // and refresh tokens, and an expiry time for the access token.
-    // These tokens will be automatically used by wstrade-api when you call
+    // These tokens will automatically be used by wstrade-api when you call
     // an API call that needs to talk to WealthSimple Trade servers
     // (for example, to place an order of 5 shares of AAPL in your TFSA account)
     console.log(auth.tokens);
@@ -66,8 +65,6 @@ auth.on('otp', getCodeFromGmail);
     //   refresh: 'O3xScrMpYlPxdaDu2QM-yS-YlJS8s4jwZYZlHbt5RC0',
     //   expires: 1607137004
     // };
-
-
  })()
  .catch(error => console.log(error));
 
