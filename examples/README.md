@@ -13,12 +13,12 @@ and a lot more usecases. `wstrade-api` is developed to provide you with the prog
 **Architecture overview**
 | module | Description |
 |--|--|
-| [`auth`](/auth) |  Logging in, One-Time Passwords, managing 0Auth2.0 tokens |
-| [`headers`](/headers) |  Custom headers for rogue usecases (*you likely won't use this*) |
-| [`accounts`](/accounts) | Open accounts, positions, meta data, bank accounts, and so on |
-| [`quotes`](/quotes) | Quotes for securities, ability to custom quote source |
-| [`orders`](/orders) | Pending/Filled/Cancelled orders, buying/selling securities |
-| [`data`](/data) | Securities information, exchange rates |
-| [`config`](/config) | Managing conditional features of `wstrade-api` |
+| [`auth`](/examples/auth) |  Logging in, One-Time Passwords, managing 0Auth2.0 tokens |
+| [`headers`](/examples/headers) |  Custom headers for rogue usecases (*you likely won't use this*) |
+| [`accounts`](/examples/accounts) | Open accounts, positions, meta data, bank accounts, and so on |
+| [`quotes`](/examples/quotes) | Quotes for securities, ability to custom quote source |
+| [`orders`](/examples/orders) | Pending/Filled/Cancelled orders, buying/selling securities |
+| [`data`](/examples/data) | Securities information, exchange rates |
+| [`config`](/examples/config) | Managing conditional features of `wstrade-api` |
 
 Click on any of the modules above to view examples of using the available APIs. It is recommended to go through the table of modules in order if you are new to `wstrade-api`.
