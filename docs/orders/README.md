@@ -307,6 +307,7 @@ Purchase a security with a market order.
 orders.marketBuy(accountId, ticker, quantity) -> Promise<any>
 ```
 ```javascript
+* This is not the full returned object - it has been cut.
 {
   // Confirmation and details of the market buy
   object: 'order',
@@ -338,6 +339,7 @@ Purchase a security with a limit order.
 orders.limitBuy(accountId, ticker, limit, quantity) -> Promise<any>
 ```
 ```javascript
+* This is not the full returned object - it has been cut.
 {
   // Confirmation and details of the limit buy
   object: 'order',
@@ -370,6 +372,7 @@ Purchase a security with a stop limit order.
 orders.stopLimitBuy(accountId, ticker, stop, limit, quantity) -> Promise<any>
 ```
 ```javascript
+* This is not the full returned object - it has been cut.
 {
   // Confirmation and details of the stop limit buy
   object: 'order',
@@ -400,6 +403,7 @@ Sell a security with a market order.
 orders.marketSell(accountId, ticker, quantity) -> Promise<any>
 ```
 ```javascript
+* This is not the full returned object - it has been cut.
 {
   // Confirmation and details of the market sell
   object: 'order',
@@ -431,6 +435,7 @@ Sell a security with a limit order.
 orders.limitSell(accountId, ticker, limit, quantity) -> Promise<any>
 ```
 ```javascript
+* This is not the full returned object - it has been cut.
 {
   // Confirmation and details of the limit sell
   object: 'order',
@@ -463,6 +468,7 @@ Sell a security with a stop limit order.
 orders.stopLimitSell(accountId, ticker, stop, limit, quantity) -> Promise<any>
 ```
 ```javascript
+* This is not the full returned object - it has been cut.
 {
   // Confirmation and details of the stop limit sell
   object: 'order',
