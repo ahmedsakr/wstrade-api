@@ -27,7 +27,11 @@ quotes.use(exchange, provider) -> void
 Attach a custom quote provider for the specified exchange.
 * `provider` must be an object that has a `get` function that takes one parameter (`ticker`) and returns the quote as a number.
 
+**Note**: the `orders` module makes use of the `quotes` module for its orders.`marketBuy` and orders.`marketSell` APIs. A custom quote provider will be utilized in a market buy or sell if the security trades on the specified exchange.
+
 [View examples](/docs/quotes/examples.js)
+
+See also: [orders.`marketBuy`](/docs/orders/README.md#market-buy), [orders.`marketSell`](/docs/orders/README.md#market-sell)
 
 ---
 

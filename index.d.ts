@@ -240,14 +240,14 @@ namespace orders {
   function cancel(orderId: string): Promise<any>;
 
   /**
-   * Cancels all pending orders under the WealthSimple Trade Account.
+   * Cancels all pending orders under the open account specified by accountId.
    *
    * @param {*} accountId The specific account in the WealthSimple Trade account
    */
   function cancelPending(accountId: string): Promise<any>;
 
   /**
-   * Market buy a security through the WealthSimple Trade application.
+   * Purchase a security with a market order.
    *
    * @param {*} accountId The account to make the transaction from
    * @param {*} ticker The security symbol
@@ -256,7 +256,7 @@ namespace orders {
   function marketBuy(accountId: string, ticker: Ticker, quantity: number): Promise<any>;
 
   /**
-   * Limit buy a security through the WealthSimple Trade application.
+   * Purchase a security with a limit order.
    *
    * @param {*} accountId The account to make the transaction from
    * @param {*} ticker The security symbol
@@ -266,7 +266,7 @@ namespace orders {
   function limitBuy(accountId: string, ticker: Ticker, limit: number, quantity: number): Promise<any>;
 
   /**
-   * Stop limit buy a security through the WealthSimple Trade application.
+   * Purchase a security with a stop limit order.
    *
    * @param {*} accountId The account to make the transaction from
    * @param {*} ticker The security symbol
@@ -277,7 +277,7 @@ namespace orders {
   function stopLimitBuy(accountId: string, ticker: Ticker, stop: number, limit: number, quantity: number): Promise<any>;
 
   /**
-   * Market sell a security through the WealthSimple Trade application.
+   * Sell a security with a market order.
    *
    * @param {*} accountId The account to make the transaction from
    * @param {*} ticker The security symbol
@@ -286,7 +286,7 @@ namespace orders {
   function marketSell(accountId: string, ticker: Ticker, quantity: number): Promise<any>;
 
   /**
-   * Limit sell a security through the WealthSimple Trade application.
+   * Sell a security with a limit order.
    *
    * @param {*} accountId The account to make the transaction from
    * @param {*} ticker The security symbol
@@ -296,7 +296,7 @@ namespace orders {
   function limitSell(accountId: string, ticker: Ticker, limit: number, quantity: number): Promise<any>;
 
   /**
-   * Stop limit sell a security through the WealthSimple Trade application.
+   * Sell a security with a stop limit order.
    *
    * @param {*} accountId The account to make the transaction from
    * @param {*} ticker The security symbol
