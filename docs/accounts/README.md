@@ -29,6 +29,8 @@ API Reference
 ---
 
 <a id="accounts-all"></a>
+### accounts.`all`
+
 ```javascript
 accounts.all() -> Promise<AccountList>
 ```
@@ -48,6 +50,8 @@ Retrieves an object containing the ids of all open accounts under your WealthSim
 ---
 
 <a id="accounts-data"></a>
+### accounts.`data`
+
 ```javascript
 accounts.data() -> Promise<Array<any>>
 ```
@@ -76,6 +80,8 @@ Returns a list of details about your open accounts, like account type, buying po
 ---
 
 <a id="accounts-me"></a>
+### accounts.`me`
+
 ```javascript
 accounts.me() -> Promise<any>
 ```
@@ -109,6 +115,8 @@ signatures, and other metadata.
 ---
 
 <a id="accounts-person"></a>
+### accounts.`person`
+
 ```javascript
 accounts.person() -> Promise<any>
 ```
@@ -133,6 +141,8 @@ Detailed information about you that you provided on signup, like residential and
 ---
 
 <a id="accounts-history"></a>
+### accounts.`history`
+
 ```javascript
 accounts.history(interval, accountId) -> Promise<any>
 ```
@@ -174,6 +184,8 @@ See also: [accounts.`all`](#accounts-all)
 ---
 
 <a id="accounts-activities"></a>
+### accounts.`activities`
+
 ```javascript
 accounts.activities() -> Promise<Array<any>>
 ```
@@ -208,6 +220,8 @@ Retrieves up to  20 recent activities on the WealthSimple Trade Account.
 ---
 
 <a id="accounts-getBankAccounts"></a>
+### accounts.`getBankAccounts`
+
 ```javascript
 accounts.getBankAccounts() -> Promise<Array<any>>
 ```
@@ -241,6 +255,8 @@ Retrieves all bank accounts linked to the WealthSimple Trade account.
 ---
 
 <a id="accounts-deposits"></a>
+### accounts.`deposits`
+
 ```javascript
 accounts.deposits() -> Promise<Array<any>>
 ```
@@ -273,6 +289,8 @@ Grab all deposit records on the WealthSimple Trade account.
 ---
 
 <a id="accounts-positions"></a>
+### accounts.`positions`
+
 ```javascript
 accounts.positions(accountId) -> Promise<Array<any>>
 ```
