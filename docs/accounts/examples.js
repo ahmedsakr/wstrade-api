@@ -26,14 +26,13 @@ import { auth, accounts } from 'wstrade-api';
     //    personal: 'non-registered-zzzzzzzz'
     // }
 
-
     // Information about Jane's open accounts
     let accsData = await accounts.data();
 
     // Information about Jane's WealthSimple Trade parent account
     let tradeAccount = await accounts.me();
 
-    // Information athat Jane used to open her WealthSimple Trade parent account
+    // Information that Jane used to open her WealthSimple Trade parent account
     let janeInfo = await accounts.person();
 
     // History of Jane's TFSA in the past 3 months.
