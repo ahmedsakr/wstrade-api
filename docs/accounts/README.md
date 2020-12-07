@@ -31,13 +31,13 @@ API Reference
 <a id="accounts-all"></a>
 ### accounts.`all`
 
-```javascript
-accounts.all() -> Promise<AccountList>
-```
 Retrieves an object containing the ids of all open accounts under your WealthSimple Trade account. The returned object could include `tfsa`, `rrsp`, `crypto`, and `personal` ids.
 
 [View examples](/docs/accounts/examples.js)
 
+```javascript
+accounts.all() -> Promise<AccountList>
+```
 ```javascript
 {
   tfsa: 'tfsa-zzzzzzzz',
@@ -52,13 +52,13 @@ Retrieves an object containing the ids of all open accounts under your WealthSim
 <a id="accounts-data"></a>
 ### accounts.`data`
 
-```javascript
-accounts.data() -> Promise<Array<any>>
-```
 Returns a list of details about your open accounts, like account type, buying power, current balance for each account.
 
 [View examples](/docs/accounts/examples.js)
 
+```javascript
+accounts.data() -> Promise<Array<any>>
+```
 ```javascript
 * This is not the full returned object - it has been cut.
 [
@@ -82,14 +82,14 @@ Returns a list of details about your open accounts, like account type, buying po
 <a id="accounts-me"></a>
 ### accounts.`me`
 
-```javascript
-accounts.me() -> Promise<any>
-```
 Retrieves some surface information about you like your name and email, account
 signatures, and other metadata.
 
 [View examples](/docs/accounts/examples.js)
 
+```javascript
+accounts.me() -> Promise<any>
+```
 ```javascript
 * This is not the full returned object - it has been cut.
 {
@@ -117,13 +117,13 @@ signatures, and other metadata.
 <a id="accounts-person"></a>
 ### accounts.`person`
 
-```javascript
-accounts.person() -> Promise<any>
-```
 Detailed information about you that you provided on signup, like residential and mailing addresses, employment, phone numbers, and so on.
 
 [View examples](/docs/accounts/examples.js)
 
+```javascript
+accounts.person() -> Promise<any>
+```
 ```javascript
 * This is not the full returned object - it has been cut.
 {
@@ -143,16 +143,15 @@ Detailed information about you that you provided on signup, like residential and
 <a id="accounts-history"></a>
 ### accounts.`history`
 
-```javascript
-accounts.history(interval, accountId) -> Promise<any>
-```
-
 Query the history of the open account within the specified time  interval.
 * Valid interval values: `1d`, `1w`, `1m`, `3m`, `1y`
 * `accountId` should be one that is returned by accounts.`all`
 
 [View examples](/docs/accounts/examples.js)
 
+```javascript
+accounts.history(interval, accountId) -> Promise<any>
+```
 ```javascript
 * This is not the full returned object - it has been cut.
 {
@@ -186,14 +185,13 @@ See also: [accounts.`all`](#accounts-all)
 <a id="accounts-activities"></a>
 ### accounts.`activities`
 
-```javascript
-accounts.activities() -> Promise<Array<any>>
-```
-
 Retrieves up to  20 recent activities on the WealthSimple Trade Account.
 
 [View examples](/docs/accounts/examples.js)
 
+```javascript
+accounts.activities() -> Promise<Array<any>>
+```
 ```javascript
 * This is not the full returned object - it has been cut.
 [
@@ -222,14 +220,13 @@ Retrieves up to  20 recent activities on the WealthSimple Trade Account.
 <a id="accounts-getBankAccounts"></a>
 ### accounts.`getBankAccounts`
 
-```javascript
-accounts.getBankAccounts() -> Promise<Array<any>>
-```
-
 Retrieves all bank accounts linked to the WealthSimple Trade account.
 
 [View examples](/docs/accounts/examples.js)
 
+```javascript
+accounts.getBankAccounts() -> Promise<Array<any>>
+```
 ```javascript
 * This is not the full returned object - it has been cut.
 [
@@ -257,14 +254,13 @@ Retrieves all bank accounts linked to the WealthSimple Trade account.
 <a id="accounts-deposits"></a>
 ### accounts.`deposits`
 
-```javascript
-accounts.deposits() -> Promise<Array<any>>
-```
-
 Grab all deposit records on the WealthSimple Trade account.
 
 [View examples](/docs/accounts/examples.js)
 
+```javascript
+accounts.deposits() -> Promise<Array<any>>
+```
 ```javascript
 * This is not the full returned object - it has been cut.
 [
@@ -291,15 +287,15 @@ Grab all deposit records on the WealthSimple Trade account.
 <a id="accounts-positions"></a>
 ### accounts.`positions`
 
-```javascript
-accounts.positions(accountId) -> Promise<Array<any>>
-```
 Lists all positions in the specified open account under the WealthSimple Trade Account.
 
 * `accountId` should be one that is returned by accounts.`all`
 
 [View examples](/docs/accounts/examples.js)
 
+```javascript
+accounts.positions(accountId) -> Promise<Array<any>>
+```
 ```javascript
 * This is not the full returned object - it has been cut.
 [
