@@ -1,6 +1,6 @@
 // ES6 syntax is used here. Please refer to the link below for importing
 // wstrade-api in CommonJS:
-// https://github.com/ahmedsakr/wstrade-api/tree/api-examples/docs#importing-wstrade-api-commonjs-es6
+// https://github.com/ahmedsakr/wstrade-api/docs#importing-wstrade-api-commonjs-es6
 
 import { auth, accounts } from 'wstrade-api';
 
@@ -11,7 +11,6 @@ import { auth, accounts } from 'wstrade-api';
     // an automatic function that retrieves the OTP.
     auth.on('otp', '182923');
     await auth.login('jane@doe.ca', 'mypassword');
-
 
     /*
      * Let's get the open accounts under Jane's WealthSimple Trade account.

@@ -1,6 +1,6 @@
 // ES6 syntax is used here. Please refer to the link below for importing
 // wstrade-api in CommonJS:
-// https://github.com/ahmedsakr/wstrade-api/tree/api-examples/docs#importing-wstrade-api-commonjs-es6
+// https://github.com/ahmedsakr/wstrade-api/docs#importing-wstrade-api-commonjs-es6
 
 import { headers } from 'wstrade-api';
 
