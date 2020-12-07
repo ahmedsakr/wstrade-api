@@ -22,6 +22,8 @@ API Reference
 ---
 
 <a id="headers-add"></a>
+### headers.`add`
+
 ```javascript
 headers.add(name, value) -> void
 ```
@@ -30,6 +32,8 @@ Appends a custom key-value header to all endpoint requests to WealthSimple Trade
 ---
 
 <a id="headers-remove"></a>
+### headers.`remove`
+
 ```javascript
 headers.remove(name) -> void
 ```
@@ -40,6 +44,8 @@ See also: [headers.`add`](#headers-add)
 ---
 
 <a id="headers-clear"></a>
+### headers.`clear`
+
 ```javascript
 headers.clear() -> void
 ```
@@ -49,6 +55,8 @@ Removes all custom headers.
 ---
 
 <a id="headers-values"></a>
+### headers.`values`
+
 ```javascript
 headers.values() -> Array<String>
 ```

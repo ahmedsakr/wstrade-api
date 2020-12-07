@@ -1,5 +1,3 @@
-
-
 [Skip to API reference -->](#api-reference)
 
 [See Examples in Code](/docs/auth/examples.js)
@@ -53,6 +51,8 @@ API Reference
 ---
 
 <a id="auth-on"></a>
+### auth.`on`
+
 ```javascript
 auth.on(event, thunk) -> void
 ```
@@ -69,6 +69,8 @@ See also: [auth.`login`](#auth-login)
 ---
 
 <a id="auth-login"></a>
+### auth.`login`
+
 ```javascript
 auth.login(email, password) -> Promise<void>
 ```
@@ -87,6 +89,8 @@ See also: [Authentication Tokens](#authentication-tokens), [auth.`on`](#auth-on)
 ---
 
 <a id="auth-refresh"></a>
+### auth.`refresh`
+
 ```javascript
 auth.refresh() -> Promise<void>
 ```
