@@ -1,0 +1,300 @@
+
+[Skip to API reference -->](#api-reference)
+
+[See Examples in Code](/docs/accounts/examples.js)
+
+Accounts
+===
+`accounts` is a core module to encapsulates the domain of open accounts in your WealthSimple Trade account. With the `accounts` module, you can:
+
+* Retrieve open account ids (TFSA, RRSP, etc) for use in other APIs
+* Retrieve connected bank accounts and deposits
+* Retrieve meta information about your WealthSimple Trade account
+* Retrieve positions in an open account (e.g., positions in TFSA)
+
+##### Note: All operations in `accounts` module require talking to WealthSimple Trade endpoints. So make sure you are authenticated through the [`auth`](/docs/auth/) module.
+<a id="#api-reference"></a>
+
+API Reference
+---
+* ### [accounts.`all`](#accounts-all)
+* ### [accounts.`data`](#accounts-data)
+* ### [accounts.`me`](#accounts-me)
+* ### [accounts.`person`](#accounts-person)
+* ### [accounts.`history`](#accounts-history)
+* ### [accounts.`activities`](#accounts-activities)
+* ### [accounts.`getBankAccounts`](#accounts-getBankAccounts)
+* ### [accounts.`deposits`](#accounts-deposits)
+* ### [accounts.`positions`](#accounts-positions)
+---
+
+<a id="accounts-all"></a>
+```javascript
+accounts.all() -> Promise<AccountList>
+```
+Retrieves an object containing the ids of all open accounts under your WealthSimple Trade account. The returned object could include `tfsa`, `rrsp`, `crypto`, and `personal` ids.
+
+[View examples](/docs/accounts/examples.js)
+
+```javascript
+{
+  tfsa: 'tfsa-zzzzzzzz',
+  rrsp: undefined,
+  crypto: 'non-registered-crypto-zzzzzzz',
+  personal: 'non-registered-zzzzzzzz'
+}
+```
+
+---
+
+<a id="accounts-data"></a>
+```javascript
+accounts.data() -> Promise<Array<any>>
+```
+Returns a list of details about your open accounts, like account type, buying power, current balance for each account.
+
+[View examples](/docs/accounts/examples.js)
+
+```javascript
+* This is not the full returned object - it has been cut.
+[
+  {
+    object: 'account',
+    id: 'non-registered-zzzzzzzz',
+    deleted_at: null,
+    buying_power: { amount: 3000000, currency: 'CAD' },
+    current_balance: { amount: 200000, currency: 'CAD' },
+    withdrawn_earnings: { amount: 10000000, currency: 'CAD' },
+    net_deposits: { amount: 1000000, currency: 'CAD' },
+    available_to_withdraw: { amount: 1000000, currency: 'CAD' },
+    ...
+  },
+  ...
+]
+```
+
+---
+
+<a id="accounts-me"></a>
+```javascript
+accounts.me() -> Promise<any>
+```
+Retrieves some surface information about you like your name and email, account
+signatures, and other metadata.
+
+[View examples](/docs/accounts/examples.js)
+
+```javascript
+* This is not the full returned object - it has been cut.
+{
+  object: 'user',
+  attempted_existing_bank_account_import: true,
+  attempted_existing_document_import: true,
+  first_name: 'Jane',
+  last_name: 'Doe',
+  feature_flags: [
+    'balance_service',
+    'tfsa',
+    'edit_kyc',
+    'sparkline_v2'
+  ],
+  email: 'jane@doe.ca',
+  email_confirmed: true,
+  unconfirmed_email: null,
+  is_funded: true,
+  can_create_referral: false
+}
+```
+
+---
+
+<a id="accounts-person"></a>
+```javascript
+accounts.person() -> Promise<any>
+```
+Detailed information about you that you provided on signup, like residential and mailing addresses, employment, phone numbers, and so on.
+
+[View examples](/docs/accounts/examples.js)
+
+```javascript
+* This is not the full returned object - it has been cut.
+{
+  email: 'jane@doe.ca',
+  phone_numbers: [ ... ],
+  residential_address: { ... },
+  mailing_address: { ... },
+  employment: { ... },
+  citizenships: [ 'CA' ],
+  date_of_birth: '1970-01-01',
+  full_legal_name: { first_name: 'Jane', middle_names: null, last_name: 'Doe' }
+}
+```
+
+---
+
+<a id="accounts-history"></a>
+```javascript
+accounts.history(interval, accountId) -> Promise<any>
+```
+
+Query the history of the open account within the specified time  interval.
+* Valid interval values: `1d`, `1w`, `1m`, `3m`, `1y`
+* `accountId` should be one that is returned by accounts.`all`
+
+[View examples](/docs/accounts/examples.js)
+
+```javascript
+* This is not the full returned object - it has been cut.
+{
+  results: [
+    {
+      date: '2020-03-16',
+      value: [Object],
+      equity_value: [Object],
+      net_deposits: [Object],
+      withdrawn_earnings: [Object],
+      relative_equity_earnings: [Object]
+    },
+    {
+      date: '2020-03-17',
+      value: [Object],
+      equity_value: [Object],
+      net_deposits: [Object],
+      withdrawn_earnings: [Object],
+      relative_equity_earnings: [Object]
+    },
+    ...
+  ],
+  start_earnings: { amount: 100000.00, currency: 'CAD' }
+}
+```
+
+See also: [accounts.`all`](#accounts-all)
+
+---
+
+<a id="accounts-activities"></a>
+```javascript
+accounts.activities() -> Promise<Array<any>>
+```
+
+Retrieves up to  20 recent activities on the WealthSimple Trade Account.
+
+[View examples](/docs/accounts/examples.js)
+
+```javascript
+* This is not the full returned object - it has been cut.
+[
+  {
+    id: 'funds_transfer-zzzzzzzzzzzzzzzzzzzzzzzzzzzzz',
+    bank_account_id: 'bank_account-zzzzzzzzzzzzzzzzzzzzzz',
+    created_at: '1970-01-01T14:16:46.000Z',
+    updated_at: '1970-01-01T23:16:32.185Z',
+    rejected_at: null,
+    cancelled_at: null,
+    accepted_at: '1970-01-01T00:12:55.000Z',
+    status: 'accepted',
+    value: { amount: 100000, currency: 'CAD' },
+    cancellable: false,
+    object: 'withdrawal',
+    withdrawal_reason: 'other',
+    tax_withholding: 0,
+    account_id: 'tfsa-zzzzzzzzz'
+  },
+  ...
+]
+```
+
+---
+
+<a id="accounts-getBankAccounts"></a>
+```javascript
+accounts.getBankAccounts() -> Promise<Array<any>>
+```
+
+Retrieves all bank accounts linked to the WealthSimple Trade account.
+
+[View examples](/docs/accounts/examples.js)
+
+```javascript
+* This is not the full returned object - it has been cut.
+[
+  {
+    object: 'bank_account',
+    id: 'bank_account-zzzzzzzzzzzzzzzzzzzzzzz',
+    type: 'chequing',
+    corporate: false,
+    account_name: null,
+    institution_name: 'RBC',
+    institution_number: '003',
+    transit_number: '***xx',
+    account_number: '****xxx',
+    jurisdiction: 'CA',
+    created_at: '1970-01-01T18:56:08Z',
+    updated_at: '1970-01-01T18:56:08Z',
+    verifications: [ [Object] ]
+  },
+  ...
+]
+```
+
+---
+
+<a id="accounts-deposits"></a>
+```javascript
+accounts.deposits() -> Promise<Array<any>>
+```
+
+Grab all deposit records on the WealthSimple Trade account.
+
+[View examples](/docs/accounts/examples.js)
+
+```javascript
+* This is not the full returned object - it has been cut.
+[
+  {
+    id: 'funds_transfer-zzzzzzzzzzzzzzzzzzzzzz',
+    bank_account_id: 'bank_account-zzzzzzzzzzzzzzzzz',
+    created_at: '1970-01-01T00:17:12.000Z',
+    updated_at: '1970-01-01T18:54:50.188Z',
+    rejected_at: null,
+    cancelled_at: null,
+    accepted_at: '1970-01-01T04:00:00.000Z',
+    status: 'accepted',
+    value: { amount: 100000, currency: 'CAD' },
+    cancellable: false,
+    object: 'deposit',
+    account_id: 'non-registered-zzzzzzzz'
+  },
+  ...
+]
+```
+
+---
+
+<a id="accounts-positions"></a>
+```javascript
+accounts.positions(accountId) -> Promise<Array<any>>
+```
+Lists all positions in the specified open account under the WealthSimple Trade Account.
+
+* `accountId` should be one that is returned by accounts.`all`
+
+[View examples](/docs/accounts/examples.js)
+
+```javascript
+* This is not the full returned object - it has been cut.
+[
+  {
+    // position 1
+    ...
+  },
+  {
+    // position 2
+    ...
+  },
+  ...
+]
+```
+
+See also: [accounts.`all`](#accounts-all)

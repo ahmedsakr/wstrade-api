@@ -18,7 +18,8 @@ export default {
   },
 
   /**
-   * Retrieves the top-level data of the account, including account id, account types, account values, and more.
+   * Returns a list of details about your open accounts, like account type, buying power,
+   * current balance, and more.
    */
   data: async () => handleRequest(endpoints.LIST_ACCOUNT, {}),
   
@@ -44,7 +45,6 @@ export default {
   
   /**
    * Retrieves the most recent 20 activities on the WealthSimple Trade Account.
-   *
    */
   activities: async () => handleRequest(endpoints.ACTIVITIES, {}),
 
