@@ -32,4 +32,4 @@ import { auth, quotes } from 'wstrade-api';
     // for NASDAQ-listed stocks, and quotes.get will use WealthSimple Trade endpoints to get
     // the quote for SU (Suncor).
     let suValue = await quotes.get('SU');
-});
+})().catch(error => console.log(error));
