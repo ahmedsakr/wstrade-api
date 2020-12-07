@@ -20,7 +20,7 @@ and a lot more usecases. `wstrade-api` is developed to provide you with the prog
 | [`auth`](/docs/auth) |  Logging in, One-Time Passwords, managing 0Auth2.0 tokens |
 | [`headers`](/docs/headers) |  Custom headers for rogue usecases (*you likely won't use this*) |
 | [`accounts`](/docs/accounts) | Open accounts, positions, meta data, bank accounts, and so on |
-| [`quotes`](/docs/quotes) | Quotes for securities, ability to custom quote source |
+| [`quotes`](/docs/quotes) | Quotes for securities, ability to customize quote source |
 | [`orders`](/docs/orders) | Pending/Filled/Cancelled orders, buying/selling securities |
 | [`data`](/docs/data) | Securities information, exchange rates |
 | [`config`](/docs/config) | Managing conditional features of `wstrade-api` |
