@@ -85,7 +85,10 @@ const WealthSimpleTradeEndpoints = {
   LIST_ACCOUNT: {
     method: "GET",
     url: "https://trade-service.wealthsimple.com/account/list",
-    onSuccess: defaultEndpointBehaviour.onSuccess,
+    onSuccess: async (request) => {
+      let data = await request.response.json();
+      return data.results;
+    },
     onFailure: defaultEndpointBehaviour.onFailure
   },
 
