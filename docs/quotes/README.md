@@ -31,7 +31,7 @@ Attach a custom quote provider for the specified exchange.
 
 [View examples](/docs/quotes/examples.js)
 
-See also: [orders.`marketBuy`](/docs/orders/README.md#market-buy), [orders.`marketSell`](/docs/orders/README.md#market-sell)
+See also: [orders.`marketBuy`](/docs/orders/README.md#orders-marketBuy), [orders.`marketSell`](/docs/orders/README.md#orders-marketSell)
 
 ---
 
