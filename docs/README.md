@@ -29,7 +29,7 @@ and a lot more usecases. `wstrade-api` is developed to provide you with the prog
 
 It is recommended to go through the table of modules in order if you are new to `wstrade-api`.
 
-Importing `wstrade-api`: CommonJS, ES6
+Importing `wstrade-api` with CommonJS, ES6
 ===
 There is no default export in `wstrade-api`. Instead, the `wstrade-api` exports the modules independently. Below are examples of importing `wstrade-api` with CommonJS or ES6 notations.
 

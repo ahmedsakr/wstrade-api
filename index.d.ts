@@ -376,7 +376,7 @@ declare namespace Trade {
    * @param {*} feature The string identifier for the feature, starting with "no_" if
    *                    you wish to disable it.
    */
-  function config(feature): void;
+  function config(feature: string): void;
 
 }
 
