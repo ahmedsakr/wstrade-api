@@ -29,18 +29,17 @@ Attach a custom quote provider for the specified exchange.
 
 [View examples](/docs/accounts/examples.js)
 
-
 ---
 
 <a id="quotes-get"></a>
 ### quotes.`get`
 
 ```javascript
-quotes.get(ticker) -> void
+quotes.get(ticker) -> Promise<number>
 ```
-Obtains a quote for the ticker. The source of the quote may be a custom
-provider if a valid provider is registered for the exchange that the
-ticker trades on.
-* `ticker` is an identifier for a security. [Read this document to understand how you can specify the ticker](/docs/ticker.md).
+Obtains a quote for the ticker. The source of the quote is by default from WealthSimple trade, but it could be a custom provider if a valid provider is registered for the exchange that the ticker trades on.
+* `ticker` is an identifier for a security. Read [this document](/docs/ticker.md) to understand how you can specify the ticker.
+
+[View examples](/docs/accounts/examples.js)
 
 See also: [quotes.`use`](#quotes-use)
