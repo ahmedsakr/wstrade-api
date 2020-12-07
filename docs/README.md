@@ -13,21 +13,23 @@ and a lot more usecases. `wstrade-api` is developed to provide you with the prog
 
 **Architecture overview**
 
-`wstrade-api` is broken down into 7 modules, with each module addressing a domain of operation. Below is a table of the modules and a brief description of their domain.
+`wstrade-api` is broken down into 7 modules, with each module addressing a domain of operation.
+
+## API References and Examples
 
 | module | Description |
 |--|--|
-| [`auth`](/docs/auth) |  Logging in, One-Time Passwords, managing 0Auth2.0 tokens |
-| [`headers`](/docs/headers) |  Custom headers for rogue usecases (*you likely won't use this*) |
-| [`accounts`](/docs/accounts) | Open accounts, positions, meta data, bank accounts, and so on |
-| [`quotes`](/docs/quotes) | Quotes for securities, ability to customize quote source |
-| [`orders`](/docs/orders) | Pending/Filled/Cancelled orders, buying/selling securities |
-| [`data`](/docs/data) | Securities information, exchange rates |
-| [`config`](/docs/config) | Managing conditional features of `wstrade-api` |
+| [`auth`](/examples/auth) |  Logging in, One-Time Passwords, managing 0Auth2.0 tokens |
+| [`headers`](/examples/headers) |  Custom headers for rogue usecases |
+| [`accounts`](/examples/accounts) | Open accounts, positions, meta data, bank accounts, and so on |
+| [`quotes`](/examples/quotes) | Quotes for securities, ability to customize quote source |
+| [`orders`](/examples/orders) | Pending/Filled/Cancelled orders, buying/selling securities |
+| [`data`](/examples/data) | Securities information, exchange rates |
+| [`config`](/examples/config) | Manage conditional features of `wstrade-api` |
 
-Click on any of the modules above to view examples of using the available APIs. It is recommended to go through the table of modules in order if you are new to `wstrade-api`.
+It is recommended to go through the table of modules in order if you are new to `wstrade-api`.
 
-Importing `wstrade-api` with CommonJS, ES6
+Importing `wstrade-api`: CommonJS, ES6
 ===
 There is no default export in `wstrade-api`. Instead, the `wstrade-api` exports the modules independently. Below are examples of importing `wstrade-api` with CommonJS or ES6 notations.
 
