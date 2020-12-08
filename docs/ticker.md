@@ -1,10 +1,11 @@
 # Ticker
 
-WealthSimple Trade supports securities from 4 exchanges:
+WealthSimple Trade supports securities from 5 exchanges:
 * `NASDAQ`
 * `NYSE`
 * `TSX`
 * `TSX-V`
+* `NEO`
 
 You will notice that some APIs require a ticker as a parameter. `wstrade-api` has incorporated a non-ambiguous way of identifying a security through its `symbol`, `exchange`, or `id`. This document will provide guidance on how you can specify the ticker argument for such APIs.
 

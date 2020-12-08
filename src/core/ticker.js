@@ -1,5 +1,5 @@
 // Exchanges supported by WealthSimple Trade 
-const exchanges = ["NASDAQ", "NYSE", "TSX", "TSX-V"];
+const exchanges = ["NASDAQ", "NYSE", "TSX", "TSX-V", "NEO"];
 
 /**
  * Ticker provides a logical encapsulation for the allowed forms
