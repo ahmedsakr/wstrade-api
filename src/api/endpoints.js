@@ -1,4 +1,5 @@
-import trade from '../index'
+import Ticker from '../core/ticker';
+import myOrders from '../orders';
 
 // The maximum number of orders retrieved by the /orders API.
 export const ORDERS_PER_PAGE = 20;
@@ -33,7 +34,8 @@ const WealthSimpleTradeEndpoints = {
       return {
         tokens: {
           access: request.response.headers.get('x-access-token'),
-          refresh: request.response.headers.get('x-refresh-token')
+          refresh: request.response.headers.get('x-refresh-token'),
+          expires: parseInt(request.response.headers.get('x-access-token-expires'))
         },
 
         accountInfo: await request.response.json()
@@ -50,8 +52,11 @@ const WealthSimpleTradeEndpoints = {
     url: "https://trade-service.wealthsimple.com/auth/refresh",
     onSuccess: async (request) => {
       return {
-        access: request.response.headers.get('x-access-token'),
-        refresh: request.response.headers.get('x-refresh-token')
+        tokens: {
+          access: request.response.headers.get('x-access-token'),
+          refresh: request.response.headers.get('x-refresh-token'),
+          expires: parseInt(request.response.headers.get('x-access-token-expires'))
+        }
       }
     },
     onFailure: defaultEndpointBehaviour.onFailure
@@ -80,6 +85,32 @@ const WealthSimpleTradeEndpoints = {
   LIST_ACCOUNT: {
     method: "GET",
     url: "https://trade-service.wealthsimple.com/account/list",
+    onSuccess: async (request) => {
+      let data = await request.response.json();
+      return data.results;
+    },
+    onFailure: defaultEndpointBehaviour.onFailure
+  },
+
+  /*
+   * The ME endpoint retrieves some surface information about you like
+   * your name and email.
+   */
+  ME: {
+    method: "GET",
+    url: "https://trade-service.wealthsimple.com/me",
+    onSuccess: defaultEndpointBehaviour.onSuccess,
+    onFailure: defaultEndpointBehaviour.onFailure
+  },
+
+  /*
+   * The PERSON endpoint retrieves detailed information about you that
+   * you provided on signup, like residential and mailing addresses,
+   * employment, phone numbers, and so on.
+   */
+  PERSON: {
+    method: "GET",
+    url: "https://trade-service.wealthsimple.com/person",
     onSuccess: defaultEndpointBehaviour.onSuccess,
     onFailure: defaultEndpointBehaviour.onFailure
   },
@@ -234,7 +265,7 @@ const WealthSimpleTradeEndpoints = {
     parameters: {
       0: "accountId",
     },
-    onSuccess: async (request, tokens) => {
+    onSuccess: async (request) => {
       const data = await request.response.json();
       const pages = Math.ceil(data.total / ORDERS_PER_PAGE);
       let orders = data.results;
@@ -243,7 +274,7 @@ const WealthSimpleTradeEndpoints = {
 
         // Query the rest of the pages
         for (let page = 2; page <= pages; page++) {
-          let tmp = await trade.getOrdersByPage(tokens, request.arguments.accountId, page);
+          let tmp = await myOrders.page(request.arguments.accountId, page);
           orders.push(...tmp.orders)
         }
       }
@@ -265,21 +296,34 @@ const WealthSimpleTradeEndpoints = {
     parameters: {
       0: "accountId"
     },
-    onSuccess: async (request, tokens) => {
+    onSuccess: async (request) => {
       const data = await request.response.json();
       const pages = Math.ceil(data.total / ORDERS_PER_PAGE);
 
-      // The ticker symbol restricts the pending orders to a specific security
-      let pendingFilter = (request.arguments.ticker) ?
-        order => order.symbol === request.arguments.ticker && order.status === request.arguments.status :
-        order => order.status === request.arguments.status;
+      let pendingFilter = order => {
+        let ticker = request.arguments.ticker;
+        if (ticker) {
+
+          let target = new Ticker({ symbol: order.symbol, id: order.security_id });
+          // order objects don't include exchanges, so we are unable to make
+          // a strong comparison without requiring a linear increase of
+          // endpoint calls (which is not reasonable).
+          //
+          // The user should provide the security id for a strong comparison here.
+          if (!ticker.weakEquals(target)) {
+            return false;
+          }
+        }
+        
+        return order.status === request.arguments.status;
+      };
 
       let orders = data.results.filter(pendingFilter);
       if (pages > 1) {
 
         // Check all other pages for pending orders
         for (let page = 2; page <= pages; page++) {
-          let tmp = await trade.getOrdersByPage(tokens, request.arguments.accountId, page);
+          let tmp = await myOrders.page(request.arguments.accountId, page);
           orders.push(...tmp.orders.filter(pendingFilter))
         }
       }

@@ -1,43 +1,24 @@
 import fetch from 'node-fetch';
 import status from 'http-status';
-
-let customHeaders = new fetch.Headers();
-
-// External API to mutate custom headers
-export const headers = {
-  add: (name, value) => customHeaders.append(name, value),
-  remove: (name) => customHeaders.delete(name),
-  clear: () => [...customHeaders].forEach(header => customHeaders.delete(header[0])),
-};
-
-// WealthSimple Trade API returns some custom HTTP codes
-const wealthSimpleHttpCodes = {
-  ORDER_CREATED: 201
-}
-
-// Successful HTTP codes to be used for determining the status of the request
-const httpSuccessCodes = [
-  status.OK,
-  wealthSimpleHttpCodes.ORDER_CREATED
-]
-
-export const isSuccessfulRequest = (code) => httpSuccessCodes.includes(code);
+import customHeaders from '../headers';
+import auth from '../auth';
+import { configDisabled } from '../config';
 
 /*
  * Fulfill the endpoint request given the endpoint configuration, optional
- * data, and the authentication tokens.
+ * data.
  */
-export async function handleRequest(endpoint, data, tokens) {
+export async function handleRequest(endpoint, data) {
   try {
 
     // Submit the HTTP request to the WealthSimple Trade Servers
-    const response = await talk(endpoint, data, tokens);
+    const response = await talk(endpoint, data);
 
-    if (isSuccessfulRequest(response.status)) {
+    if ([status.OK, status.CREATED].includes(response.status)) {
       return endpoint.onSuccess({
         arguments: data,
         response
-      }, tokens);
+      });
     } else {
       return Promise.reject(await endpoint.onFailure(response));
     }
@@ -54,6 +35,9 @@ export async function handleRequest(endpoint, data, tokens) {
  * data arguments.
  */
 function finalizeRequest(endpoint, data) {
+
+  // Make a copy so we don't modify the original one.
+  data = Object.assign({}, data);
 
   let url = endpoint.url;
 
@@ -80,27 +64,66 @@ function finalizeRequest(endpoint, data) {
 
   return { url, payload: JSON.stringify(data) };
 }
+
+/*
+ * Validate the auth token for expiry, attempting to refresh it
+ * if we have the refresh token.
+ */
+async function checkAuthTokenExpiry() {
+
+  // Absence of a token is allowed because non-privileged endpoints (i.e., login, refresh)
+  // do not require an authorization token.
+  if (!auth.tokens?.access) {
+    return false;
+  }
+
+  // We won't attempt to implicitly refresh if the user has requested
+  // this.
+  if (configDisabled('implicit_token_refresh')) {
+    return true;
+  }
+
+  const epochSeconds = () => parseInt(Date.now()/1000);
+
+  if (epochSeconds() >= auth.tokens?.expires) {
+    if (auth.tokens?.refresh) {
+      try {
+
+        // Let's implicitly refresh the access token using the refresh token.
+        await auth.refresh();
+      } catch (error) {
+
+        // The refresh token is not valid.
+        return Promise.reject(`Unable to refresh expired token: ${error}`);
+      }
+    } else {
+
+      // We are forced to reject as our access token has expired and we
+      // do not have a refresh token.
+      return Promise.reject('Access token expired');
+    }
+  }
+
+  return true;
+}
   
 /*
  * Implements the network level protocol for talking to the
  * WealthSimple Trade HTTPS API.
  */
-function talk(endpoint, data, tokens) {
+async function talk(endpoint, data) {
   let headers = new fetch.Headers();
   headers.append('Content-Type', 'application/json');
 
-  // Apply all custom headers
-  [...customHeaders].forEach(header => headers.append(...header));
-
-  if (tokens) {
-    headers.append('Authorization', tokens.access)
+  if (await checkAuthTokenExpiry()) {
+    headers.append('Authorization', auth.tokens.access)
   }
 
-  // Make a copy of the arguments so the original copy is not modified
-  let copy = Object.assign({}, data);
+  // Apply all custom headers
+  customHeaders.values().forEach(header => headers.append(...header));
 
   // fill path and query parameters in the URL
-  let { url, payload } = finalizeRequest(endpoint, copy);
+  let { url, payload } = finalizeRequest(endpoint, data);
 
   return fetch(url, {
     body: payload,

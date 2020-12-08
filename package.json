@@ -1,10 +1,11 @@
 {
   "name": "wstrade-api",
-  "version": "0.11.0",
+  "version": "1.0.0",
   "description": "WealthSimple Trade API Wrapper for JavaScript",
-  "main": "dist/index.js",
+  "main": "dist/wstrade.js",
   "scripts": {
     "build": "babel -d dist src",
+    "bundle": "webpack",
     "test": "npm run build && node dist/index.js"
   },
   "repository": {
@@ -26,8 +27,13 @@
   "devDependencies": {
     "@babel/cli": "^7.8.4",
     "@babel/core": "^7.9.6",
+    "@babel/plugin-proposal-optional-chaining": "^7.12.7",
+    "@babel/plugin-transform-runtime": "^7.12.1",
     "@babel/preset-env": "^7.9.6",
-    "typescript": "^3.9.2"
+    "babel-loader": "^8.2.2",
+    "typescript": "^3.9.2",
+    "webpack": "^5.4.0",
+    "webpack-cli": "^4.2.0"
   },
   "dependencies": {
     "http-status": "^1.4.2",
