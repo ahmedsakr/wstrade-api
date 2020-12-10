@@ -12,7 +12,6 @@ Data
 This module is currently limited, but has lots of room for growth in later versions.
 
 ##### Note: All operations in `data` module require talking to WealthSimple Trade endpoints. So make sure you are authenticated through the [`auth`](/docs/auth/) module.
-<a id="#api-reference"></a>
 
 <a id="#api-reference"></a>
 
