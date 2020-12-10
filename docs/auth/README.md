@@ -76,7 +76,7 @@ auth.login(email, password) -> Promise<void>
 ```
 
 Attempts to login to the WealthSimple Trade platform using the email and password combination. 
-If the login was successful, `auth.tokens` will be populated with the retrieved OAauth2.0 tokens and access token expiry time. Otherwise, the return promise is rejected with the appropriate error.
+If the login was successful, `auth.tokens` will be populated with the retrieved OAuth2.0 tokens and access token expiry time. Otherwise, the return promise is rejected with the appropriate error.
 
 An OTP provider must be configured beforehand with the auth.`on` API for the `otp` event. If the `otp` event was registered with a string literal, it is assumed that you have already obtained the OTP manually and it will be passed along as-is. Otherwise, if you specified a function handler, it is assumed that your handler will automatically retrieve the OTP after we attempt a login without an OTP.  See examples for practical explanation.
 

@@ -10,6 +10,8 @@ The `orders` module can be described as the most exciting module in `wstrade-api
 * cancel one or all pending orders
 * View pending, cancelled, filled, or all orders
 
+##### Note: All operations in `orders` module require talking to WealthSimple Trade endpoints. So make sure you are authenticated through the [`auth`](/docs/auth/) module.
+
 <a id="#api-reference"></a>
 
 API Reference
