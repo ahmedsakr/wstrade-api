@@ -8,7 +8,7 @@ declare namespace Trade {
   };
 
   // Supported exchanges
-  type Exchange = 'NYSE' | 'NASDAQ' | 'TSX' | 'TSX-V';
+  type Exchange = 'NYSE' | 'NASDAQ' | 'TSX' | 'TSX-V' | 'NEO';
 
   /**
    * A ticker may be provided to the API as a string or an object with
