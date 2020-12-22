@@ -1,8 +1,8 @@
-// Conditional features that have been disabled
+// Optional features that have been disabled
 let disabled = [];
 
 /**
- * Enable or disable a conditional feature within wstrade-api.
+ * Enable or disable a optional feature within wstrade-api.
  * 
  * Examples:
  * ---

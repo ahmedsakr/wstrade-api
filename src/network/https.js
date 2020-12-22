@@ -3,6 +3,7 @@ import status from 'http-status';
 import customHeaders from '../headers';
 import auth from '../auth';
 import { configDisabled } from '../config';
+import { epochSeconds } from '../helpers/time';
 
 /*
  * Fulfill the endpoint request given the endpoint configuration, optional
@@ -69,22 +70,7 @@ function finalizeRequest(endpoint, data) {
  * Validate the auth token for expiry, attempting to refresh it
  * if we have the refresh token.
  */
-async function checkAuthTokenExpiry() {
-
-  // Absence of a token is allowed because non-privileged endpoints (i.e., login, refresh)
-  // do not require an authorization token.
-  if (!auth.tokens?.access) {
-    return false;
-  }
-
-  // We won't attempt to implicitly refresh if the user has requested
-  // this.
-  if (configDisabled('implicit_token_refresh')) {
-    return true;
-  }
-
-  const epochSeconds = () => parseInt(Date.now()/1000);
-
+async function implicitTokenRefresh() {
   if (epochSeconds() >= auth.tokens?.expires) {
     if (auth.tokens?.refresh) {
       try {
@@ -103,8 +89,6 @@ async function checkAuthTokenExpiry() {
       return Promise.reject('Access token expired');
     }
   }
-
-  return true;
 }
   
 /*
@@ -115,7 +99,14 @@ async function talk(endpoint, data) {
   let headers = new fetch.Headers();
   headers.append('Content-Type', 'application/json');
 
-  if (await checkAuthTokenExpiry()) {
+  if (!auth.tokens?.access) {
+
+    // We won't attempt to implicitly refresh if the user has requested
+    // this.
+    if (!configDisabled('implicit_token_refresh')) {
+      await implicitTokenRefresh();
+    }
+
     headers.append('Authorization', auth.tokens.access)
   }
 

@@ -25,7 +25,7 @@ and a lot more usecases. `wstrade-api` is developed to provide you with the prog
 | [`quotes`](/docs/quotes) | Quotes for securities, ability to customize quote source |
 | [`orders`](/docs/orders) | Pending/Filled/Cancelled orders, buying/selling securities |
 | [`data`](/docs/data) | Securities information, exchange rates |
-| [`config`](/docs/config) | Manage conditional features of `wstrade-api` |
+| [`config`](/docs/config) | Manage optional features of `wstrade-api` |
 
 It is recommended to go through the table of modules in order if you are new to `wstrade-api`.
 
