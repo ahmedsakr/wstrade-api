@@ -8,7 +8,7 @@ declare namespace Trade {
   };
 
   // Supported exchanges
-  type Exchange = 'NYSE' | 'NASDAQ' | 'TSX' | 'TSX-V';
+  type Exchange = 'NYSE' | 'NASDAQ' | 'TSX' | 'TSX-V' | 'NEO';
 
   /**
    * A ticker may be provided to the API as a string or an object with
@@ -363,7 +363,7 @@ declare namespace Trade {
 
 
   /**
-   * Enable or disable a conditional feature within wstrade-api.
+   * Enable or disable an optional feature within wstrade-api.
    * 
    * Examples:
    * ---

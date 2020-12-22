@@ -6,7 +6,7 @@
 
 Config
 ===
-`config` module allows you to disable or enable conditional features within `wstrade-api`. Here is a list of conditional features.
+`config` module allows you to disable or enable optional features within `wstrade-api`. Here is a list of optional features.
 
 | Feature | Default | Description |
 |--|--|--|
@@ -26,7 +26,7 @@ API Reference
 config(feature) -> void
 ```
 
-Enable or disable a conditional feature within `wstrade-api`.
+Enable or disable an optional feature within `wstrade-api`.
 * To **enable** a feature, specify the feature name shown in the table above
 * To **disable** a feature, prefix `no_` before the feature name shown in the table above.
 
