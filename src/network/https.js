@@ -99,7 +99,7 @@ async function talk(endpoint, data) {
   let headers = new fetch.Headers();
   headers.append('Content-Type', 'application/json');
 
-  if (!auth.tokens?.access) {
+  if (auth.tokens?.access) {
 
     // We won't attempt to implicitly refresh if the user has requested
     // this.
