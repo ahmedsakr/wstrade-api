@@ -36,14 +36,6 @@ export default {
     queryResult = queryResult.filter(security => security.stock.symbol === ticker.symbol);
 
     if (ticker.exchange) {
-
-      // WealthSimple Trade doesn't have a short exchange id ('NEO') for
-      // AEQUITAS NEO EXCHANGE for some reason...
-      // We have to map it to the full name for comparisons to work.
-      if (ticker.exchange === 'NEO') {
-        ticker.exchange = 'AEQUITAS NEO EXCHANGE';
-      }
-
       queryResult = queryResult.filter(security => security.stock.primary_exchange === ticker.exchange);
     }
 
