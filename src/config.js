@@ -1,5 +1,5 @@
-// Optional features that have been disabled
-let disabled = [];
+// Holds optional features that have been disabled.
+let disabled = [ 'securities_cache' ];
 
 /**
  * Enable or disable a optional feature within wstrade-api.
@@ -20,13 +20,13 @@ export default function config(feature) {
     let cut = feature.substring(feature.indexOf("_") + 1);
 
     // We will only append this if it isn't already in there.
-    if (!configDisabled(cut)) {
+    if (configEnabled(cut)) {
       disabled.push(cut);
     }
   } else {
 
     // Only delete the feature if it's already disabled.
-    if (configDisabled(feature)) {
+    if (!configEnabled(feature)) {
       disabled.splice(disabled.indexOf(feature), 1);
     }
   }
