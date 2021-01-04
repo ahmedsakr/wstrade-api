@@ -32,4 +32,4 @@ export default function config(feature) {
   }
 }
 
-export const configDisabled = (feature) => disabled.includes(feature);
+export const configEnabled = (feature) => !disabled.includes(feature);

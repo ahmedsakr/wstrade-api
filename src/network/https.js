@@ -2,7 +2,7 @@ import fetch from 'node-fetch';
 import status from 'http-status';
 import customHeaders from '../headers';
 import auth from '../auth';
-import { configDisabled } from '../config';
+import { configEnabled } from '../config';
 import implicitTokenRefresh from '../optional/implicit-token-refresh';
 
 /*
@@ -78,7 +78,7 @@ async function talk(endpoint, data) {
 
     // We won't attempt to implicitly refresh if the user has requested
     // this.
-    if (!configDisabled('implicit_token_refresh')) {
+    if (configEnabled('implicit_token_refresh')) {
       await implicitTokenRefresh();
     }
 
