@@ -5,7 +5,8 @@ let cache = new APICache(10);
 
 export default {
     /**
-     * Query the cache for the security
+     * Query the cache for the security.
+     *
      * @param {*} security 
      */
     get(security) {
@@ -19,8 +20,10 @@ export default {
 
         return result;
     },
+
     /**
-     * 
+     * Remember the security for a future quick retrieval.
+     *
      * @param {*} key 
      * @param {*} value 
      */

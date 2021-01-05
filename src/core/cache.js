@@ -18,6 +18,13 @@ export default class APICache {
         this.size = size;
     }
 
+    /**
+     * Store the key-value pair into this cache. The oldest entry is evicted if
+     * we're out of space.
+     *
+     * @param {*} key 
+     * @param {*} value 
+     */
     insert(key, value) {
         if (this.cache.size >= this.size) {
             this.cache.delete(this.cache.keys().next());
@@ -26,6 +33,11 @@ export default class APICache {
         this.cache.set(key, value);
     }
 
+    /**
+     * Retrieve the value of the element associated with the key.
+     *
+     * @param {*} key 
+     */
     get(key) {
         return this.cache.get(key);
     }
