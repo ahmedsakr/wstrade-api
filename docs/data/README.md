@@ -1,4 +1,5 @@
 
+
 [Skip to API reference -->](#api-reference)
 
 [See Examples in Code](/docs/data/examples.js)
@@ -51,6 +52,11 @@ data.exchangeRates() -> Promise<any>
 Information about a security on the WealthSimple Trade Platform.
 * `ticker` is an identifier for a security. Read [this document](/docs/ticker.md) to understand how you can specify the ticker.
 * `extensive` is a boolean that triggers a more detailed information draw, including the quote of the security.
+
+**Note**: If `extensive` is set to true and you have enabled the securities cache, the securities cache is always bypassed and an API call is made.  This is because the `extensive` data draw retrieves information like the quote.
+
+[View examples](/docs/data/examples.js)
+
 ```javascript
 data.getSecurity(ticker, [extensive]) -> Promise<any>
 ```
@@ -76,3 +82,5 @@ data.getSecurity(ticker, [extensive]) -> Promise<any>
   ...
 }
 ```
+
+See also: [`config`](/docs/config/README.md)

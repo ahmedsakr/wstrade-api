@@ -55,6 +55,13 @@ class Ticker {
     if (this.exchange && !exchanges.includes(this.exchange)) {
       throw new Error(`Invalid exchange '${this.exchange}'!`);
     }
+
+    // WealthSimple Trade doesn't have a short exchange id ('NEO') for
+    // AEQUITAS NEO EXCHANGE for some reason...
+    // We have to map it to the full name for comparisons to work.
+    if (this.exchange === 'NEO') {
+      this.exchange = 'AEQUITAS NEO EXCHANGE';
+    }
   }
 
   /**

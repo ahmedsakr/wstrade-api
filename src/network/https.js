@@ -2,8 +2,8 @@ import fetch from 'node-fetch';
 import status from 'http-status';
 import customHeaders from '../headers';
 import auth from '../auth';
-import { configDisabled } from '../config';
-import { epochSeconds } from '../helpers/time';
+import { configEnabled } from '../config';
+import implicitTokenRefresh from '../optional/implicit-token-refresh';
 
 /*
  * Fulfill the endpoint request given the endpoint configuration, optional
@@ -65,31 +65,6 @@ function finalizeRequest(endpoint, data) {
 
   return { url, payload: JSON.stringify(data) };
 }
-
-/*
- * Validate the auth token for expiry, attempting to refresh it
- * if we have the refresh token.
- */
-async function implicitTokenRefresh() {
-  if (epochSeconds() >= auth.tokens?.expires) {
-    if (auth.tokens?.refresh) {
-      try {
-
-        // Let's implicitly refresh the access token using the refresh token.
-        await auth.refresh();
-      } catch (error) {
-
-        // The refresh token is not valid.
-        return Promise.reject(`Unable to refresh expired token: ${error}`);
-      }
-    } else {
-
-      // We are forced to reject as our access token has expired and we
-      // do not have a refresh token.
-      return Promise.reject('Access token expired');
-    }
-  }
-}
   
 /*
  * Implements the network level protocol for talking to the
@@ -103,7 +78,7 @@ async function talk(endpoint, data) {
 
     // We won't attempt to implicitly refresh if the user has requested
     // this.
-    if (!configDisabled('implicit_token_refresh')) {
+    if (configEnabled('implicit_token_refresh')) {
       await implicitTokenRefresh();
     }
 
