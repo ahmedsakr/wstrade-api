@@ -20,7 +20,7 @@ export default {
    *
    * @param {*} accountId The specific account in the WealthSimple Trade account
    */
-  async cancelPending(accountId) {
+  cancelPending: async (accountId) => {
     const pending = await history.pending(accountId);
     return Promise.all(pending.orders.map(async (order) => this.cancel(order.order_id)));
   },
