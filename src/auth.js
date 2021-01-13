@@ -14,7 +14,7 @@ export default {
    * @param {*} event The trigger for the function
    * @param {*} thunk The function block to execute on event trigger
    */
-  on: function (event, thunk) {
+  on(event, thunk) {
     this[event] = thunk;
   },
 
@@ -24,8 +24,7 @@ export default {
    * @param {*} email emailed registered by the WealthSimple Trade account
    * @param {*} password The password of the account
    */
-  login: async function (email, password) {
-
+  async login(email, password) {
     let response = null;
 
     /*
@@ -36,10 +35,10 @@ export default {
      * If a literal value is provided for otp, it means the user has manually
      * provided us with the otp code. We can skip this login attempt.
      */
-    if (typeof(this.otp) === 'function') {
+    if (typeof (this.otp) === 'function') {
       await handleRequest(endpoints.LOGIN, {
         email,
-        password
+        password,
       }).catch(() => {});
     }
 
@@ -48,13 +47,12 @@ export default {
       response = await handleRequest(endpoints.LOGIN, {
         email,
         password,
-        otp: typeof(this.otp) === 'function'  ? await this.otp() : this.otp
+        otp: typeof (this.otp) === 'function' ? await this.otp() : this.otp,
       });
     } catch (error) {
-
       // we might have failed because OTP was not provided
       if (!this.otp) {
-        return Promise.reject("OTP not provided!");
+        return Promise.reject('OTP not provided!');
       }
 
       // Seems to be incorrect credentials or OTP.
@@ -68,13 +66,12 @@ export default {
   /**
    * Generates a new set of access and refresh tokens.
    */
-  refresh: async function () {
-
+  async refresh() {
     // Dispose of the existing token
     this.tokens.access = null;
-  
-    let response = await handleRequest(endpoints.REFRESH, {
-      refresh_token: this.tokens.refresh
+
+    const response = await handleRequest(endpoints.REFRESH, {
+      refresh_token: this.tokens.refresh,
     });
 
     this.tokens = response.tokens;

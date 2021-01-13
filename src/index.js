@@ -13,5 +13,5 @@ module.exports = {
   orders,
   quotes,
   data,
-  config
+  config,
 };

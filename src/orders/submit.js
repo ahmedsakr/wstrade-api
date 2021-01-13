@@ -4,7 +4,7 @@ import history from './history';
 import data from '../data';
 import quotes from '../quotes';
 
-const isCanadianSecurity = (exchange) => ["TSX", "TSX-V"].includes(exchange);
+const isCanadianSecurity = (exchange) => ['TSX', 'TSX-V'].includes(exchange);
 
 export default {
 
@@ -20,9 +20,9 @@ export default {
    *
    * @param {*} accountId The specific account in the WealthSimple Trade account
    */
-  cancelPending: async function (accountId) {
+  async cancelPending(accountId) {
     const pending = await history.pending(accountId);
-    return Promise.all(pending.orders.map(async (order) => await this.cancel(order.order_id)));
+    return Promise.all(pending.orders.map(async (order) => this.cancel(order.order_id)));
   },
 
   /**
@@ -33,16 +33,16 @@ export default {
    * @param {*} quantity The number of securities to purchase
    */
   marketBuy: async (accountId, ticker, quantity) => {
-    let extensive_details = await data.getSecurity(ticker, true);
+    const details = await data.getSecurity(ticker);
 
     return handleRequest(endpoints.PLACE_ORDER, {
-      security_id: extensive_details.id,
+      security_id: details.id,
       limit_price: await quotes.get(ticker),
       quantity,
-      order_type: "buy_quantity",
-      order_sub_type: "market",
-      time_in_force: "day",
-      account_id: accountId
+      order_type: 'buy_quantity',
+      order_sub_type: 'market',
+      time_in_force: 'day',
+      account_id: accountId,
     });
   },
 
@@ -54,16 +54,15 @@ export default {
    * @param {*} limit The maximum price to purchase the security at
    * @param {*} quantity The number of securities to purchase
    */
-  limitBuy: async (accountId, ticker, limit, quantity) =>
-    handleRequest(endpoints.PLACE_ORDER, {
-      security_id: (await data.getSecurity(ticker)).id,
-      limit_price: limit,
-      quantity,
-      order_type: "buy_quantity",
-      order_sub_type: "limit",
-      time_in_force: "day",
-      account_id: accountId
-    }),
+  limitBuy: async (accountId, ticker, limit, quantity) => handleRequest(endpoints.PLACE_ORDER, {
+    security_id: (await data.getSecurity(ticker)).id,
+    limit_price: limit,
+    quantity,
+    order_type: 'buy_quantity',
+    order_sub_type: 'limit',
+    time_in_force: 'day',
+    account_id: accountId,
+  }),
 
   /**
    * Stop limit buy a security through the WealthSimple Trade application.
@@ -75,12 +74,11 @@ export default {
    * @param {*} quantity The number of securities to purchase
    */
   stopLimitBuy: async (accountId, ticker, stop, limit, quantity) => {
-    
-    let security = await data.getSecurity(ticker);
+    const security = await data.getSecurity(ticker);
 
     // The WealthSimple Trade backend doesn't check for this, even though the app does..
     if (isCanadianSecurity(security.stock.primary_exchange) && stop !== limit) {
-      return Promise.reject({ reason: "TSX/TSX-V securities must have an equivalent stop and limit price." });
+      return Promise.reject({ reason: 'TSX/TSX-V securities must have an equivalent stop and limit price.' });
     }
 
     return handleRequest(endpoints.PLACE_ORDER, {
@@ -88,10 +86,10 @@ export default {
       stop_price: stop,
       limit_price: limit,
       quantity,
-      order_type: "buy_quantity",
-      order_sub_type: "stop_limit",
-      time_in_force: "day",
-      account_id: accountId
+      order_type: 'buy_quantity',
+      order_sub_type: 'stop_limit',
+      time_in_force: 'day',
+      account_id: accountId,
     });
   },
 
@@ -103,16 +101,15 @@ export default {
    * @param {*} quantity The number of securities to purchase
    */
   marketSell: async (accountId, ticker, quantity) => {
+    const details = await data.getSecurity(ticker);
 
-    let extensive_details = await data.getSecurity(ticker, true);
-    
     return handleRequest(endpoints.PLACE_ORDER, {
-      security_id: extensive_details.id,
+      security_id: details.id,
       market_value: await quotes.get(ticker),
-      quantity: quantity,
-      order_type: "sell_quantity",
-      order_sub_type: "market",
-      time_in_force: "day",
+      quantity,
+      order_type: 'sell_quantity',
+      order_sub_type: 'market',
+      time_in_force: 'day',
       account_id: accountId,
     });
   },
@@ -125,16 +122,15 @@ export default {
    * @param {*} limit The minimum price to sell the security at
    * @param {*} quantity The number of securities to sell
    */
-  limitSell: async (accountId, ticker, limit, quantity) =>
-    handleRequest(endpoints.PLACE_ORDER, {
-      security_id: (await data.getSecurity(ticker)).id,
-      limit_price: limit,
-      quantity,
-      order_type: "sell_quantity",
-      order_sub_type: "limit",
-      time_in_force: "day",
-      account_id: accountId
-    }),
+  limitSell: async (accountId, ticker, limit, quantity) => handleRequest(endpoints.PLACE_ORDER, {
+    security_id: (await data.getSecurity(ticker)).id,
+    limit_price: limit,
+    quantity,
+    order_type: 'sell_quantity',
+    order_sub_type: 'limit',
+    time_in_force: 'day',
+    account_id: accountId,
+  }),
 
   /**
    * Stop limit sell a security through the WealthSimple Trade application.
@@ -146,12 +142,11 @@ export default {
    * @param {*} quantity The number of securities to sell
    */
   stopLimitSell: async (accountId, ticker, stop, limit, quantity) => {
-
-    let security = await data.getSecurity(ticker);
+    const security = await data.getSecurity(ticker);
 
     // The WealthSimple Trade backend doesn't check for this, even though the app does..
     if (isCanadianSecurity(security.stock.primary_exchange) && stop !== limit) {
-      return Promise.reject({ reason: "TSX/TSX-V securities must have an equivalent stop and limit price." });
+      return Promise.reject({ reason: 'TSX/TSX-V securities must have an equivalent stop and limit price.' });
     }
 
     return handleRequest(endpoints.PLACE_ORDER, {
@@ -159,10 +154,10 @@ export default {
       stop_price: stop,
       limit_price: limit,
       quantity,
-      order_type: "sell_quantity",
-      order_sub_type: "stop_limit",
-      time_in_force: "day",
-      account_id: accountId
+      order_type: 'sell_quantity',
+      order_sub_type: 'stop_limit',
+      time_in_force: 'day',
+      account_id: accountId,
     });
-  }
+  },
 };

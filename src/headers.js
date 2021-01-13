@@ -1,12 +1,12 @@
-import { Headers } from 'node-fetch';  
+import { Headers } from 'node-fetch';
 
-let customHeaders = new Headers();
+const customHeaders = new Headers();
 
 export default {
 
   /**
    * Appends a header name-value pair to all requests.
-   * 
+   *
    * @param {*} name Header key
    * @param {*} value Header value
    */
@@ -14,7 +14,7 @@ export default {
 
   /**
    * Removes a custom header from all requests.
-   * 
+   *
    * @param {*} name Header key
    */
   remove: (name) => customHeaders.delete(name),
@@ -22,10 +22,10 @@ export default {
   /**
    * Clears all custom headers.
    */
-  clear: () => [...customHeaders].forEach(header => customHeaders.delete(header[0])),
+  clear: () => [...customHeaders].forEach((header) => customHeaders.delete(header[0])),
 
   /**
    * Produces a list of custom headers.
    */
   values: () => [...customHeaders],
-}
+};
