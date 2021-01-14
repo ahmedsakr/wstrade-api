@@ -29,7 +29,8 @@ async function all(accountId) {
 
   if (pages > 1) {
     const tasks = [];
-    // Query the rest of the pages
+
+    // Buld the task queue that will retrieve the remaining pages of orders
     for (let pageNum = 2; pageNum <= pages; pageNum++) {
       tasks.push(page(accountId, pageNum).then((result) => result.orders));
     }
