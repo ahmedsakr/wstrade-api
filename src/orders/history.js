@@ -38,12 +38,12 @@ async function all(accountId) {
     // guarantee that the data order is preserved.
     const result = await Promise.all(tasks);
     result.forEach((list) => data.orders.push(...list));
+
+    // Update the total attribute to reflect the new size
+    data.total = data.orders.length;
   }
 
-  return {
-    total: data.orders.length,
-    orders: data.orders,
-  };
+  return data;
 }
 
 /*
