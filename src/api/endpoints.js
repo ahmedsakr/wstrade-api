@@ -1,6 +1,3 @@
-import Ticker from '../core/ticker';
-import myOrders from '../orders';
-
 // The maximum number of orders retrieved by the /orders API.
 export const ORDERS_PER_PAGE = 20;
 
@@ -243,84 +240,6 @@ const WealthSimpleTradeEndpoints = {
       return {
         total: data.total,
         orders: data.results,
-      };
-    },
-    onFailure: defaultEndpointBehaviour.onFailure,
-  },
-
-  /*
-   * Pull all orders (filled, cancelled, pending) for the specified account under
-   * the WealthSimple Trade account.
-   */
-  ALL_ORDERS: {
-    method: 'GET',
-    url: 'https://trade-service.wealthsimple.com/orders?account_id={0}',
-    parameters: {
-      0: 'accountId',
-    },
-    onSuccess: async (request) => {
-      const data = await request.response.json();
-      const pages = Math.ceil(data.total / ORDERS_PER_PAGE);
-      const orders = data.results;
-
-      if (pages > 1) {
-        // Query the rest of the pages
-        for (let page = 2; page <= pages; page++) {
-          const tmp = await myOrders.page(request.arguments.accountId, page);
-          orders.push(...tmp.orders);
-        }
-      }
-
-      return {
-        total: orders.length,
-        orders,
-      };
-    },
-    onFailure: defaultEndpointBehaviour.onFailure,
-  },
-
-  /*
-   * Filters orders by status and ticker.
-   */
-  FILTERED_ORDERS: {
-    method: 'GET',
-    url: 'https://trade-service.wealthsimple.com/orders?account_id={0}',
-    parameters: {
-      0: 'accountId',
-    },
-    onSuccess: async (request) => {
-      const data = await request.response.json();
-      const pages = Math.ceil(data.total / ORDERS_PER_PAGE);
-
-      const pendingFilter = (order) => {
-        const { ticker } = request.arguments;
-        if (ticker) {
-          const target = new Ticker({ symbol: order.symbol, id: order.security_id });
-          // order objects don't include exchanges, so we are unable to make
-          // a strong comparison without requiring a linear increase of
-          // endpoint calls (which is not reasonable).
-          //
-          // The user should provide the security id for a strong comparison here.
-          if (!ticker.weakEquals(target)) {
-            return false;
-          }
-        }
-
-        return order.status === request.arguments.status;
-      };
-
-      const orders = data.results.filter(pendingFilter);
-      if (pages > 1) {
-        // Check all other pages for pending orders
-        for (let page = 2; page <= pages; page++) {
-          const tmp = await myOrders.page(request.arguments.accountId, page);
-          orders.push(...tmp.orders.filter(pendingFilter));
-        }
-      }
-
-      return {
-        total: orders.length,
-        orders,
       };
     },
     onFailure: defaultEndpointBehaviour.onFailure,
