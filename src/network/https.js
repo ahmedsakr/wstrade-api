@@ -79,11 +79,9 @@ export async function handleRequest(endpoint, data) {
     const response = await talk(endpoint, data);
 
     if ([status.OK, status.CREATED].includes(response.status)) {
-      return endpoint.onSuccess({
-        arguments: data,
-        response,
-      });
+      return endpoint.onSuccess(response);
     }
+
     return Promise.reject(await endpoint.onFailure(response));
   } catch (error) {
     // This is likely a network error; throw it to the caller to deal with.

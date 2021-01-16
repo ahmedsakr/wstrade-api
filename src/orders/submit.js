@@ -13,7 +13,10 @@ export default {
    *
    * @param {*} orderId The pending order to cancel
    */
-  cancel: async (orderId) => handleRequest(endpoints.CANCEL_ORDER, { orderId }),
+  cancel: async (orderId) => ({
+    order: orderId,
+    response: await handleRequest(endpoints.CANCEL_ORDER, { orderId }),
+  }),
 
   /**
    * Cancels all pending orders under the WealthSimple Trade Account.

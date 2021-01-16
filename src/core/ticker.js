@@ -35,10 +35,9 @@ class Ticker {
     this.id = null;
 
     if (typeof (value) === 'string') {
-
       // Empty tickers are not allowed
       if (value === '') {
-        throw new Error("Empty ticker");
+        throw new Error('Empty ticker');
       }
 
       [this.symbol, this.exchange] = value.split(':');
@@ -77,9 +76,9 @@ class Ticker {
     // We must retranslate the full name of the NEO exchange back to NEO
     if (this.exchange === 'AEQUITAS NEO EXCHANGE') {
       return `${this.symbol}:NEO`;
-    } else {
-      return `${this.symbol}${this.exchange ? `:${this.exchange}` : ''}`;
     }
+
+    return `${this.symbol}${this.exchange ? `:${this.exchange}` : ''}`;
   }
 
   /**
@@ -94,10 +93,9 @@ class Ticker {
       return true;
     }
 
-    if (this.symbol && this.symbol == other.symbol) {
+    if (this.symbol && this.symbol === other.symbol) {
       return true;
     }
-
 
     return false;
   }

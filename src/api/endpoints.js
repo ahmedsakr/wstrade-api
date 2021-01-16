@@ -11,7 +11,7 @@ const defaultEndpointBehaviour = {
   }),
 
   // Default success method for all endpoint calls
-  onSuccess: async (request) => request.response.json(),
+  onSuccess: async (response) => response.json(),
 };
 
 const WealthSimpleTradeEndpoints = {
@@ -25,14 +25,14 @@ const WealthSimpleTradeEndpoints = {
   LOGIN: {
     method: 'POST',
     url: 'https://trade-service.wealthsimple.com/auth/login',
-    onSuccess: async (request) => ({
+    onSuccess: async (response) => ({
       tokens: {
-        access: request.response.headers.get('x-access-token'),
-        refresh: request.response.headers.get('x-refresh-token'),
-        expires: parseInt(request.response.headers.get('x-access-token-expires'), 10),
+        access: response.headers.get('x-access-token'),
+        refresh: response.headers.get('x-refresh-token'),
+        expires: parseInt(response.headers.get('x-access-token-expires'), 10),
       },
 
-      accountInfo: await request.response.json(),
+      accountInfo: await response.json(),
     }),
     onFailure: defaultEndpointBehaviour.onFailure,
   },
@@ -43,11 +43,11 @@ const WealthSimpleTradeEndpoints = {
   REFRESH: {
     method: 'POST',
     url: 'https://trade-service.wealthsimple.com/auth/refresh',
-    onSuccess: async (request) => ({
+    onSuccess: async (response) => ({
       tokens: {
-        access: request.response.headers.get('x-access-token'),
-        refresh: request.response.headers.get('x-refresh-token'),
-        expires: parseInt(request.response.headers.get('x-access-token-expires'), 10),
+        access: response.headers.get('x-access-token'),
+        refresh: response.headers.get('x-refresh-token'),
+        expires: parseInt(response.headers.get('x-access-token-expires'), 10),
       },
     }),
     onFailure: defaultEndpointBehaviour.onFailure,
@@ -59,8 +59,8 @@ const WealthSimpleTradeEndpoints = {
   ACCOUNT_IDS: {
     method: 'GET',
     url: 'https://trade-service.wealthsimple.com/account/list',
-    onSuccess: async (request) => {
-      const data = await request.response.json();
+    onSuccess: async (response) => {
+      const data = await response.json();
 
       // Collect all account ids registered under this WealthSimple Trade Account
       return data.results.map((account) => account.id);
@@ -76,8 +76,8 @@ const WealthSimpleTradeEndpoints = {
   LIST_ACCOUNT: {
     method: 'GET',
     url: 'https://trade-service.wealthsimple.com/account/list',
-    onSuccess: async (request) => {
-      const data = await request.response.json();
+    onSuccess: async (response) => {
+      const data = await response.json();
       return data.results;
     },
     onFailure: defaultEndpointBehaviour.onFailure,
@@ -128,8 +128,8 @@ const WealthSimpleTradeEndpoints = {
   ACTIVITIES: {
     method: 'GET',
     url: 'https://trade-service.wealthsimple.com/account/activities',
-    onSuccess: async (request) => {
-      const data = await request.response.json();
+    onSuccess: async (response) => {
+      const data = await response.json();
       return data.results;
     },
     onFailure: defaultEndpointBehaviour.onFailure,
@@ -141,8 +141,8 @@ const WealthSimpleTradeEndpoints = {
   DEPOSITS: {
     method: 'GET',
     url: 'https://trade-service.wealthsimple.com/deposits',
-    onSuccess: async (request) => {
-      const data = await request.response.json();
+    onSuccess: async (response) => {
+      const data = await response.json();
       return data.results;
     },
     onFailure: defaultEndpointBehaviour.onFailure,
@@ -154,8 +154,8 @@ const WealthSimpleTradeEndpoints = {
   BANK_ACCOUNTS: {
     method: 'GET',
     url: 'https://trade-service.wealthsimple.com/bank-accounts',
-    onSuccess: async (request) => {
-      const data = await request.response.json();
+    onSuccess: async (response) => {
+      const data = await response.json();
       return data.results;
     },
     onFailure: defaultEndpointBehaviour.onFailure,
@@ -180,8 +180,8 @@ const WealthSimpleTradeEndpoints = {
     parameters: {
       0: 'ticker',
     },
-    onSuccess: async (request) => {
-      const data = await request.response.json();
+    onSuccess: async (response) => {
+      const data = await response.json();
 
       if (data.results.length === 0) {
         return Promise.reject({
@@ -205,7 +205,7 @@ const WealthSimpleTradeEndpoints = {
     parameters: {
       0: 'id',
     },
-    onSuccess: async (request) => request.response.json(),
+    onSuccess: defaultEndpointBehaviour.onSuccess,
     onFailure: defaultEndpointBehaviour.onFailure,
   },
 
@@ -218,8 +218,8 @@ const WealthSimpleTradeEndpoints = {
     parameters: {
       0: 'accountId',
     },
-    onSuccess: async (request) => {
-      const data = await request.response.json();
+    onSuccess: async (response) => {
+      const data = await response.json();
       return data.results;
     },
     onFailure: defaultEndpointBehaviour.onFailure,
@@ -235,8 +235,8 @@ const WealthSimpleTradeEndpoints = {
       0: 'offset',
       1: 'accountId',
     },
-    onSuccess: async (request) => {
-      const data = await request.response.json();
+    onSuccess: async (response) => {
+      const data = await response.json();
       return {
         total: data.total,
         orders: data.results,
@@ -254,10 +254,7 @@ const WealthSimpleTradeEndpoints = {
     parameters: {
       0: 'orderId',
     },
-    onSuccess: async (request) => ({
-      order: request.arguments.orderId,
-      response: await request.response.json(),
-    }),
+    onSuccess: defaultEndpointBehaviour.onSuccess,
     onFailure: defaultEndpointBehaviour.onFailure,
   },
 
