@@ -1,5 +1,5 @@
 import endpoints, { ORDERS_PER_PAGE } from '../api/endpoints';
-import { handleRequest } from '../network/https';
+import handleRequest from '../network/https';
 import Ticker from '../core/ticker';
 
 /**

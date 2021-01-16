@@ -1,4 +1,4 @@
-import fetch from 'node-fetch';
+import fetch, { Headers } from 'node-fetch';
 import status from 'http-status';
 import customHeaders from '../headers';
 import auth from '../auth';
@@ -43,7 +43,7 @@ function finalizeRequest(endpoint, data) {
  * WealthSimple Trade HTTPS API.
  */
 async function talk(endpoint, data) {
-  const headers = new fetch.Headers();
+  const headers = new Headers();
   headers.append('Content-Type', 'application/json');
 
   if (auth.tokens?.access) {
@@ -73,17 +73,15 @@ async function talk(endpoint, data) {
  * Fulfill the endpoint request given the endpoint configuration, optional
  * data.
  */
-export async function handleRequest(endpoint, data) {
+export default async function handleRequest(endpoint, data) {
   try {
     // Submit the HTTP request to the WealthSimple Trade Servers
     const response = await talk(endpoint, data);
 
     if ([status.OK, status.CREATED].includes(response.status)) {
-      return endpoint.onSuccess({
-        arguments: data,
-        response,
-      });
+      return endpoint.onSuccess(response);
     }
+
     return Promise.reject(await endpoint.onFailure(response));
   } catch (error) {
     // This is likely a network error; throw it to the caller to deal with.

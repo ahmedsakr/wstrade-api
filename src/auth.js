@@ -1,4 +1,4 @@
-import { handleRequest } from './network/https';
+import handleRequest from './network/https';
 import endpoints from './api/endpoints';
 
 export default {

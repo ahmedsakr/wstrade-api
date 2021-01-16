@@ -35,6 +35,11 @@ class Ticker {
     this.id = null;
 
     if (typeof (value) === 'string') {
+      // Empty tickers are not allowed
+      if (value === '') {
+        throw new Error('Empty ticker');
+      }
+
       [this.symbol, this.exchange] = value.split(':');
     } else {
       // You need at least a symbol or id to form a ticker.
@@ -67,6 +72,12 @@ class Ticker {
     if (this.id) {
       return this.id;
     }
+
+    // We must retranslate the full name of the NEO exchange back to NEO
+    if (this.exchange === 'AEQUITAS NEO EXCHANGE') {
+      return `${this.symbol}:NEO`;
+    }
+
     return `${this.symbol}${this.exchange ? `:${this.exchange}` : ''}`;
   }
 
@@ -78,7 +89,15 @@ class Ticker {
    * @param {*} other Ticker to compare us with
    */
   weakEquals(other) {
-    return (this.id === other.id) || (this.symbol === other.symbol);
+    if (this.id && this.id === other.id) {
+      return true;
+    }
+
+    if (this.symbol && this.symbol === other.symbol) {
+      return true;
+    }
+
+    return false;
   }
 }
 

@@ -26,7 +26,7 @@ export default class APICache {
      */
   insert(key, value) {
     if (this.cache.size >= this.size) {
-      this.cache.delete(this.cache.keys().next());
+      this.cache.delete(this.cache.keys().next().value);
     }
 
     this.cache.set(key, value);
