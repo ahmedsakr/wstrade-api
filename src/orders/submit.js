@@ -1,5 +1,5 @@
 import endpoints from '../api/endpoints';
-import { handleRequest } from '../network/https';
+import handleRequest from '../network/https';
 import history from './history';
 import data from '../data';
 import quotes from '../quotes';

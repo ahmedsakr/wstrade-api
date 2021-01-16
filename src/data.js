@@ -1,5 +1,5 @@
 import endpoints from './api/endpoints';
-import { handleRequest } from './network/https';
+import handleRequest from './network/https';
 import Ticker from './core/ticker';
 import { configEnabled } from './config';
 import cache from './optional/securities-cache';
