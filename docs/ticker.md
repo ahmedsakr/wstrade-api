@@ -1,6 +1,6 @@
 # Ticker
 
-WealthSimple Trade supports securities from 5 exchanges:
+Wealthsimple Trade supports securities from 5 exchanges:
 * `NASDAQ`
 * `NYSE`
 * `TSX`
@@ -28,4 +28,4 @@ You can also provide the ticker argument as an object of `symbol` and `exchange`
 *  `{ symbol :  'BB' }`
 *  `{ id: 'sec-s-76a7155242e8477880cbb43269235cb6' }`
 
-The `id` shown in the last example is the internal unique security id that WealthSimple Trade assigns to each security, and can be retrieved from the [data.`getSecurity`](/docs/data/README.md#data-getSecurity) API.
+The `id` shown in the last example is the internal unique security id that Wealthsimple Trade assigns to each security, and can be retrieved from the [data.`getSecurity`](/docs/data/README.md#data-getSecurity) API.

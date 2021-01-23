@@ -43,7 +43,7 @@ function finalizeRequest(endpoint, data) {
 
 /*
  * Implements the network level protocol for talking to the
- * WealthSimple Trade HTTPS API.
+ * Wealthsimple Trade HTTPS API.
  */
 async function talk(endpoint, data) {
   const headers = new Headers();
@@ -77,7 +77,7 @@ async function talk(endpoint, data) {
  * data.
  */
 export default async function handleRequest(endpoint, data) {
-  // Submit the HTTP request to the WealthSimple Trade Servers
+  // Submit the HTTP request to the Wealthsimple Trade Servers
   const response = await talk(endpoint, data);
 
   if ([status.OK, status.CREATED].includes(response.status)) {

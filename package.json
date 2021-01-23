@@ -1,7 +1,7 @@
 {
   "name": "wstrade-api",
-  "version": "1.2.0",
-  "description": "WealthSimple Trade API Wrapper",
+  "version": "1.2.1",
+  "description": "Wealthsimple Trade API Wrapper",
   "main": "dist.js",
   "scripts": {
     "bundle": "webpack",
@@ -15,7 +15,7 @@
   "keywords": [
     "API",
     "Wrapper",
-    "WealthSimple",
+    "Wealthsimple",
     "Trade"
   ],
   "author": "Ahmed Sakr",

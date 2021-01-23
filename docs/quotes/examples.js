@@ -29,7 +29,7 @@ import { auth, quotes } from 'wstrade-api';
     let aaplValue = await quotes.get('AAPL');
 
     // Since SU (Suncor) is TSX-listed, it will not be affected by our custom provider
-    // for NASDAQ-listed stocks, and quotes.get will use WealthSimple Trade endpoints to get
+    // for NASDAQ-listed stocks, and quotes.get will use Wealthsimple Trade endpoints to get
     // the quote for SU (Suncor).
     let suValue = await quotes.get('SU');
 })().catch(error => console.log(error));

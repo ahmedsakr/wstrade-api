@@ -1,9 +1,9 @@
-// Exchanges supported by WealthSimple Trade
+// Exchanges supported by Wealthsimple Trade
 const exchanges = ['NASDAQ', 'NYSE', 'TSX', 'TSX-V', 'NEO'];
 
 /**
  * Ticker provides a logical encapsulation for the allowed forms
- * of a security ticker within the WealthSimple Trade application.
+ * of a security ticker within the Wealthsimple Trade application.
  *
  * It provides validation of the format of the ticker, and the
  * value of the exchange, if provided.
@@ -57,7 +57,7 @@ class Ticker {
       throw new Error(`Invalid exchange '${this.exchange}'!`);
     }
 
-    // WealthSimple Trade doesn't have a short exchange id ('NEO') for
+    // Wealthsimple Trade doesn't have a short exchange id ('NEO') for
     // AEQUITAS NEO EXCHANGE for some reason...
     // We have to map it to the full name for comparisons to work.
     if (this.exchange === 'NEO') {

@@ -4,7 +4,7 @@ import handleRequest from './network/https';
 export default {
 
   /**
-   * Retrieves all account ids open under this WealthSimple Trade account.
+   * Retrieves all account ids open under this Wealthsimple Trade account.
    */
   all: async () => {
     const accounts = await handleRequest(endpoints.ACCOUNT_IDS, {});
@@ -46,24 +46,24 @@ export default {
   }),
 
   /**
-   * Retrieves the most recent 20 activities on the WealthSimple Trade Account.
+   * Retrieves the most recent 20 activities on the Wealthsimple Trade Account.
    */
   activities: async () => handleRequest(endpoints.ACTIVITIES, {}),
 
   /**
-   * Retrieves all bank accounts linked to the WealthSimple Trade account.
+   * Retrieves all bank accounts linked to the Wealthsimple Trade account.
    */
   getBankAccounts: async () => handleRequest(endpoints.BANK_ACCOUNTS, {}),
 
   /**
-   * Grab all deposit records on the WealthSimple Trade account.
+   * Grab all deposit records on the Wealthsimple Trade account.
    */
   deposits: async () => handleRequest(endpoints.DEPOSITS, {}),
 
   /**
-   * Lists all positions in the specified trading account under the WealthSimple Trade Account.
+   * Lists all positions in the specified trading account under the Wealthsimple Trade Account.
    *
-   * @param {*} accountId The specific account in the WealthSimple Trade account
+   * @param {*} accountId The specific account in the Wealthsimple Trade account
    */
   positions: async (accountId) => handleRequest(endpoints.POSITIONS, { accountId }),
 };

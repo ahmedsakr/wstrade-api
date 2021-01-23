@@ -19,9 +19,9 @@ export default {
   }),
 
   /**
-   * Cancels all pending orders under the WealthSimple Trade Account.
+   * Cancels all pending orders under the Wealthsimple Trade Account.
    *
-   * @param {*} accountId The specific account in the WealthSimple Trade account
+   * @param {*} accountId The specific account in the Wealthsimple Trade account
    */
   async cancelPending(accountId) {
     const pending = await history.pending(accountId);
@@ -29,7 +29,7 @@ export default {
   },
 
   /**
-   * Market buy a security through the WealthSimple Trade application.
+   * Market buy a security through the Wealthsimple Trade application.
    *
    * @param {*} accountId The account to make the transaction from
    * @param {*} ticker The security symbol
@@ -50,7 +50,7 @@ export default {
   },
 
   /**
-   * Limit buy a security through the WealthSimple Trade application.
+   * Limit buy a security through the Wealthsimple Trade application.
    *
    * @param {*} accountId The account to make the transaction from
    * @param {*} ticker The security symbol
@@ -68,7 +68,7 @@ export default {
   }),
 
   /**
-   * Stop limit buy a security through the WealthSimple Trade application.
+   * Stop limit buy a security through the Wealthsimple Trade application.
    *
    * @param {*} accountId The account to make the transaction from
    * @param {*} ticker The security symbol
@@ -79,7 +79,7 @@ export default {
   stopLimitBuy: async (accountId, ticker, stop, limit, quantity) => {
     const security = await data.getSecurity(ticker);
 
-    // The WealthSimple Trade backend doesn't check for this, even though the app does..
+    // The Wealthsimple Trade backend doesn't check for this, even though the app does..
     if (isCanadianSecurity(security.stock.primary_exchange) && stop !== limit) {
       throw new Error('TSX/TSX-V securities must have an equivalent stop and limit price.');
     }
@@ -97,7 +97,7 @@ export default {
   },
 
   /**
-   * Market sell a security through the WealthSimple Trade application.
+   * Market sell a security through the Wealthsimple Trade application.
    *
    * @param {*} accountId The account to make the transaction from
    * @param {*} ticker The security symbol
@@ -118,7 +118,7 @@ export default {
   },
 
   /**
-   * Limit sell a security through the WealthSimple Trade application.
+   * Limit sell a security through the Wealthsimple Trade application.
    *
    * @param {*} accountId The account to make the transaction from
    * @param {*} ticker The security symbol
@@ -136,7 +136,7 @@ export default {
   }),
 
   /**
-   * Stop limit sell a security through the WealthSimple Trade application.
+   * Stop limit sell a security through the Wealthsimple Trade application.
    *
    * @param {*} accountId The account to make the transaction from
    * @param {*} ticker The security symbol
@@ -147,7 +147,7 @@ export default {
   stopLimitSell: async (accountId, ticker, stop, limit, quantity) => {
     const security = await data.getSecurity(ticker);
 
-    // The WealthSimple Trade backend doesn't check for this, even though the app does..
+    // The Wealthsimple Trade backend doesn't check for this, even though the app does..
     if (isCanadianSecurity(security.stock.primary_exchange) && stop !== limit) {
       throw new Error('TSX/TSX-V securities must have an equivalent stop and limit price.');
     }

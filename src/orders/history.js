@@ -6,7 +6,7 @@ import Ticker from '../core/ticker';
  * Collects orders (filled, pending, cancelled) for the provided page and
  * account id.
  *
- * @param {*} accountId The specific account in the WealthSimple Trade account
+ * @param {*} accountId The specific account in the Wealthsimple Trade account
  * @param {*} pageNum The orders page index to seek to
  */
 async function page(accountId, pageNum) {
@@ -19,7 +19,7 @@ async function page(accountId, pageNum) {
 /**
  * Collects all orders (filled, pending, cancelled) for the specific account.
  *
- * @param {*} accountId The specific account in the WealthSimple Trade account
+ * @param {*} accountId The specific account in the Wealthsimple Trade account
  */
 async function all(accountId) {
   // We start by capturing the first page of orders in order to
@@ -84,7 +84,7 @@ export default {
   /**
    * Retrieves pending orders for the specified security in the account.
    *
-   * @param {*} accountId The specific account in the WealthSimple Trade account
+   * @param {*} accountId The specific account in the Wealthsimple Trade account
    * @param {*} ticker (optional) The security symbol
    */
   pending: async (accountId, ticker) => filteredOrders(accountId, ticker, 'submitted'),
@@ -92,7 +92,7 @@ export default {
   /**
    * Retrieves filled orders for the specified security in the account.
    *
-   * @param {*} accountId The specific account in the WealthSimple Trade account
+   * @param {*} accountId The specific account in the Wealthsimple Trade account
    * @param {*} ticker (optional) The security symbol
    */
   filled: async (accountId, ticker) => filteredOrders(accountId, ticker, 'posted'),
@@ -100,7 +100,7 @@ export default {
   /**
    * Retrieves cancelled orders for the specified security in the account.
    *
-   * @param {*} accountId The specific account in the WealthSimple Trade account
+   * @param {*} accountId The specific account in the Wealthsimple Trade account
    * @param {*} ticker (optional) The security symbol
    */
   cancelled: async (accountId, ticker) => filteredOrders(accountId, ticker, 'cancelled'),

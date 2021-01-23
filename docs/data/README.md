@@ -6,13 +6,13 @@
 
 Data
 ===
-`data` module allows you to draw datasets from WealthSimple Trade endpoints that may be useful for your business logic, including:
+`data` module allows you to draw datasets from Wealthsimple Trade endpoints that may be useful for your business logic, including:
 * Exchange rates for USD/CAD
 * Extensive information about securities offered on the platform
 
 This module is currently limited, but has lots of room for growth in later versions.
 
-##### Note: All operations in `data` module require talking to WealthSimple Trade endpoints. So make sure you are authenticated through the [`auth`](/docs/auth/) module.
+##### Note: All operations in `data` module require talking to Wealthsimple Trade endpoints. So make sure you are authenticated through the [`auth`](/docs/auth/) module.
 
 <a id="#api-reference"></a>
 
@@ -25,7 +25,7 @@ API Reference
 <a id="data-exchangeRates"></a>
 ### data.`exchangeRates`
 
-A snapshot of the current USD/CAD exchange rates on the WealthSimple Trade
+A snapshot of the current USD/CAD exchange rates on the Wealthsimple Trade
 platform.
 
 [View examples](/docs/data/examples.js)
@@ -49,7 +49,7 @@ data.exchangeRates() -> Promise<any>
 <a id="data-getSecurity"></a>
 ### data.`getSecurity`
 
-Information about a security on the WealthSimple Trade Platform.
+Information about a security on the Wealthsimple Trade Platform.
 * `ticker` is an identifier for a security. Read [this document](/docs/ticker.md) to understand how you can specify the ticker.
 * `extensive` is a boolean that triggers a more detailed information draw, including the quote of the security.
 

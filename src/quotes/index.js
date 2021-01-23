@@ -3,7 +3,7 @@ import data from '../data';
 
 export default {
 
-  // WealthSimple Trade is our default source for quotes, despite
+  // Wealthsimple Trade is our default source for quotes, despite
   // having a 15 min delay
   defaultProvider: trade,
 
@@ -37,7 +37,7 @@ export default {
 
     // We need the exchange in the next step if the user has specified
     // a custom provider for an exchange. So if the user hasn't provided
-    // it, we will have to ping WealthSimple trade to get it.
+    // it, we will have to ping Wealthsimple trade to get it.
     if (ticker.exchange) {
       exchange = ticker.exchange;
     } else if (Object.keys(this.providers).length > 0) {

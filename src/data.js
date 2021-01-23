@@ -7,13 +7,13 @@ import cache from './optional/securities-cache';
 export default {
 
   /**
-   * A snapshot of the current USD/CAD exchange rates on the WealthSimple Trade
+   * A snapshot of the current USD/CAD exchange rates on the Wealthsimple Trade
    * platform.
    */
   exchangeRates: async () => handleRequest(endpoints.EXCHANGE_RATES, {}),
 
   /**
-   * Information about a security on the WealthSimple Trade Platform.
+   * Information about a security on the Wealthsimple Trade Platform.
    *
    * @param {string|object} userTicker The security id
    * @param {boolean} extensive Pulls a more detailed report of the security using the

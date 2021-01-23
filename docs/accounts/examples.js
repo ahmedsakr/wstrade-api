@@ -13,7 +13,7 @@ import { auth, accounts } from 'wstrade-api';
     await auth.login('jane@doe.ca', 'mypassword');
 
     /*
-     * Let's get the open accounts under Jane's WealthSimple Trade account.
+     * Let's get the open accounts under Jane's Wealthsimple Trade account.
      */
     let openAccs = await accounts.all();
     console.log(openAccs);
@@ -28,10 +28,10 @@ import { auth, accounts } from 'wstrade-api';
     // Information about Jane's open accounts
     let accsData = await accounts.data();
 
-    // Information about Jane's WealthSimple Trade parent account
+    // Information about Jane's Wealthsimple Trade parent account
     let tradeAccount = await accounts.me();
 
-    // Information that Jane used to open her WealthSimple Trade parent account
+    // Information that Jane used to open her Wealthsimple Trade parent account
     let janeInfo = await accounts.person();
 
     // History of Jane's TFSA in the past 3 months.
@@ -40,10 +40,10 @@ import { auth, accounts } from 'wstrade-api';
     // History of Jane's crypto in the past year.
     let threeMonthsPerformance = await accounts.history('1y', openAccs.crypto);
 
-    // Recent activity on Jane's WealthSimple Trade account
+    // Recent activity on Jane's Wealthsimple Trade account
     let activity = await accounts.activities();
 
-    // Bank accounts that Jane has linked to her WealthSimple Trade account
+    // Bank accounts that Jane has linked to her Wealthsimple Trade account
     let banks = await accounts.getBankAccounts();
 
     // Deposits that Jane has made to her WealhSimple Trade account
