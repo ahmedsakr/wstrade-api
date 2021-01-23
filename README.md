@@ -39,7 +39,7 @@ You just need node.js — and npm, obviously.
 
 ### Dependencies
 
-The dependency list is tiny — **node-fetch** and **http-status**. They will be automatically installed when you install `wstrade-api` through `npm`.
+The dependency list is tiny — **node-fetch**, **http-status**, and **source-map-support**. They will be automatically installed when you install `wstrade-api` through `npm`.
 
 ### Installing
 
