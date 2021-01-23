@@ -43,6 +43,10 @@ export default {
         result = result.filter((security) => security.stock.primary_exchange === ticker.exchange);
       }
 
+      if (ticker.crypto) {
+        result = result.filter((security) => security.security_type === 'cryptocurrency');
+      }
+
       if (result.length > 1) {
         throw new Error('Multiple securities matched query.');
       } if (result.length === 0) {

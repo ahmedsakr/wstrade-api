@@ -3,6 +3,7 @@ import handleRequest from '../network/https';
 import history from './history';
 import data from '../data';
 import quotes from '../quotes';
+import Ticker from '../core/ticker';
 
 const isCanadianSecurity = (exchange) => ['TSX', 'TSX-V'].includes(exchange);
 
@@ -103,19 +104,15 @@ export default {
    * @param {*} ticker The security symbol
    * @param {*} quantity The number of securities to purchase
    */
-  marketSell: async (accountId, ticker, quantity) => {
-    const details = await data.getSecurity(ticker);
-
-    return handleRequest(endpoints.PLACE_ORDER, {
-      security_id: details.id,
-      market_value: await quotes.get(ticker),
-      quantity,
-      order_type: 'sell_quantity',
-      order_sub_type: 'market',
-      time_in_force: 'day',
-      account_id: accountId,
-    });
-  },
+  marketSell: async (accountId, ticker, quantity) => handleRequest(endpoints.PLACE_ORDER, {
+    security_id: (await data.getSecurity(ticker)).id,
+    market_value: !(new Ticker(ticker).crypto) ? await quotes.get(ticker) : undefined,
+    quantity,
+    order_type: 'sell_quantity',
+    order_sub_type: 'market',
+    time_in_force: 'day',
+    account_id: accountId,
+  }),
 
   /**
    * Limit sell a security through the Wealthsimple Trade application.
