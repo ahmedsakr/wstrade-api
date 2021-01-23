@@ -5,14 +5,14 @@
 
 Accounts
 ===
-`accounts` is a core module to encapsulates the domain of open accounts in your WealthSimple Trade account. With the `accounts` module, you can:
+`accounts` is a core module to encapsulates the domain of open accounts in your Wealthsimple Trade account. With the `accounts` module, you can:
 
 * Retrieve open account ids (TFSA, RRSP, etc) for use in other APIs
 * Retrieve connected bank accounts and deposits
-* Retrieve meta information about your WealthSimple Trade account
+* Retrieve meta information about your Wealthsimple Trade account
 * Retrieve positions in an open account (e.g., positions in TFSA)
 
-##### Note: All operations in `accounts` module require talking to WealthSimple Trade endpoints. So make sure you are authenticated through the [`auth`](/docs/auth/) module.
+##### Note: All operations in `accounts` module require talking to Wealthsimple Trade endpoints. So make sure you are authenticated through the [`auth`](/docs/auth/) module.
 <a id="#api-reference"></a>
 
 API Reference
@@ -31,7 +31,7 @@ API Reference
 <a id="accounts-all"></a>
 ### accounts.`all`
 
-Retrieves an object containing the ids of all open accounts under your WealthSimple Trade account. The returned object could include `tfsa`, `rrsp`, `crypto`, and `personal` ids.
+Retrieves an object containing the ids of all open accounts under your Wealthsimple Trade account. The returned object could include `tfsa`, `rrsp`, `crypto`, and `personal` ids.
 
 [View examples](/docs/accounts/examples.js)
 
@@ -185,7 +185,7 @@ See also: [accounts.`all`](#accounts-all)
 <a id="accounts-activities"></a>
 ### accounts.`activities`
 
-Retrieves up to  20 recent activities on the WealthSimple Trade Account.
+Retrieves up to  20 recent activities on the Wealthsimple Trade Account.
 
 [View examples](/docs/accounts/examples.js)
 
@@ -220,7 +220,7 @@ accounts.activities() -> Promise<Array<any>>
 <a id="accounts-getBankAccounts"></a>
 ### accounts.`getBankAccounts`
 
-Retrieves all bank accounts linked to the WealthSimple Trade account.
+Retrieves all bank accounts linked to the Wealthsimple Trade account.
 
 [View examples](/docs/accounts/examples.js)
 
@@ -254,7 +254,7 @@ accounts.getBankAccounts() -> Promise<Array<any>>
 <a id="accounts-deposits"></a>
 ### accounts.`deposits`
 
-Grab all deposit records on the WealthSimple Trade account.
+Grab all deposit records on the Wealthsimple Trade account.
 
 [View examples](/docs/accounts/examples.js)
 
@@ -287,7 +287,7 @@ accounts.deposits() -> Promise<Array<any>>
 <a id="accounts-positions"></a>
 ### accounts.`positions`
 
-Lists all positions in the specified open account under the WealthSimple Trade Account.
+Lists all positions in the specified open account under the Wealthsimple Trade Account.
 
 * `accountId` should be one that is returned by accounts.`all`
 

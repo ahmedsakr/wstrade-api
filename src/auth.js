@@ -21,7 +21,7 @@ export default {
   /**
    * Attempts to establish a session for the provided email and password.
    *
-   * @param {*} email emailed registered by the WealthSimple Trade account
+   * @param {*} email emailed registered by the Wealthsimple Trade account
    * @param {*} password The password of the account
    */
   async login(email, password) {
@@ -29,7 +29,7 @@ export default {
 
     /*
      * If we are given a function for otp, then we must fail a log in to
-     * trigger an OTP event with WealthSimple Trade. This will allow the user
+     * trigger an OTP event with Wealthsimple Trade. This will allow the user
      * otp thunk to retrieve the code.
      *
      * If a literal value is provided for otp, it means the user has manually

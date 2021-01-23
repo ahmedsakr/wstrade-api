@@ -48,14 +48,14 @@ import { auth, orders, accounts, quotes } from 'wstrade-api';
     let marketBuyAapl = await orders.marketBuy(accs.personal, 'AAPL:NASDAQ', 6);
 
     // Place a limit buy for 10 shares of Uber in Jane's TFSA
-    // Since we know WealthSimple Trade's quotes are 15 minutes delayed, Jane is fine
-    // with paying up to $1/share more from WealthSimple Trade's delayed quotes.
+    // Since we know Wealthsimple Trade's quotes are 15 minutes delayed, Jane is fine
+    // with paying up to $1/share more from Wealthsimple Trade's delayed quotes.
     let uberPrice = await quotes.get('UBER:NYSE');
     let limitUberPrice = uberPrice + 1;
     let limitBuyUber = await orders.limitBuy(accs.tfsa, 'UBER:NYSE', limitUberPrice, 10);
 
     // Place a stop limit buy for 10 shares of Uber in Jane's TFSA
-    // Jane decided to set the stop price at $0.5 more than WealthSimple Trade's quote for UBER.
+    // Jane decided to set the stop price at $0.5 more than Wealthsimple Trade's quote for UBER.
     // If the stock bypasses that, the order will be converted to a limit order and use
     // limitUberPrice, which is $1 more than the current quote for UBER.
     let stopUberPrice = uberPrice + 0.5;
@@ -70,19 +70,19 @@ import { auth, orders, accounts, quotes } from 'wstrade-api';
     let marketSellSu = await orders.marketSell(accs.tfsa, 'SU:TSX', 5);
 
     // Place a limit sell for 10 shares of Netflix in Jane's TFSA
-    // Since we know WealthSimple Trade's quotes are 15 minutes delayed, Jane is fine
-    // with sell $0.5/share less than WealthSimple Trade's delayed quotes.
+    // Since we know Wealthsimple Trade's quotes are 15 minutes delayed, Jane is fine
+    // with sell $0.5/share less than Wealthsimple Trade's delayed quotes.
     let nflxPrice = await quotes.get('NFLX:NASDAQ');
     let limitNflxPrice = nflxPrice - 0.5;
     let limitSellNflx = await orders.limitBuy(accs.tfsa, 'NFLX:NASDAQ', limitNflxPrice, 10);
 
     // Place a stop limit sell for 10 shares of Suncor in Jane's TFSA
-    // Jane decided to set the stop price at $0.25 less than WealthSimple Trade's quote for Suncor.
+    // Jane decided to set the stop price at $0.25 less than Wealthsimple Trade's quote for Suncor.
     // If the stock bypasses that, the order will be converted to a limit order and use
     // limitSuPrice, which is also $0.25 less than the current quote for Suncor.
     //
     // The stop and limit prices are the same here because of a TSX/TSX-V limitation
-    // (enforced by WealthSimple Trade) that requires stop and limit prices to be the same.
+    // (enforced by Wealthsimple Trade) that requires stop and limit prices to be the same.
     let suPrice = await quotes.get('SU:TSX');
     let limitSuPrice = suPrice - 0.25
     let stopSuPrice = suPrice;

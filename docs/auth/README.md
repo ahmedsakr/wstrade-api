@@ -5,15 +5,15 @@
 Authentication
 ===
 
-Most `wstrade-api` API calls are privileged communication with WealthSimple Trade servers. You must have authenticated against a valid account before you can unlock all API calls.
+Most `wstrade-api` API calls are privileged communication with Wealthsimple Trade servers. You must have authenticated against a valid account before you can unlock all API calls.
 
 **Do you store my email and password?**
 
-No. Not at all. WealthSimple Trade operates on an OAuth2.0 framework. Once you invoke the login API with your email and password combination, `access`/`refresh` tokens are returned and stored in `auth.tokens`. These tokens are then subsequently used to identify you and invoke all APIs.
+No. Not at all. Wealthsimple Trade operates on an OAuth2.0 framework. Once you invoke the login API with your email and password combination, `access`/`refresh` tokens are returned and stored in `auth.tokens`. These tokens are then subsequently used to identify you and invoke all APIs.
 
 One-Time Password (OTP)
 ---
-OTPs are required for logging into WealthSimple Trade for a while now. Naturally, `wstrade-api` has added support for providing the OTP as part of the login process. The support is exposed in terms of an **authentication event** that can be configured with the auth.`on` API.
+OTPs are required for logging into Wealthsimple Trade for a while now. Naturally, `wstrade-api` has added support for providing the OTP as part of the login process. The support is exposed in terms of an **authentication event** that can be configured with the auth.`on` API.
 
 See the API reference for [auth.`on`](#auth-on) below and check examples in this folder for practical guidance.
 
@@ -31,7 +31,7 @@ auth.tokens = {
 };
 ```
 
-* The `access` token is used in authenticating and granting you access to WealthSimple Trade endpoints. 
+* The `access` token is used in authenticating and granting you access to Wealthsimple Trade endpoints. 
 * The `refresh` token can be used to request a new `access` token. This is useful when the access token has expired.
 * The `expires` property is the time (in epoch seconds) when the `access` token is no longer valid.
 
@@ -75,7 +75,7 @@ See also: [auth.`login`](#auth-login)
 auth.login(email, password) -> Promise<void>
 ```
 
-Attempts to login to the WealthSimple Trade platform using the email and password combination. 
+Attempts to login to the Wealthsimple Trade platform using the email and password combination. 
 If the login was successful, `auth.tokens` will be populated with the retrieved OAuth2.0 tokens and access token expiry time. Otherwise, the return promise is rejected with the appropriate error.
 
 An OTP provider must be configured beforehand with the auth.`on` API for the `otp` event. If the `otp` event was registered with a string literal, it is assumed that you have already obtained the OTP manually and it will be passed along as-is. Otherwise, if you specified a function handler, it is assumed that your handler will automatically retrieve the OTP after we attempt a login without an OTP.  See examples for practical explanation.

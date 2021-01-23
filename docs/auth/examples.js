@@ -25,7 +25,7 @@ const getCodeFromGmail = async () => {
     let gmail_otp = null;
 
     // logic to connect to gmail, get OTP and assign it to gmail_otp.
-    // You might want to have a sleep in here for 5 seconds to allow for WealthSimple Trade
+    // You might want to have a sleep in here for 5 seconds to allow for Wealthsimple Trade
     // to dispatch the OTP to your email.
 
     return gmail_otp;
@@ -55,7 +55,7 @@ auth.on('otp', getCodeFromGmail);
     // If login succeeded, the auth.tokens object will be populated with access
     // and refresh tokens, and an expiry time for the access token.
     // These tokens will automatically be used by wstrade-api when you call
-    // an API call that needs to talk to WealthSimple Trade servers
+    // an API call that needs to talk to Wealthsimple Trade servers
     // (for example, to place an order of 5 shares of AAPL in your TFSA account)
     console.log(auth.tokens);
     // Output:
@@ -75,7 +75,7 @@ auth.on('otp', getCodeFromGmail);
 
     // If you wish to generate a new set of access and refresh tokens, you can do
     // so by invoking auth.refresh. This will take your existing auth.tokens.refresh
-    // token and generate new access and refresh tokens from the WealthSimple Trade servers.
+    // token and generate new access and refresh tokens from the Wealthsimple Trade servers.
     //
     // Keep in mind that wstrade-api does implicitly refresh access tokens when they expire.
     await auth.refresh();

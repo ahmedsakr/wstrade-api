@@ -6,13 +6,13 @@ import { headers } from 'wstrade-api';
 
 /**
  * The headers module provides you with the extensibility
- * to insert custom headers into all requests made to WealthSimple Trade
+ * to insert custom headers into all requests made to Wealthsimple Trade
  * endpoints.
  * 
  * Let's walk through some practical examples.
  */
 
-// If you wanted to explicitly tell WealthSimple Trade that the content is JSON,
+// If you wanted to explicitly tell Wealthsimple Trade that the content is JSON,
 // you can do this by adding this custom header.
 // This header is not automatically inserted by wstrade-api network-level code
 // as it is not necessary.

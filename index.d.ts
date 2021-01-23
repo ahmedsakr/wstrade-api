@@ -16,7 +16,7 @@ declare namespace Trade {
    *
    * @param {string} symbol symbol that the security trades under.
    * @param {string} [exchange] exchange under which the security trades in
-   * @param {string} [id] The internal WealthSimple Trade security id
+   * @param {string} [id] The internal Wealthsimple Trade security id
    */
   type Ticker = string | {
     symbol: string,
@@ -42,7 +42,7 @@ declare namespace Trade {
     type AuthEventHandler = string | (() => Promise<string>);
 
     /**
-     * Authentication tokens associated with your WealthSimple Trade account.
+     * Authentication tokens associated with your Wealthsimple Trade account.
      * 
      * The access token is good for 2 hours before it expires. The expiry time is stored in
      * this object and checked before every API call. If it has expired, the wrapper will
@@ -53,7 +53,7 @@ declare namespace Trade {
     let tokens: AuthTokens;
 
     /**
-     * One-Time Passwords (OTP) are mandatory to login to your WealthSimple Trade account.
+     * One-Time Passwords (OTP) are mandatory to login to your Wealthsimple Trade account.
      * However, wstrade-api does not have the ability to get the OTP token for you (for obvious reasons).
      * So, in order to successfuly login, you must provide the OTP code that wstrade-api can use to
      * complete a successful login.
@@ -117,7 +117,7 @@ declare namespace Trade {
   namespace accounts {
 
     /**
-     * A WealthSimple Trade account can have 4 underlying asset accounts: Personal, TFSA, RRSP, and Crypto.
+     * A Wealthsimple Trade account can have 4 underlying asset accounts: Personal, TFSA, RRSP, and Crypto.
      * AccountList is the object returned by the accounts.all(), associating any open account types
      * with their ids.
      * 
@@ -137,12 +137,12 @@ declare namespace Trade {
     type HistoryInterval = '1d' | '1w' | '1m' | '3m' | '1y';
 
     /**
-     * Retrieves all open account ids under this WealthSimple Trade account.
+     * Retrieves all open account ids under this Wealthsimple Trade account.
      */
     function all(): Promise<AccountList>;
 
     /**
-     * Retrieves the top-level data of the account, including WealthSimple Trade account id, account types,
+     * Retrieves the top-level data of the account, including Wealthsimple Trade account id, account types,
      * account values, and more.
      */
     function data(): Promise<any>;
@@ -168,24 +168,24 @@ declare namespace Trade {
     function history(interval: HistoryInterval, accountId: string): Promise<any>;
 
     /**
-     * Retrieves the most recent 20 activities on the WealthSimple Trade Account.
+     * Retrieves the most recent 20 activities on the Wealthsimple Trade Account.
      */
     function activities(): Promise<any>;
 
     /**
-     * Retrieves all bank accounts linked to the WealthSimple Trade account.
+     * Retrieves all bank accounts linked to the Wealthsimple Trade account.
      */
     function getBankAccounts(): Promise<any>;
 
     /**
-     * Grab all deposit records on the WealthSimple Trade account.
+     * Grab all deposit records on the Wealthsimple Trade account.
      */
     function deposits(): Promise<any>;
 
     /**
-     * Lists all positions in the specified trading account under the WealthSimple Trade Account.
+     * Lists all positions in the specified trading account under the Wealthsimple Trade Account.
      * 
-     * @param {*} accountId The specific account in the WealthSimple Trade account
+     * @param {*} accountId The specific account in the Wealthsimple Trade account
      */
     function positions(accountId: string): Promise<any>;
   }
@@ -196,7 +196,7 @@ declare namespace Trade {
      * Collects orders (filled, pending, cancelled) for the provided page and
      * account id.
      *
-     * @param {*} accountId The specific account in the WealthSimple Trade account
+     * @param {*} accountId The specific account in the Wealthsimple Trade account
      * @param {*} page The orders page index to seek to
      */
     function page(accountId: string, page: number): Promise<any>;
@@ -204,14 +204,14 @@ declare namespace Trade {
     /**
      * Collects all orders (filled, pending, cancelled) for the specific account.
      *
-     * @param {*} accountId The specific account in the WealthSimple Trade account
+     * @param {*} accountId The specific account in the Wealthsimple Trade account
      */
     function all(accountId: string): Promise<any>;
 
     /**
      * Retrieves pending orders for the specified security in the account.
      *
-     * @param {*} accountId The specific account in the WealthSimple Trade account
+     * @param {*} accountId The specific account in the Wealthsimple Trade account
      * @param {*} ticker (optional) The security symbol
      */
     function pending(accountId: string, ticker?: Ticker): Promise<any>;
@@ -219,7 +219,7 @@ declare namespace Trade {
     /**
      * Retrieves filled orders for the specified security in the account.
      *
-     * @param {*} accountId The specific account in the WealthSimple Trade account
+     * @param {*} accountId The specific account in the Wealthsimple Trade account
      * @param {*} ticker (optional) The security symbol
      */
     function filled(accountId: string, ticker?: Ticker): Promise<any>;
@@ -227,7 +227,7 @@ declare namespace Trade {
     /**
      * Retrieves cancelled orders for the specified security in the account.
      *
-     * @param {*} accountId The specific account in the WealthSimple Trade account
+     * @param {*} accountId The specific account in the Wealthsimple Trade account
      * @param {*} ticker (optional) The security symbol
      */
     function cancelled(accountId: string, ticker?: Ticker): Promise<any>;
@@ -242,7 +242,7 @@ declare namespace Trade {
     /**
      * Cancels all pending orders under the open account specified by accountId.
      *
-     * @param {*} accountId The specific account in the WealthSimple Trade account
+     * @param {*} accountId The specific account in the Wealthsimple Trade account
      */
     function cancelPending(accountId: string): Promise<any>;
 
@@ -321,7 +321,7 @@ declare namespace Trade {
     };
 
     /**
-     * WealthSimple Trade is our default quote provider for all exchanges,
+     * Wealthsimple Trade is our default quote provider for all exchanges,
      * despite having a 15-minute delay.
      */
     const defaultProvider: QuoteProvider;
@@ -347,13 +347,13 @@ declare namespace Trade {
   namespace data {
 
     /**
-     * A snapshot of the current USD/CAD exchange rates on the WealthSimple Trade
+     * A snapshot of the current USD/CAD exchange rates on the Wealthsimple Trade
      * platform.
      */
     function exchangeRates(): Promise<any>;
 
     /**
-     * Information about a security on the WealthSimple Trade Platform.
+     * Information about a security on the Wealthsimple Trade Platform.
      *
      * @param {Ticker} ticker The security symbol.
      * @param {boolean} extensive Pulls a more detailed report of the security using the /securities/{id} API

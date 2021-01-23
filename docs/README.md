@@ -9,7 +9,7 @@ Getting started with `wstrade-api`
 * Placing a limit buy order for 10 shares of AAPL in your TFSA
 * Placing a stop limit sell order for 25 shares of UBER in your personal account
 
-and a lot more usecases. `wstrade-api` is developed to provide you with the progamming autonomy to control your WealthSimple Trade account.
+and a lot more usecases. `wstrade-api` is developed to provide you with the progamming autonomy to control your Wealthsimple Trade account.
 
 **Architecture overview**
 

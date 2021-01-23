@@ -14,7 +14,7 @@ const defaultEndpointBehaviour = {
   onSuccess: async (response) => response.json(),
 };
 
-const WealthSimpleTradeEndpoints = {
+const WealthsimpleTradeEndpoints = {
 
   /*
    * The LOGIN endpoint intializes a new session for the given email and
@@ -54,7 +54,7 @@ const WealthSimpleTradeEndpoints = {
   },
 
   /*
-   * Grabs all account ids in this WealthSimple Trade account.
+   * Grabs all account ids in this Wealthsimple Trade account.
    */
   ACCOUNT_IDS: {
     method: 'GET',
@@ -62,7 +62,7 @@ const WealthSimpleTradeEndpoints = {
     onSuccess: async (response) => {
       const data = await response.json();
 
-      // Collect all account ids registered under this WealthSimple Trade Account
+      // Collect all account ids registered under this Wealthsimple Trade Account
       return data.results.map((account) => account.id);
     },
     onFailure: defaultEndpointBehaviour.onFailure,
@@ -70,7 +70,7 @@ const WealthSimpleTradeEndpoints = {
 
   /*
    * The LIST_ACCOUNT endpoint retrieves general metadata of the
-   * WealthSimple Trade account, including balances, account id, and
+   * Wealthsimple Trade account, including balances, account id, and
    * more.
    */
   LIST_ACCOUNT: {
@@ -108,7 +108,7 @@ const WealthSimpleTradeEndpoints = {
 
   /*
    * The HISTORY_ACCOUNT endpoint provides historical snapshots of the
-   * WealthSimple account for a specified timeframe.
+   * Wealthsimple account for a specified timeframe.
    */
   HISTORY_ACCOUNT: {
     method: 'GET',
@@ -122,7 +122,7 @@ const WealthSimpleTradeEndpoints = {
   },
 
   /*
-   * Provides the most recent 20 activities (deposits, dividends, orders, etc) on the WealthSimple
+   * Provides the most recent 20 activities (deposits, dividends, orders, etc) on the Wealthsimple
    * Trade account.
    */
   ACTIVITIES: {
@@ -136,7 +136,7 @@ const WealthSimpleTradeEndpoints = {
   },
 
   /*
-   * All deposits under the WealthSimple Trade account
+   * All deposits under the Wealthsimple Trade account
    */
   DEPOSITS: {
     method: 'GET',
@@ -149,7 +149,7 @@ const WealthSimpleTradeEndpoints = {
   },
 
   /*
-   * All linked bank accounts under the WealthSimple Trade account
+   * All linked bank accounts under the Wealthsimple Trade account
    */
   BANK_ACCOUNTS: {
     method: 'GET',
@@ -162,7 +162,7 @@ const WealthSimpleTradeEndpoints = {
   },
 
   /*
-   * Current WealthSimple Trade USD/CAD exchange rates
+   * Current Wealthsimple Trade USD/CAD exchange rates
    */
   EXCHANGE_RATES: {
     method: 'GET',
@@ -267,4 +267,4 @@ const WealthSimpleTradeEndpoints = {
   },
 };
 
-export default WealthSimpleTradeEndpoints;
+export default WealthsimpleTradeEndpoints;

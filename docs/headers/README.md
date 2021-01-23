@@ -5,11 +5,11 @@
 
 Headers
 ===
-`wstrade-api` handles the network-level protocol for talking to WealthSimple Trade endpoints without any necessary intervention from you. However, in rogue usecases that I cannot think of, you might need to override this with custom headers. 
+`wstrade-api` handles the network-level protocol for talking to Wealthsimple Trade endpoints without any necessary intervention from you. However, in rogue usecases that I cannot think of, you might need to override this with custom headers. 
 
-The `headers` module provides you with extensibility to configure custom HTTP headers on all endpoint calls to WealthSimple Trade. 99.9% of `wstrade-api` users won't be using this module at all. However, it is still useful to know about its existence.
+The `headers` module provides you with extensibility to configure custom HTTP headers on all endpoint calls to Wealthsimple Trade. 99.9% of `wstrade-api` users won't be using this module at all. However, it is still useful to know about its existence.
 
-The `headers` module could act as insurance in events where WealthSimple Trade starts to require a certain header to be present that is not available in an older version of `wstrade-api`, for example.
+The `headers` module could act as insurance in events where Wealthsimple Trade starts to require a certain header to be present that is not available in an older version of `wstrade-api`, for example.
 
 <a id="#api-reference"></a>
 
@@ -27,7 +27,7 @@ API Reference
 ```javascript
 headers.add(name, value) -> void
 ```
-Appends a custom key-value header to all endpoint requests to WealthSimple Trade.
+Appends a custom key-value header to all endpoint requests to Wealthsimple Trade.
 
 ---
 

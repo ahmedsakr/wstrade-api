@@ -8,11 +8,11 @@
 ###   ⚠️⚠️ **Version 0 (`0.x.x`) will only be supported with hotfixes until **February 28, 2021**. Please start planning migration to Version 1**.
 # wstrade-api
 
-A tiny Unofficial WealthSimple Trade API Wrapper for JavaScript, supporting the core abilities of the WealthSimple Trade application including placing orders, viewing and cancelling orders, and more.
+A tiny Unofficial Wealthsimple Trade API Wrapper for JavaScript, supporting the core abilities of the Wealthsimple Trade application including placing orders, viewing and cancelling orders, and more.
 
 ## Disclaimer
 
-* **USE AT YOUR OWN RISK**. This is an unofficial WealthSimple Trade API Wrapper.
+* **USE AT YOUR OWN RISK**. This is an unofficial Wealthsimple Trade API Wrapper.
 *  **DO NOT LEVERAGE THIS IN ATTEMPT TO DISRUPT ORDERLY MARKET FUNCTIONS**. This package is provided to you so you can
 build cool shit with it, but you should understand that you have a responsibility to not engage in illegal trading behaviours that can disrupt orderly market functions.
 
@@ -24,14 +24,14 @@ APIs.
 
 ## Server-Side Limitation
 
-This wrapper will not work when executed on the client-side due to the underlying CORS security limitation imposed by the WealthSimple Trade endpoints.
+This wrapper will not work when executed on the client-side due to the underlying CORS security limitation imposed by the Wealthsimple Trade endpoints.
 If you wish to build a front-end application, you will have to design an architecture where the server
 does all of the API calls.
 
 ## Getting Started
 
 Before playing with **wstrade-api**, you must have a valid
-WealthSimple Trade account to authenticate against. If you have not signed up for WealthSimple Trade, you may download the iOS application [here](https://apps.apple.com/ca/app/wealthsimple-trade/id1403491709) or the android application [here](https://play.google.com/store/apps/details?id=com.wealthsimple.trade&hl=en_CA).
+Wealthsimple Trade account to authenticate against. If you have not signed up for Wealthsimple Trade, you may download the iOS application [here](https://apps.apple.com/ca/app/wealthsimple-trade/id1403491709) or the android application [here](https://play.google.com/store/apps/details?id=com.wealthsimple.trade&hl=en_CA).
 
 ### Prerequisites
 
