@@ -1,3 +1,5 @@
+require('source-map-support').install();
+
 const auth = require('./auth').default;
 const headers = require('./headers').default;
 const accounts = require('./accounts').default;

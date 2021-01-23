@@ -43,6 +43,7 @@
   },
   "dependencies": {
     "http-status": "^1.4.2",
-    "node-fetch": "^2.6.1"
+    "node-fetch": "^2.6.1",
+    "source-map-support": "^0.5.19"
   }
 }
