@@ -22,9 +22,7 @@ export default {
   /**
    * Clears all custom headers.
    */
-  clear: () => {
-    [...customHeaders].forEach((header) => customHeaders.delete(header[0]));
-  },
+  clear: () => [...customHeaders].forEach((header) => customHeaders.delete(header[0])),
 
   /**
    * Produces a list of custom headers.
