@@ -52,7 +52,7 @@ export default {
     } catch (error) {
       // we might have failed because OTP was not provided
       if (!this.otp) {
-        return Promise.reject('OTP not provided!');
+        throw new Error('OTP not provided!');
       }
 
       // Seems to be incorrect credentials or OTP.

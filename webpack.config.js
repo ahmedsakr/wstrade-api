@@ -3,10 +3,12 @@ const path = require('path');
 module.exports = {
     target: "node",
     output: {
-        filename: "wstrade.js",
+        path: process.cwd(),
+        filename: "dist.js",
         library: "wstrade-api",
         libraryTarget: "umd"
     },
+    devtool: 'inline-source-map',
     resolve: {
         modules: [path.resolve(__dirname, 'src'), 'node_modules']
     },
@@ -21,6 +23,12 @@ module.exports = {
             commonjs: 'http-status',
             commonjs2: 'http-status',
             amd: 'http-status',
+            root: '_',
+        },
+        "source-map-support": {
+            commonjs: 'source-map-support',
+            commonjs2: 'source-map-support',
+            amd: 'source-map-support',
             root: '_',
         }
     },

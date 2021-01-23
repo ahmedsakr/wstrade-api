@@ -1,8 +1,8 @@
 {
   "name": "wstrade-api",
-  "version": "1.1.4",
+  "version": "1.2.0",
   "description": "WealthSimple Trade API Wrapper",
-  "main": "dist/wstrade.js",
+  "main": "dist.js",
   "scripts": {
     "bundle": "webpack",
     "lint": "npx eslint --fix src/ --ignore-pattern __test__",
@@ -43,6 +43,7 @@
   },
   "dependencies": {
     "http-status": "^1.4.2",
-    "node-fetch": "^2.6.1"
+    "node-fetch": "^2.6.1",
+    "source-map-support": "^0.5.19"
   }
 }

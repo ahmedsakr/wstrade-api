@@ -184,9 +184,7 @@ const WealthSimpleTradeEndpoints = {
       const data = await response.json();
 
       if (data.results.length === 0) {
-        return Promise.reject({
-          reason: 'Security does not exist',
-        });
+        throw new Error('Security does not exist');
       }
 
       return data.results;
