@@ -81,7 +81,7 @@ export default {
 
     // The WealthSimple Trade backend doesn't check for this, even though the app does..
     if (isCanadianSecurity(security.stock.primary_exchange) && stop !== limit) {
-      return Promise.reject({ reason: 'TSX/TSX-V securities must have an equivalent stop and limit price.' });
+      throw new Error('TSX/TSX-V securities must have an equivalent stop and limit price.');
     }
 
     return handleRequest(endpoints.PLACE_ORDER, {
@@ -149,7 +149,7 @@ export default {
 
     // The WealthSimple Trade backend doesn't check for this, even though the app does..
     if (isCanadianSecurity(security.stock.primary_exchange) && stop !== limit) {
-      return Promise.reject({ reason: 'TSX/TSX-V securities must have an equivalent stop and limit price.' });
+      throw new Error('TSX/TSX-V securities must have an equivalent stop and limit price.');
     }
 
     return handleRequest(endpoints.PLACE_ORDER, {

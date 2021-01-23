@@ -11,22 +11,25 @@ import implicitTokenRefresh from '../optional/implicit-token-refresh';
  */
 function finalizeRequest(endpoint, data) {
   // Make a copy so we don't modify the original one.
-  data = { ...data };
-
+  const params = { ...data };
   let { url } = endpoint;
 
   // No need to do anything if the URL is static (no parameters)
   if (endpoint.parameters) {
     // Swap all the parameter placeholders with the arguments.
     for (let index = 0; index < Object.keys(endpoint.parameters).length; index++) {
-      if (data[endpoint.parameters[index]] === null || data[endpoint.parameters[index]] === undefined) {
-        throw new Error('URL Path parameter missing');
+      const parameterName = endpoint.parameters[index];
+
+      // we have to explicitly check for null and undefined since parameter
+      // values might be 0.
+      if (params[parameterName] === null || params[parameterName] === undefined) {
+        throw new Error(`URL Path parameter '${parameterName}' missing!`);
       }
 
-      url = url.replace(`{${index}}`, data[endpoint.parameters[index]]);
+      url = url.replace(`{${index}}`, params[endpoint.parameters[index]]);
 
       // Must remove this key from the payload as it has been consumed by the URL
-      delete data[endpoint.parameters[index]];
+      delete params[endpoint.parameters[index]];
     }
   }
 
@@ -35,7 +38,7 @@ function finalizeRequest(endpoint, data) {
     return { url, payload: undefined };
   }
 
-  return { url, payload: JSON.stringify(data) };
+  return { url, payload: JSON.stringify(params) };
 }
 
 /*
@@ -74,17 +77,12 @@ async function talk(endpoint, data) {
  * data.
  */
 export default async function handleRequest(endpoint, data) {
-  try {
-    // Submit the HTTP request to the WealthSimple Trade Servers
-    const response = await talk(endpoint, data);
+  // Submit the HTTP request to the WealthSimple Trade Servers
+  const response = await talk(endpoint, data);
 
-    if ([status.OK, status.CREATED].includes(response.status)) {
-      return endpoint.onSuccess(response);
-    }
-
-    return Promise.reject(await endpoint.onFailure(response));
-  } catch (error) {
-    // This is likely a network error; throw it to the caller to deal with.
-    throw error;
+  if ([status.OK, status.CREATED].includes(response.status)) {
+    return endpoint.onSuccess(response);
   }
+
+  return Promise.reject(await endpoint.onFailure(response));
 }

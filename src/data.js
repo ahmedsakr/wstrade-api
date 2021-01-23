@@ -15,16 +15,15 @@ export default {
   /**
    * Information about a security on the WealthSimple Trade Platform.
    *
-   * @param {string|object} ticker The security symbol. An exchange may be added as a suffix, separated from
-   *                               the symbol with a colon, for example: AAPL:NASDAQ, ENB:TSX
+   * @param {string|object} userTicker The security id
    * @param {boolean} extensive Pulls a more detailed report of the security using the
    *                            /securities/{id} API
    */
-  getSecurity: async (ticker, extensive) => {
+  getSecurity: async (userTicker, extensive) => {
     let result = null;
 
     // Run some validation on the ticker
-    ticker = new Ticker(ticker);
+    const ticker = new Ticker(userTicker);
 
     if (!extensive && configEnabled('securities_cache')) {
       result = cache.get(ticker);
@@ -45,12 +44,13 @@ export default {
       }
 
       if (result.length > 1) {
-        return Promise.reject({ reason: 'Multiple securities matched query.' });
+        throw new Error('Multiple securities matched query.');
       } if (result.length === 0) {
-        return Promise.reject({ reason: 'No securities matched query.' });
+        throw new Error('No securities matched query.');
       }
 
-      result = result[0];
+      // Convert result from a singleton list to its raw entry
+      [result] = result;
 
       if (extensive) {
         // The caller has opted to receive the extensive details about the security.
