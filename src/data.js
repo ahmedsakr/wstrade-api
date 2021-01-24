@@ -39,12 +39,10 @@ export default {
       result = await handleRequest(endpoints.SECURITY, { ticker: ticker.symbol });
       result = result.filter((security) => security.stock.symbol === ticker.symbol);
 
-      if (ticker.exchange) {
-        result = result.filter((security) => security.stock.primary_exchange === ticker.exchange);
-      }
-
       if (ticker.crypto) {
         result = result.filter((security) => security.security_type === 'cryptocurrency');
+      } else if (ticker.exchange) {
+        result = result.filter((security) => security.stock.primary_exchange === ticker.exchange);
       }
 
       if (result.length > 1) {

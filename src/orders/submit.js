@@ -41,7 +41,7 @@ export default {
 
     return handleRequest(endpoints.PLACE_ORDER, {
       security_id: details.id,
-      limit_price: await quotes.get(ticker),
+      limit_price: !(new Ticker(ticker).crypto) ? await quotes.get(ticker) : undefined,
       quantity,
       order_type: 'buy_quantity',
       order_sub_type: 'market',

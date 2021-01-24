@@ -1,5 +1,6 @@
 import trade from './default';
 import data from '../data';
+import Ticker from '../core/ticker';
 
 export default {
 
@@ -30,15 +31,20 @@ export default {
      * provider if a valid provider is registered for the exchange that the
      * ticker trades on.
      *
-     * @param {*} ticker The security to get a quote for.
+     * @param {*} security The security to get a quote for.
      */
-  async get(ticker) {
+  async get(security) {
     let exchange = null;
+    const ticker = new Ticker(security);
 
-    // We need the exchange in the next step if the user has specified
-    // a custom provider for an exchange. So if the user hasn't provided
-    // it, we will have to ping Wealthsimple trade to get it.
-    if (ticker.exchange) {
+    if (ticker.crypto) {
+      // Cryptocurrencies don't have a specific exchange but we put
+      // them under the 'CC' umbrella.
+      exchange = 'CC';
+    } else if (ticker.exchange) {
+      // We need the exchange in the next step if the user has specified
+      // a custom provider for an exchange. So if the user hasn't provided
+      // it, we will have to ping Wealthsimple trade to get it.
       exchange = ticker.exchange;
     } else if (Object.keys(this.providers).length > 0) {
       const info = await data.getSecurity(ticker, false);
@@ -46,7 +52,7 @@ export default {
     }
 
     // A custom provider will take precedence over the default source
-    if (this.providers[exchange]) {
+    if (exchange in this.providers) {
       return this.providers[exchange].quote(ticker);
     }
     return this.defaultProvider.quote(ticker);

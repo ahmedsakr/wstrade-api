@@ -73,7 +73,7 @@ test('Ticker with NEO exchange is internally mapped to full name', () => {
 test('Ticker with CC exchange is treated as cryptocurrency', () => {
   const ticker = new Ticker('BTC:CC');
   expect(ticker.symbol).toBe('BTC');
-  expect(ticker.exchange).toBe(null);
+  expect(ticker.exchange).toBe('CC');
   expect(ticker.id).toBe(null);
   expect(ticker.crypto).toBe(true);
   expect(ticker.format()).toBe('BTC:CC');

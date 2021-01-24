@@ -60,10 +60,9 @@ class Ticker {
       throw new Error(`Invalid exchange '${this.exchange}'!`);
     }
 
-    // Set the crypto property to true to treat this security as crypto currency
+    // Set the crypto property to true to treat this security as cryptocurrency
     if (this.exchange === 'CC' || this.id?.startsWith('sec-z')) {
       this.crypto = true;
-      this.exchange = null;
     }
 
     // Wealthsimple Trade doesn't have a short exchange id ('NEO') for
@@ -85,11 +84,6 @@ class Ticker {
     // We must retranslate the full name of the NEO exchange back to NEO
     if (this.exchange === 'AEQUITAS NEO EXCHANGE') {
       return `${this.symbol}:NEO`;
-    }
-
-    // Create a composite ticker with 'CC' as the exchange if it's a cryptocurrency.
-    if (this.crypto) {
-      return `${this.symbol}:CC`;
     }
 
     return `${this.symbol}${this.exchange ? `:${this.exchange}` : ''}`;
