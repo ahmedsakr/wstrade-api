@@ -50,9 +50,9 @@ class Ticker {
         throw new Error(`Invalid ticker '${value}'`);
       }
 
-      this.symbol = value.symbol;
-      this.exchange = value.exchange;
-      this.id = value.id;
+      this.symbol = value.symbol || null;
+      this.exchange = value.exchange || null;
+      this.id = value.id || null;
     }
 
     // Guarantee that the exchange is valid if not null
@@ -61,7 +61,7 @@ class Ticker {
     }
 
     // Set the crypto property to true to treat this security as crypto currency
-    if (this.exchange === 'CC') {
+    if (this.exchange === 'CC' || this.id?.startsWith('sec-z')) {
       this.crypto = true;
       this.exchange = null;
     }
@@ -107,7 +107,7 @@ class Ticker {
       return true;
     }
 
-    if (this.symbol && this.symbol === other.symbol && this.crypto == other.crypto) {
+    if (this.symbol && this.symbol === other.symbol && this.crypto === other.crypto) {
       return true;
     }
 
