@@ -37,15 +37,15 @@ export default {
     let exchange = null;
     const ticker = new Ticker(security);
 
-    if (ticker.crypto) {
-      // Cryptocurrencies don't have a specific exchange but we put
-      // them under the 'CC' umbrella.
-      exchange = 'CC';
-    } else if (ticker.exchange) {
+    if (ticker.exchange) {
       // We need the exchange in the next step if the user has specified
       // a custom provider for an exchange. So if the user hasn't provided
       // it, we will have to ping Wealthsimple trade to get it.
       exchange = ticker.exchange;
+    } else if (ticker.crypto && ticker.id) {
+      // If the id is only given but we know it's a crypto id,
+      // we will automatically set exchange to 'CC'.
+      exchange = 'CC';
     } else if (Object.keys(this.providers).length > 0) {
       const info = await data.getSecurity(ticker, false);
       exchange = info.stock.primary_exchange;
