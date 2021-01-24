@@ -77,7 +77,7 @@ test('Ticker with CC exchange is treated as cryptocurrency', () => {
   expect(ticker.id).toBe(null);
   expect(ticker.crypto).toBe(true);
   expect(ticker.format()).toBe('BTC:CC');
-})
+});
 
 test('Ticker with id starting with "sec-z" is treated as crypto', () => {
   const ticker = new Ticker({ id: 'sec-z-eth-dc40261c82a191b11e53426aa25d91af' });
@@ -86,7 +86,7 @@ test('Ticker with id starting with "sec-z" is treated as crypto', () => {
   expect(ticker.id).toBe('sec-z-eth-dc40261c82a191b11e53426aa25d91af');
   expect(ticker.crypto).toBe(true);
   expect(ticker.format()).toBe('sec-z-eth-dc40261c82a191b11e53426aa25d91af');
-})
+});
 
 // The user can specify the internal id of the security instead of
 // a symbol.
@@ -128,4 +128,4 @@ test('Weak comparison between conventional security and cryptocurrency', () => {
   const ticker1 = new Ticker('ETH:CC');
   const ticker2 = new Ticker('ETH');
   expect(ticker1.weakEquals(ticker2)).toBe(false);
-})
+});
