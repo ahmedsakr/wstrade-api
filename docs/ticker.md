@@ -6,7 +6,7 @@ You will notice that some APIs require a ticker as a parameter. `wstrade-api` ha
 
 An exchange is a platform that a security is traded on.  Wealthsimple Trade supports:
 * **Conventional securities** from 5 exchanges: `NASDAQ`, `NYSE`, `TSX`, `TSX-V`, and `NEO`
-* **Cryptocurrencies** through undisclosed exchanges, but you **must** specify `CC` as the exchange when constructoring a cryptocurrency ticker within `wstrade-api`.
+* **Cryptocurrencies** through undisclosed exchanges, but you **must** specify `CC` as the exchange when creating a cryptocurrency ticker within `wstrade-api`.
 
 Here are the different ways you can construct a Ticker for `wstrade-api`
 
@@ -26,9 +26,9 @@ The composite `symbol`:`exchange` format is useful for disambiguating which stoc
 You can also provide the ticker argument as an object of `symbol` and `exchange`, or `id`. Here are a few examples of valid tickers as objects:
 * `{ symbol: 'AAPL' }`
 * `{ symbol: 'AAPL', exchange: 'NASDAQ' }`
-*  `{ symbol: 'SU', exchange: 'TSX' }`
-*  `{ symbol :  'BB' }`
-*  `{ id: 'sec-s-76a7155242e8477880cbb43269235cb6' }`
-* ` { symbol: 'BTC', exchange: 'CC' }`
+* `{ symbol: 'SU', exchange: 'TSX' }`
+* `{ symbol :  'BB' }`
+* `{ id: 'sec-s-76a7155242e8477880cbb43269235cb6' }`
+* `{ symbol: 'BTC', exchange: 'CC' }`
 
 The `id` shown in the last example is the internal unique security id that Wealthsimple Trade assigns to each security, and can be retrieved from the [data.`getSecurity`](/docs/data/README.md#data-getSecurity) API.
