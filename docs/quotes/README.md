@@ -29,6 +29,8 @@ Attach a custom quote provider for the specified exchange.
 
 **Note**: the `orders` module makes use of the `quotes` module for its orders.`marketBuy` and orders.`marketSell` APIs. A custom quote provider will be utilized in a market buy or sell if the security trades on the specified exchange.
 
+**Caution**: You CANNOT configure a custom provider for cryptocurrencies at this moment. Wealthsimple Trade servers seem to not honour the limit price provided for cryptocurrencies and execute them at their best price.
+
 [View examples](/docs/quotes/examples.js)
 
 See also: [orders.`marketBuy`](/docs/orders/README.md#orders-marketBuy), [orders.`marketSell`](/docs/orders/README.md#orders-marketSell)
