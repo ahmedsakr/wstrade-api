@@ -1,5 +1,7 @@
 // Exchanges supported by Wealthsimple Trade
-const exchanges = ['NASDAQ', 'NYSE', 'TSX', 'TSX-V', 'NEO'];
+// 'CC' is not an exchange; it stands for Crypto currency and
+// it allows us to distinguish it from conventional securities.
+const exchanges = ['NASDAQ', 'NYSE', 'TSX', 'TSX-V', 'NEO', 'CC'];
 
 /**
  * Ticker provides a logical encapsulation for the allowed forms
@@ -33,6 +35,7 @@ class Ticker {
     this.symbol = null;
     this.exchange = null;
     this.id = null;
+    this.crypto = false;
 
     if (typeof (value) === 'string') {
       // Empty tickers are not allowed
@@ -47,14 +50,19 @@ class Ticker {
         throw new Error(`Invalid ticker '${value}'`);
       }
 
-      this.symbol = value.symbol;
-      this.exchange = value.exchange;
-      this.id = value.id;
+      this.symbol = value.symbol || null;
+      this.exchange = value.exchange || null;
+      this.id = value.id || null;
     }
 
     // Guarantee that the exchange is valid if not null
     if (this.exchange && !exchanges.includes(this.exchange)) {
       throw new Error(`Invalid exchange '${this.exchange}'!`);
+    }
+
+    // Set the crypto property to true to treat this security as cryptocurrency
+    if (this.exchange === 'CC' || this.id?.startsWith('sec-z')) {
+      this.crypto = true;
     }
 
     // Wealthsimple Trade doesn't have a short exchange id ('NEO') for
@@ -93,7 +101,7 @@ class Ticker {
       return true;
     }
 
-    if (this.symbol && this.symbol === other.symbol) {
+    if (this.symbol && this.symbol === other.symbol && this.crypto === other.crypto) {
       return true;
     }
 
