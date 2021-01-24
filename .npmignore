@@ -1,2 +1,6 @@
 src/
 docs/
+Contributing.md
+webpack.config.js
+.eslintrc.json
+.babelrc
