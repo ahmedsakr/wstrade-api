@@ -19,12 +19,6 @@ module.exports = {
             amd: 'node-fetch',
             root: '_',
         },
-        "http-status": {
-            commonjs: 'http-status',
-            commonjs2: 'http-status',
-            amd: 'http-status',
-            root: '_',
-        },
         "source-map-support": {
             commonjs: 'source-map-support',
             commonjs2: 'source-map-support',

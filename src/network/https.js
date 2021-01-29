@@ -1,9 +1,10 @@
 import fetch, { Headers } from 'node-fetch';
-import status from 'http-status';
 import customHeaders from '../headers';
 import auth from '../auth';
 import { configEnabled } from '../config';
 import implicitTokenRefresh from '../optional/implicit-token-refresh';
+
+const [HTTP_OK, HTTP_CREATED] = [400, 201];
 
 /*
  * Complete the URL by filling the parameter placeholders with the
@@ -80,7 +81,7 @@ export default async function handleRequest(endpoint, data) {
   // Submit the HTTP request to the Wealthsimple Trade Servers
   const response = await talk(endpoint, data);
 
-  if ([status.OK, status.CREATED].includes(response.status)) {
+  if ([HTTP_OK, HTTP_CREATED].includes(response.status)) {
     return endpoint.onSuccess(response);
   }
 
