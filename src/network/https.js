@@ -4,7 +4,7 @@ import auth from '../auth';
 import { configEnabled } from '../config';
 import implicitTokenRefresh from '../optional/implicit-token-refresh';
 
-const [HTTP_OK, HTTP_CREATED] = [400, 201];
+const [HTTP_OK, HTTP_CREATED] = [200, 201];
 
 /*
  * Complete the URL by filling the parameter placeholders with the
