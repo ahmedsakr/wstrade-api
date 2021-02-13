@@ -1,6 +1,9 @@
-import endpoints, { ORDERS_PER_PAGE } from '../api/endpoints';
+import endpoints from '../api/endpoints';
 import handleRequest from '../network/https';
 import Ticker from '../core/ticker';
+
+// The maximum number of orders retrieved by the /orders API.
+const ORDERS_PER_PAGE = 20;
 
 /**
  * Collects orders (filled, pending, cancelled) for the provided page and

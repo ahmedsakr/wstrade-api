@@ -320,6 +320,9 @@ declare namespace Trade {
       quote: (ticker: Ticker) => Promise<number>;
     };
 
+    // Historical intervals for quotes
+    type QuotesInterval = '1d' | '1w' | '1m' | '3m' | '1y' | '5y';
+
     /**
      * Wealthsimple Trade is our default quote provider for all exchanges,
      * despite having a 15-minute delay.
@@ -342,6 +345,16 @@ declare namespace Trade {
      * @param {*} ticker The security to get a quote for.
      */
     function get(ticker: Ticker): Promise<number>;
+
+    /**
+     * Retrieves the historical quotes within a specified interval for the ticker.
+     * The source of the historical data is not customizable at this time because
+     * there is no need for it to be so.
+     *
+     * @param {*} ticker The ticker to search historical quotes for
+     * @param {*} interval The time range of the quotes
+     */
+    function history(ticker: Ticker, interval: QuotesInterval): Promise<Array<any>>;
   }
 
   namespace data {

@@ -32,4 +32,8 @@ import { auth, quotes } from 'wstrade-api';
     // for NASDAQ-listed stocks, and quotes.get will use Wealthsimple Trade endpoints to get
     // the quote for SU (Suncor).
     let suValue = await quotes.get('SU');
+
+    // Retrieves a list containing the historical price performance of apple
+    // within the last year
+    let appleYearHistory = await quotes.history('AAPL', '1y');
 })().catch(error => console.log(error));
