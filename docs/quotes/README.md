@@ -67,6 +67,7 @@ Retrieves the historical quotes within a specified interval for the ticker. The 
 quotes.history(ticker, interval) -> Promise<Array<any>>
 ```
 ```javascript
+* This is not the full returned object - it has been cut.
 [
     {
       adjusted_price: 13660.17,
