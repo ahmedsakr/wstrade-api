@@ -38,7 +38,7 @@ import { auth, accounts } from 'wstrade-api';
     let threeMonthsPerformance = await accounts.history('3m', openAccs.tfsa);
 
     // History of Jane's crypto in the past year.
-    let threeMonthsPerformance = await accounts.history('1y', openAccs.crypto);
+    let oneYearPerformance = await accounts.history('1y', openAccs.crypto);
 
     // Recent activity on Jane's Wealthsimple Trade account
     let activity = await accounts.activities();

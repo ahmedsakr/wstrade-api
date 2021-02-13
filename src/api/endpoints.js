@@ -1,6 +1,3 @@
-// The maximum number of orders retrieved by the /orders API.
-export const ORDERS_PER_PAGE = 20;
-
 const defaultEndpointBehaviour = {
 
   // Default failure method for all endpoint calls
@@ -202,6 +199,20 @@ const WealthsimpleTradeEndpoints = {
     url: 'https://trade-service.wealthsimple.com/securities/{0}',
     parameters: {
       0: 'id',
+    },
+    onSuccess: defaultEndpointBehaviour.onSuccess,
+    onFailure: defaultEndpointBehaviour.onFailure,
+  },
+
+  /*
+   * Fetches historical quotes for a security in the specified interval.
+   */
+  QUOTES_HISTORY: {
+    method: 'GET',
+    url: 'https://trade-service.wealthsimple.com/securities/{0}/historical_quotes/{1}?mic=XNAS',
+    parameters: {
+      0: 'id',
+      1: 'interval',
     },
     onSuccess: defaultEndpointBehaviour.onSuccess,
     onFailure: defaultEndpointBehaviour.onFailure,

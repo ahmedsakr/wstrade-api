@@ -1,6 +1,8 @@
 import trade from './default';
 import data from '../data';
 import Ticker from '../core/ticker';
+import handleRequest from '../network/https';
+import endpoints from '../api/endpoints';
 
 export default {
 
@@ -56,5 +58,23 @@ export default {
       return this.providers[exchange].quote(ticker);
     }
     return this.defaultProvider.quote(ticker);
+  },
+
+  /**
+   * Retrieves the historical quotes within a specified interval for the ticker.
+   * The source of the historical data is not customizable at this time because
+   * there is no need for it to be so.
+   *
+   * @param {*} ticker The ticker to search historical quotes for
+   * @param {*} interval The time range of the quotes
+   */
+  async history(security, interval) {
+    // validate the user-given security
+    const ticker = new Ticker(security);
+    if (!ticker.id) {
+      ticker.id = (await data.getSecurity(ticker)).id;
+    }
+
+    return handleRequest(endpoints.QUOTES_HISTORY, { id: ticker.id, interval });
   },
 };

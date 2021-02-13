@@ -16,6 +16,7 @@ API Reference
 ---
 * ### [quotes.`use`](#quotes-use)
 * ### [quotes.`get`](#quotes-get)
+* ### [quotes.`history`](#quotes-history)
 ---
 
 <a id="quotes-use"></a>
@@ -49,3 +50,42 @@ Obtains a quote for the ticker. The source of the quote is by default from Wealt
 [View examples](/docs/quotes/examples.js)
 
 See also: [quotes.`use`](#quotes-use)
+
+
+---
+
+<a id="quotes-history"></a>
+### quotes.`history`
+
+Retrieves the historical quotes within a specified interval for the ticker. The source of the historical data is not customizable at this time because there is no need for it to be so.
+* `ticker` is an identifier for a security. Read [this document](/docs/ticker.md) to understand how you can specify the ticker.
+* `interval` must be either `1d`, `1w`, `1m`, `3m`, `1y`, or `5y`
+
+[View examples](/docs/quotes/examples.js)
+
+```javascript
+quotes.history(ticker, interval) -> Promise<Array<any>>
+```
+```javascript
+[
+    {
+      adjusted_price: 13660.17,
+      date: '2020-05-16',
+      time: '20:00:00',
+      currency: 'CAD',
+      security_id: 'sec-z-btc-4ca670cac10139ce8678b84836231606',
+      data_source: 'crypto-service',
+      close: 13660.17
+    },
+    {
+      adjusted_price: 13595.57,
+      date: '2020-05-17',
+      time: '20:00:00',
+      currency: 'CAD',
+      security_id: 'sec-z-btc-4ca670cac10139ce8678b84836231606',
+      data_source: 'crypto-service',
+      close: 13595.57
+    },
+    ...
+]
+```
