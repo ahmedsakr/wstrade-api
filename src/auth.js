@@ -1,10 +1,8 @@
-import handleRequest from './network/https';
+import handleRequest, { refreshAuthentication } from './network/https';
 import endpoints from './api/endpoints';
+import tokens from './core/tokens';
 
 export default {
-
-  // Authentication tokens to access privileged endpoints
-  tokens: null,
 
   // Thunk for retrieving the one-time password.
   otp: null,
@@ -17,6 +15,19 @@ export default {
   on(event, thunk) {
     this[event] = thunk;
   },
+
+  /**
+   * Initialize the authentication tokens with an existing state.
+   * The state provided should contain access, refresh, and expires properties.
+   *
+   * @param {*} state Pre-existing authentication state
+   */
+  use: (state) => tokens.store(state),
+
+  /**
+   * Snapshot of the current authentication state.
+   */
+  tokens: () => ({ ...tokens }),
 
   /**
    * Attempts to establish a session for the provided email and password.
@@ -60,20 +71,11 @@ export default {
     }
 
     // Capture the tokens for later usage.
-    this.tokens = response.tokens;
+    this.use(response.tokens);
   },
 
   /**
    * Generates a new set of access and refresh tokens.
    */
-  async refresh() {
-    // Dispose of the existing token
-    this.tokens.access = null;
-
-    const response = await handleRequest(endpoints.REFRESH, {
-      refresh_token: this.tokens.refresh,
-    });
-
-    this.tokens = response.tokens;
-  },
+  refresh: async () => refreshAuthentication(),
 };

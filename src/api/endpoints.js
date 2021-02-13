@@ -22,6 +22,7 @@ const WealthsimpleTradeEndpoints = {
   LOGIN: {
     method: 'POST',
     url: 'https://trade-service.wealthsimple.com/auth/login',
+    authenticated: false,
     onSuccess: async (response) => ({
       tokens: {
         access: response.headers.get('x-access-token'),
@@ -40,6 +41,7 @@ const WealthsimpleTradeEndpoints = {
   REFRESH: {
     method: 'POST',
     url: 'https://trade-service.wealthsimple.com/auth/refresh',
+    authenticated: false,
     onSuccess: async (response) => ({
       tokens: {
         access: response.headers.get('x-access-token'),
@@ -56,6 +58,7 @@ const WealthsimpleTradeEndpoints = {
   ACCOUNT_IDS: {
     method: 'GET',
     url: 'https://trade-service.wealthsimple.com/account/list',
+    authenticated: true,
     onSuccess: async (response) => {
       const data = await response.json();
 
@@ -73,6 +76,7 @@ const WealthsimpleTradeEndpoints = {
   LIST_ACCOUNT: {
     method: 'GET',
     url: 'https://trade-service.wealthsimple.com/account/list',
+    authenticated: true,
     onSuccess: async (response) => {
       const data = await response.json();
       return data.results;
@@ -87,6 +91,7 @@ const WealthsimpleTradeEndpoints = {
   ME: {
     method: 'GET',
     url: 'https://trade-service.wealthsimple.com/me',
+    authenticated: true,
     onSuccess: defaultEndpointBehaviour.onSuccess,
     onFailure: defaultEndpointBehaviour.onFailure,
   },
@@ -99,6 +104,7 @@ const WealthsimpleTradeEndpoints = {
   PERSON: {
     method: 'GET',
     url: 'https://trade-service.wealthsimple.com/person',
+    authenticated: true,
     onSuccess: defaultEndpointBehaviour.onSuccess,
     onFailure: defaultEndpointBehaviour.onFailure,
   },
@@ -110,6 +116,7 @@ const WealthsimpleTradeEndpoints = {
   HISTORY_ACCOUNT: {
     method: 'GET',
     url: 'https://trade-service.wealthsimple.com/account/history/{0}?account_id={1}',
+    authenticated: true,
     parameters: {
       0: 'interval',
       1: 'accountId',
@@ -125,6 +132,7 @@ const WealthsimpleTradeEndpoints = {
   ACTIVITIES: {
     method: 'GET',
     url: 'https://trade-service.wealthsimple.com/account/activities',
+    authenticated: true,
     onSuccess: async (response) => {
       const data = await response.json();
       return data.results;
@@ -138,6 +146,7 @@ const WealthsimpleTradeEndpoints = {
   DEPOSITS: {
     method: 'GET',
     url: 'https://trade-service.wealthsimple.com/deposits',
+    authenticated: true,
     onSuccess: async (response) => {
       const data = await response.json();
       return data.results;
@@ -151,6 +160,7 @@ const WealthsimpleTradeEndpoints = {
   BANK_ACCOUNTS: {
     method: 'GET',
     url: 'https://trade-service.wealthsimple.com/bank-accounts',
+    authenticated: true,
     onSuccess: async (response) => {
       const data = await response.json();
       return data.results;
@@ -164,6 +174,7 @@ const WealthsimpleTradeEndpoints = {
   EXCHANGE_RATES: {
     method: 'GET',
     url: 'https://trade-service.wealthsimple.com/forex',
+    authenticated: true,
     onSuccess: defaultEndpointBehaviour.onSuccess,
     onFailure: defaultEndpointBehaviour.onFailure,
   },
@@ -174,6 +185,7 @@ const WealthsimpleTradeEndpoints = {
   SECURITY: {
     method: 'GET',
     url: 'https://trade-service.wealthsimple.com/securities?query={0}',
+    authenticated: true,
     parameters: {
       0: 'ticker',
     },
@@ -197,6 +209,7 @@ const WealthsimpleTradeEndpoints = {
   EXTENSIVE_SECURITY_DETAILS: {
     method: 'GET',
     url: 'https://trade-service.wealthsimple.com/securities/{0}',
+    authenticated: true,
     parameters: {
       0: 'id',
     },
@@ -210,6 +223,7 @@ const WealthsimpleTradeEndpoints = {
   QUOTES_HISTORY: {
     method: 'GET',
     url: 'https://trade-service.wealthsimple.com/securities/{0}/historical_quotes/{1}?mic=XNAS',
+    authenticated: true,
     parameters: {
       0: 'id',
       1: 'interval',
@@ -224,6 +238,7 @@ const WealthsimpleTradeEndpoints = {
   POSITIONS: {
     method: 'GET',
     url: 'https://trade-service.wealthsimple.com/account/positions?account_id={0}',
+    authenticated: true,
     parameters: {
       0: 'accountId',
     },
@@ -240,6 +255,7 @@ const WealthsimpleTradeEndpoints = {
   ORDERS_BY_PAGE: {
     method: 'GET',
     url: 'https://trade-service.wealthsimple.com/orders?offset={0}&account_id={1}',
+    authenticated: true,
     parameters: {
       0: 'offset',
       1: 'accountId',
@@ -260,6 +276,7 @@ const WealthsimpleTradeEndpoints = {
   CANCEL_ORDER: {
     method: 'DELETE',
     url: 'https://trade-service.wealthsimple.com/orders/{0}',
+    authenticated: true,
     parameters: {
       0: 'orderId',
     },
@@ -273,6 +290,7 @@ const WealthsimpleTradeEndpoints = {
   PLACE_ORDER: {
     method: 'POST',
     url: 'https://trade-service.wealthsimple.com/orders',
+    authenticated: true,
     onSuccess: defaultEndpointBehaviour.onSuccess,
     onFailure: defaultEndpointBehaviour.onFailure,
   },

@@ -1,8 +1,8 @@
 import fetch, { Headers } from 'node-fetch';
 import customHeaders from '../headers';
-import auth from '../auth';
+import tokens from '../core/tokens';
+import endpoints from '../api/endpoints';
 import { configEnabled } from '../config';
-import implicitTokenRefresh from '../optional/implicit-token-refresh';
 
 const [HTTP_OK, HTTP_CREATED] = [200, 201];
 
@@ -50,14 +50,18 @@ async function talk(endpoint, data) {
   const headers = new Headers();
   headers.append('Content-Type', 'application/json');
 
-  if (auth.tokens?.access) {
-    // We won't attempt to implicitly refresh if the user has requested
-    // this.
+  if (endpoint.authenticated) {
+    // no access token means we will prematurely fail the request because
+    // this is a privileged endpoint.
+    if (!tokens.access) {
+      throw new Error(`Authentication required for '${endpoint.url}'`);
+    }
+
     if (configEnabled('implicit_token_refresh')) {
       await implicitTokenRefresh();
     }
 
-    headers.append('Authorization', auth.tokens.access);
+    headers.append('Authorization', tokens.access);
   }
 
   // Apply all custom headers
@@ -86,4 +90,38 @@ export default async function handleRequest(endpoint, data) {
   }
 
   return Promise.reject(await endpoint.onFailure(response));
+}
+
+/**
+ * Obtain a new set of authentication tokens using the
+ * existing refresh token.
+ */
+export async function refreshAuthentication() {
+  const response = await handleRequest(endpoints.REFRESH, {
+    refresh_token: tokens.refresh,
+  });
+
+  tokens.store(response.tokens);
+}
+
+/**
+ * Check if the existing set of tokens have expired, automatically
+ * triggering a refresh if they have expired.
+ */
+async function implicitTokenRefresh() {
+  if (tokens.expired()) {
+    if (tokens.refresh) {
+      try {
+        // Let's implicitly refresh the access token using the refresh token.
+        await refreshAuthentication();
+      } catch (error) {
+        // The refresh token is not valid.
+        throw new Error(`Unable to refresh expired token: ${error}`);
+      }
+    } else {
+      // We are forced to reject as our access token has expired and we
+      // do not have a refresh token.
+      throw new Error('Access token expired');
+    }
+  }
 }
