@@ -2,18 +2,25 @@ import handleRequest, { refreshAuthentication } from './network/https';
 import endpoints from './api/endpoints';
 import tokens from './core/tokens';
 
+// authentication events
+const events = {
+  otp: null,
+};
+
 export default {
 
-  // Thunk for retrieving the one-time password.
-  otp: null,
-
   /**
-   * Register a function to run on a certain event
+   * Register a function to run on a certain event.
+   *
    * @param {*} event The trigger for the function
-   * @param {*} thunk The function block to execute on event trigger
+   * @param {*} handler event handler for the event
    */
-  on(event, thunk) {
-    this[event] = thunk;
+  on(event, handler) {
+    if (!(event in events)) {
+      throw new Error(`Unsupported authentication event '${event}'!`);
+    }
+
+    events[event] = handler;
   },
 
   /**
@@ -58,11 +65,11 @@ export default {
       response = await handleRequest(endpoints.LOGIN, {
         email,
         password,
-        otp: typeof (this.otp) === 'function' ? await this.otp() : this.otp,
+        otp: typeof (events.otp) === 'function' ? await events.otp() : events.otp,
       });
     } catch (error) {
       // we might have failed because OTP was not provided
-      if (!this.otp) {
+      if (!events.otp) {
         throw new Error('OTP not provided!');
       }
 
