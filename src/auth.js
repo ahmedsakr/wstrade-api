@@ -34,7 +34,7 @@ export default {
   /**
    * Snapshot of the current authentication tokens.
    */
-  tokens: () => ({ ...tokens }),
+  tokens: () => ({ access: tokens.access, refresh: tokens.refresh, expires: tokens.expires }),
 
   /**
    * Attempts to establish a session for the provided email and password.
@@ -53,7 +53,7 @@ export default {
      * If a literal value is provided for otp, it means the user has manually
      * provided us with the otp code. We can skip this login attempt.
      */
-    if (typeof (this.otp) === 'function') {
+    if (typeof (events.otp) === 'function') {
       await handleRequest(endpoints.LOGIN, {
         email,
         password,

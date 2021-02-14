@@ -41,17 +41,6 @@ declare namespace Trade {
     type AuthEventHandler = string | (() => Promise<string>);
 
     /**
-     * Authentication tokens associated with your Wealthsimple Trade account.
-     * 
-     * The access token is good for 2 hours before it expires. The expiry time is stored in
-     * this object and checked before every API call. If it has expired, the wrapper will
-     * attempt to regenerate an access token using the refresh token.
-     * 
-     * Tip: You can store these tokens and set auth.tokens instead of logging in every single time.
-     */
-    let tokens: AuthTokens;
-
-    /**
      * One-Time Passwords (OTP) are mandatory to login to your Wealthsimple Trade account.
      * However, wstrade-api does not have the ability to get the OTP token for you (for obvious reasons).
      * So, in order to successfuly login, you must provide the OTP code that wstrade-api can use to
