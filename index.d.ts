@@ -1,6 +1,5 @@
 declare namespace Trade {
 
-
   type AuthTokens = {
     access: string,
     refresh: string,
@@ -64,9 +63,22 @@ declare namespace Trade {
      * Attach a handler for the event.
      *
      * @param event authentication event to handle
-     * @param thunk Handler for the authentication event
+     * @param handler Handler for the authentication event
      */
-    function on(event: AuthEvent, thunk: AuthEventHandler): void;
+    function on(event: AuthEvent, handler: AuthEventHandler): void;
+
+    /**
+     * Initialize the auth module with an existing state of tokens.
+     * The state provided should contain access, refresh, and expires properties.
+     *
+     * @param state Pre-existing authentication state
+     */
+    function use(state: AuthTokens) : void;
+
+    /**
+     * Snapshot of the current authentication tokens.
+     */
+    function tokens(): AuthTokens;
 
     /**
      * Attempt a login with the email and password combination. A successful login
@@ -78,9 +90,9 @@ declare namespace Trade {
     function login(email: string, password: string): Promise<void>;
 
     /**
-     * Refreshes the access token in auth.tokens.
+     * Refreshes the set of tokens for the auth module
      * 
-     * The auth.tokens.refresh token must be present for this refresh call
+     * The refresh token must be present for this refresh call
      * to succeed.
      */
     function refresh(): Promise<void>;

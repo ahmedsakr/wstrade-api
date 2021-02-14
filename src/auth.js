@@ -24,7 +24,7 @@ export default {
   },
 
   /**
-   * Initialize the authentication tokens with an existing state.
+   * Initialize the auth module with an existing state of tokens.
    * The state provided should contain access, refresh, and expires properties.
    *
    * @param {*} state Pre-existing authentication state
@@ -32,7 +32,7 @@ export default {
   use: (state) => tokens.store(state),
 
   /**
-   * Snapshot of the current authentication state.
+   * Snapshot of the current authentication tokens.
    */
   tokens: () => ({ ...tokens }),
 
