@@ -15,7 +15,7 @@ import { auth, quotes } from 'wstrade-api';
     /**
      * We are providing a custom quote provider for NASDAQ-listed securities.
      * 
-     * Our custom quote provider in this example is simply return 42 all the time. However,
+     * Our custom quote provider in this example simply returns 42 all the time. However,
      * you can still hook up a real-time quote provider this way for your use case!
      */
     quotes.use('NASDAQ', {

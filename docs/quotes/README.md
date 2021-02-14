@@ -45,7 +45,7 @@ See also: [orders.`marketBuy`](/docs/orders/README.md#orders-marketBuy), [orders
 quotes.get(ticker) -> Promise<number>
 ```
 Obtains a quote for the ticker. The source of the quote is by default from Wealthsimple trade, but it could be a custom provider if a valid provider is registered for the exchange that the ticker trades on.
-* `ticker` is an identifier for a security. Read [this document](/docs/ticker.md) to understand how you can specify the ticker.
+* `ticker` is an identifier for a security. Read [this document](/docs/ticker.md) to learn how to construct a valid ticker.
 
 [View examples](/docs/quotes/examples.js)
 
@@ -58,7 +58,7 @@ See also: [quotes.`use`](#quotes-use)
 ### quotes.`history`
 
 Retrieves the historical quotes within a specified interval for the ticker. The source of the historical data is not customizable at this time because there is no need for it to be so.
-* `ticker` is an identifier for a security. Read [this document](/docs/ticker.md) to understand how you can specify the ticker.
+* `ticker` is an identifier for a security. Read [this document](/docs/ticker.md) to learn how to construct a valid ticker.
 * `interval` must be either `1d`, `1w`, `1m`, `3m`, `1y`, or `5y`
 
 [View examples](/docs/quotes/examples.js)
