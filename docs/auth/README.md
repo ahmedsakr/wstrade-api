@@ -92,9 +92,15 @@ See also: [auth.`tokens`](#auth-tokens)
 ```javascript
 auth.tokens() -> AuthTokens
 ```
-Snapshot object of the current authentication tokens, containing `access`, `refresh`, and `expires`.
+Snapshot object of the current authentication tokens, containing `access`, `refresh`, and `expires`. An example return object is shown below.
 
-
+```javascript
+{
+  access: 'm8GKZp_wdnnae4JnqUmpNInZli-IkP9escCGcvwEsTQ',
+  refresh: 'O3xScrMpYlPxdaDu2QM-yS-YlJS8s4jwZYZlHbt5RC0',
+  expires: 1607137004
+}
+```
 
 Use of this API is recommended if you have valid authentication tokens that you want to reuse so you could avoid re-logging in.
 
