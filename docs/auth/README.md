@@ -13,7 +13,7 @@ No. Not at all. Wealthsimple Trade operates on an OAuth2.0 framework. Once you i
 
 One-Time Password (OTP)
 ---
-OTPs are required for logging into Wealthsimple Trade for a while now. Naturally, `wstrade-api` has added support for providing the OTP as part of the login process. The support is exposed in terms of an **authentication event** that can be configured with the auth.`on` API.
+OTPs are required for logging into Wealthsimple Trade. Naturally, `wstrade-api` has added support for providing the OTP as part of the login process. The support is exposed in terms of an **authentication event** that can be configured with the [auth.`on`](#auth-on) API.
 
 See the API reference for [auth.`on`](#auth-on) below and check examples in this folder for practical guidance.
 
@@ -21,14 +21,14 @@ See the API reference for [auth.`on`](#auth-on) below and check examples in this
 Authentication Tokens
 ---
 
-Once you have successfully logged in, the 0Auth2.0 tokens are stored in the `auth.tokens` object:
+Once you have successfully logged in, the authentication tokens are stored internally similarly to the following object:
 
 ```javascript
-auth.tokens = {
+{
   access: 'm8GKZp_wdnnae4JnqUmpNInZli-IkP9escCGcvwEsTQ',
   refresh: 'O3xScrMpYlPxdaDu2QM-yS-YlJS8s4jwZYZlHbt5RC0',
   expires: 1607137004
-};
+}
 ```
 
 * The `access` token is used in authenticating and granting you access to Wealthsimple Trade endpoints. 
@@ -45,6 +45,8 @@ auth.tokens = {
 API Reference
 ---
 * ### [auth.`on`](#auth-on)
+* ### [auth.`use`](#auth-use)
+* ### [auth.`tokens`](#auth-tokens)
 * ### [auth.`login`](#auth-login)
 * ### [auth.`refresh`](#auth-refresh)
 
@@ -54,9 +56,9 @@ API Reference
 ### auth.`on`
 
 ```javascript
-auth.on(event, thunk) -> void
+auth.on(event, handler) -> void
 ```
-Registers a string literal or handler (dubbed here "thunk") for an event. The handler could be async.
+Registers a string literal or handler for an event. The handler could be a function (sync/async) or it could be a string literal (i.e., constant literal handler).
 
 Supported events
 
@@ -65,6 +67,38 @@ Supported events
 | `'otp'` | Event for handling one-time passwords. Invoked by `auth` during a login attempt.|
 
 See also: [auth.`login`](#auth-login)
+
+
+---
+
+<a id="auth-use"></a>
+### auth.`use`
+
+```javascript
+auth.use(state) -> void
+```
+Initialize the auth module with an existing state of tokens. The state provided should contain access, refresh, and expires properties (i.e., exact object format returned by [auth.`tokens`](#auth-tokens)).
+
+Use of this API is recommended if you have valid authentication tokens that you want to reuse. 
+
+See also: [auth.`tokens`](#auth-tokens)
+
+
+---
+
+<a id="auth-tokens"></a>
+### auth.`tokens`
+
+```javascript
+auth.tokens() -> AuthTokens
+```
+Snapshot object of the current authentication tokens, containing `access`, `refresh`, and `expires`.
+
+
+
+Use of this API is recommended if you have valid authentication tokens that you want to reuse so you could avoid re-logging in.
+
+See also: [auth.`login`](#auth-login), [auth.`use`](#auth-use)
 
 ---
 
@@ -75,10 +109,9 @@ See also: [auth.`login`](#auth-login)
 auth.login(email, password) -> Promise<void>
 ```
 
-Attempts to login to the Wealthsimple Trade platform using the email and password combination. 
-If the login was successful, `auth.tokens` will be populated with the retrieved OAuth2.0 tokens and access token expiry time. Otherwise, the return promise is rejected with the appropriate error.
+Attempts to login to the Wealthsimple Trade platform using the email and password combination. If the login was successful, the authentication tokens will be stored and used for authenticated APIs. Otherwise, the return promise is rejected with the appropriate error.
 
-An OTP provider must be configured beforehand with the auth.`on` API for the `otp` event. If the `otp` event was registered with a string literal, it is assumed that you have already obtained the OTP somehow and it will be passed along as-is. Otherwise, if you specified a function handler, it is assumed that your handler will automatically retrieve the OTP after we attempt a login without an OTP. Your OTP function should return the OTP code as a string literal. See examples for practical explanation.
+An OTP provider must be configured beforehand with the [auth.`on`](#auth-on) API for the `otp` event. If the `otp` event was registered with a string literal, it is assumed that you have already obtained the OTP somehow and it will be passed along as-is. Otherwise, if you specified a function handler, it is assumed that your handler will automatically retrieve the OTP after we attempt a login without an OTP. Your OTP function should return the OTP code as a string literal. See examples for practical explanation.
 
 **Failure reasons**
 * Incorrect email/password combination
@@ -95,6 +128,8 @@ See also: [Authentication Tokens](#authentication-tokens), [auth.`on`](#auth-on)
 auth.refresh() -> Promise<void>
 ```
 
-Attempts to refresh the access token. The new access token will automatically be saved back to `auth.tokens`. Please note that this operation requires `auth.tokens.refresh` to be available.
+Attempts to refresh the access token. The new set of tokens will be stored internally for later usage.
+
+**Note**:  refreshing requires the `refresh` tokens to be available internally.
 
 See also: [Implicit refresh of access token](#auth-implicit-refresh)
