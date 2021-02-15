@@ -136,6 +136,6 @@ auth.refresh() -> Promise<void>
 
 Attempts to refresh the access token. The new set of tokens will be stored internally for later usage.
 
-**Note**:  refreshing requires the `refresh` tokens to be available internally.
+**Note**:  refreshing requires the `refresh` token to be available internally.
 
 See also: [Implicit refresh of access token](#auth-implicit-refresh)
