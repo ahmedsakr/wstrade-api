@@ -97,10 +97,7 @@ export default async function handleRequest(endpoint, data) {
  * existing refresh token.
  */
 export async function refreshAuthentication() {
-  const response = await handleRequest(endpoints.REFRESH, {
-    refresh_token: tokens.refresh,
-  });
-
+  const response = await handleRequest(endpoints.REFRESH, { refresh_token: tokens.refresh });
   tokens.store(response.tokens);
 }
 
