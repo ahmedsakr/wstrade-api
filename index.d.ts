@@ -1,6 +1,5 @@
 declare namespace Trade {
 
-
   type AuthTokens = {
     access: string,
     refresh: string,
@@ -34,23 +33,11 @@ declare namespace Trade {
     /**
      * You may provide the auth event handler as the following:
      *
-     * - A function (thunk): If you provide a function, this function is triggered whenever the event associated
+     * - A function: If you provide a function, this function is triggered whenever the event associated
      * with it occurs.
-     *
      * - A string: Appropriate for simple value passing (e.g., providing OTP manually for logging in)
      */
-    type AuthEventHandler = string | (() => Promise<string>);
-
-    /**
-     * Authentication tokens associated with your Wealthsimple Trade account.
-     * 
-     * The access token is good for 2 hours before it expires. The expiry time is stored in
-     * this object and checked before every API call. If it has expired, the wrapper will
-     * attempt to regenerate an access token using the refresh token.
-     * 
-     * Tip: You can store these tokens and set auth.tokens instead of logging in every single time.
-     */
-    let tokens: AuthTokens;
+    type AuthEventHandler = string | (() => string|Promise<string>);
 
     /**
      * One-Time Passwords (OTP) are mandatory to login to your Wealthsimple Trade account.
@@ -64,9 +51,22 @@ declare namespace Trade {
      * Attach a handler for the event.
      *
      * @param event authentication event to handle
-     * @param thunk Handler for the authentication event
+     * @param handler Handler for the authentication event
      */
-    function on(event: AuthEvent, thunk: AuthEventHandler): void;
+    function on(event: AuthEvent, handler: AuthEventHandler): void;
+
+    /**
+     * Initialize the auth module with an existing state of tokens.
+     * The state provided should contain access, refresh, and expires properties.
+     *
+     * @param state Pre-existing authentication state
+     */
+    function use(state: AuthTokens) : void;
+
+    /**
+     * Snapshot of the current authentication tokens.
+     */
+    function tokens(): AuthTokens;
 
     /**
      * Attempt a login with the email and password combination. A successful login
@@ -78,9 +78,9 @@ declare namespace Trade {
     function login(email: string, password: string): Promise<void>;
 
     /**
-     * Refreshes the access token in auth.tokens.
+     * Refreshes the set of tokens for the auth module
      * 
-     * The auth.tokens.refresh token must be present for this refresh call
+     * The refresh token must be present for this refresh call
      * to succeed.
      */
     function refresh(): Promise<void>;

@@ -64,14 +64,20 @@ auth.on('otp', getCodeFromGmail);
     //   refresh: 'O3xScrMpYlPxdaDu2QM-yS-YlJS8s4jwZYZlHbt5RC0',
     //   expires: 1607137004
     // };
- })()
- .catch(error => console.log(error));
 
-/**
- * Finally, let's explore the auth.refresh API.
- */
 
-(async () => {
+    // if you already have the authenticaiton tokens handy, you can use
+    // the auth.use API to load them in directly without having to log in
+    // again.
+    auth.use({
+        access: 'm8GKZp_wdnnae4JnqUmpNInZli-IkP9escCGcvwEsTQ',
+        refresh: 'O3xScrMpYlPxdaDu2QM-yS-YlJS8s4jwZYZlHbt5RC0',
+        expires: 1607137004  
+    });
+
+    // if you wanted to check the current authentication tokens, use the
+    // auth.tokens API
+    const currentTokens = auth.tokens();
 
     // If you wish to generate a new set of access and refresh tokens, you can do
     // so by invoking auth.refresh. This will take your existing auth.tokens.refresh
@@ -79,5 +85,5 @@ auth.on('otp', getCodeFromGmail);
     //
     // Keep in mind that wstrade-api does implicitly refresh access tokens when they expire.
     await auth.refresh();
-})()
-.catch(error => console.log(error));
+ })()
+ .catch(error => console.log(error));

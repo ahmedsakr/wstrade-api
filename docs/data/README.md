@@ -50,7 +50,7 @@ data.exchangeRates() -> Promise<any>
 ### data.`getSecurity`
 
 Information about a security on the Wealthsimple Trade Platform.
-* `ticker` is an identifier for a security. Read [this document](/docs/ticker.md) to understand how you can specify the ticker.
+* `ticker` is an identifier for a security. Read [this document](/docs/ticker.md) to learn how to construct a valid ticker.
 * `extensive` is a boolean that triggers a more detailed information draw, including the quote of the security.
 
 **Note**: If `extensive` is set to true and you have enabled the securities cache, the securities cache is always bypassed and an API call is made.  This is because the `extensive` data draw retrieves information like the quote.

@@ -120,7 +120,7 @@ See also: [accounts.`all`](/docs/accounts/README.md#accounts-all)
 
 Retrieves pending orders for the specified security in the open account. If `ticker` is provided, only pending orders that match the security are returned.
 * `accountId` must be one returned by accounts.`all`
-* `ticker` is an identifier for a security. Read [this document](/docs/ticker.md) to understand how you can specify the ticker.
+* `ticker` is an identifier for a security. Read [this document](/docs/ticker.md) to learn how to construct a valid ticker.
 
 [View examples](/docs/orders/examples.js)
 
@@ -161,7 +161,7 @@ See also: [accounts.`all`](/docs/accounts/README.md#accounts-all)
 
 Retrieves filled orders for the specified security in the open account. If `ticker` is provided, only filled orders that match the security are returned.
 * `accountId` must be one returned by accounts.`all`
-* `ticker` is an identifier for a security. Read [this document](/docs/ticker.md) to understand how you can specify the ticker.
+* `ticker` is an identifier for a security. Read [this document](/docs/ticker.md) to learn how to construct a valid ticker.
 
 [View examples](/docs/orders/examples.js)
 
@@ -202,7 +202,7 @@ See also: [accounts.`all`](/docs/accounts/README.md#accounts-all)
 
 Retrieves cancelled orders for the specified security in the open account. If `ticker` is provided, only cancelled orders that match the security are returned.
 * `accountId` must be one returned by accounts.`all`
-* `ticker` is an identifier for a security. Read [this document](/docs/ticker.md) to understand how you can specify the ticker.
+* `ticker` is an identifier for a security. Read [this document](/docs/ticker.md) to learn how to construct a valid ticker.
 
 [View examples](/docs/orders/examples.js)
 
@@ -300,7 +300,7 @@ See also: [accounts.`all`](/docs/accounts/README.md#accounts-all)
 Purchase a security with a market order.
 
 * `accountId` must be one returned by accounts.`all`
-* `ticker` is an identifier for a security. Read [this document](/docs/ticker.md) to understand how you can specify the ticker.
+* `ticker` is an identifier for a security. Read [this document](/docs/ticker.md) to learn how to construct a valid ticker.
 * `quantity` is the number of shares you wish to purchase
 
 [View examples](/docs/orders/examples.js)
@@ -331,7 +331,7 @@ See also: [accounts.`all`](/docs/accounts/README.md#accounts-all)
 Purchase a security with a limit order.
 
 * `accountId` must be one returned by accounts.`all`
-* `ticker` is an identifier for a security. Read [this document](/docs/ticker.md) to understand how you can specify the ticker.
+* `ticker` is an identifier for a security. Read [this document](/docs/ticker.md) to learn how to construct a valid ticker.
 * `limit` is the highest price you are willing to pay for the security
 * `quantity` is the number of shares you wish to purchase
 
@@ -363,7 +363,7 @@ See also: [accounts.`all`](/docs/accounts/README.md#accounts-all)
 Purchase a security with a stop limit order.
 
 * `accountId` must be one returned by accounts.`all`
-* `ticker` is an identifier for a security. Read [this document](/docs/ticker.md) to understand how you can specify the ticker.
+* `ticker` is an identifier for a security. Read [this document](/docs/ticker.md) to learn how to construct a valid ticker.
 * `stop` is the price of the security at which the order converts to a limit order
 * `limit` is the highest price you are willing to pay for the security
 * `quantity` is the number of shares you wish to purchase
@@ -396,7 +396,7 @@ See also: [accounts.`all`](/docs/accounts/README.md#accounts-all)
 Sell a security with a market order.
 
 * `accountId` must be one returned by accounts.`all`
-* `ticker` is an identifier for a security. Read [this document](/docs/ticker.md) to understand how you can specify the ticker.
+* `ticker` is an identifier for a security. Read [this document](/docs/ticker.md) to learn how to construct a valid ticker.
 * `quantity` is the number of shares you wish to sell
 
 [View examples](/docs/orders/examples.js)
@@ -427,7 +427,7 @@ See also: [accounts.`all`](/docs/accounts/README.md#accounts-all)
 Sell a security with a limit order.
 
 * `accountId` must be one returned by accounts.`all`
-* `ticker` is an identifier for a security. Read [this document](/docs/ticker.md) to understand how you can specify the ticker.
+* `ticker` is an identifier for a security. Read [this document](/docs/ticker.md) to learn how to construct a valid ticker.
 * `limit` is the lowest price you are willing to sell the security for
 * `quantity` is the number of shares you wish to sell
 
@@ -459,7 +459,7 @@ See also: [accounts.`all`](/docs/accounts/README.md#accounts-all)
 Sell a security with a stop limit order.
 
 * `accountId` must be one returned by accounts.`all`
-* `ticker` is an identifier for a security. Read [this document](/docs/ticker.md) to understand how you can specify the ticker.
+* `ticker` is an identifier for a security. Read [this document](/docs/ticker.md) to learn how to construct a valid ticker.
 * `stop` is the price of the security at which the order converts to a limit order
 * `limit` is the lowest price you are willing to sell the security for
 * `quantity` is the number of shares you wish to sell

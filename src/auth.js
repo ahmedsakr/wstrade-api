@@ -1,22 +1,40 @@
-import handleRequest from './network/https';
+import handleRequest, { refreshAuthentication } from './network/https';
 import endpoints from './api/endpoints';
+import tokens from './core/tokens';
+
+// authentication events
+const events = {
+  otp: null,
+};
 
 export default {
 
-  // Authentication tokens to access privileged endpoints
-  tokens: null,
+  /**
+   * Register a function to run on a certain event.
+   *
+   * @param {*} event The trigger for the function
+   * @param {*} handler event handler for the event
+   */
+  on(event, handler) {
+    if (!(event in events)) {
+      throw new Error(`Unsupported authentication event '${event}'!`);
+    }
 
-  // Thunk for retrieving the one-time password.
-  otp: null,
+    events[event] = handler;
+  },
 
   /**
-   * Register a function to run on a certain event
-   * @param {*} event The trigger for the function
-   * @param {*} thunk The function block to execute on event trigger
+   * Initialize the auth module with an existing state of tokens.
+   * The state provided should contain access, refresh, and expires properties.
+   *
+   * @param {*} state Pre-existing authentication state
    */
-  on(event, thunk) {
-    this[event] = thunk;
-  },
+  use: (state) => tokens.store(state),
+
+  /**
+   * Snapshot of the current authentication tokens.
+   */
+  tokens: () => ({ access: tokens.access, refresh: tokens.refresh, expires: tokens.expires }),
 
   /**
    * Attempts to establish a session for the provided email and password.
@@ -35,7 +53,7 @@ export default {
      * If a literal value is provided for otp, it means the user has manually
      * provided us with the otp code. We can skip this login attempt.
      */
-    if (typeof (this.otp) === 'function') {
+    if (typeof (events.otp) === 'function') {
       await handleRequest(endpoints.LOGIN, {
         email,
         password,
@@ -47,11 +65,11 @@ export default {
       response = await handleRequest(endpoints.LOGIN, {
         email,
         password,
-        otp: typeof (this.otp) === 'function' ? await this.otp() : this.otp,
+        otp: typeof (events.otp) === 'function' ? await events.otp() : events.otp,
       });
     } catch (error) {
       // we might have failed because OTP was not provided
-      if (!this.otp) {
+      if (!events.otp) {
         throw new Error('OTP not provided!');
       }
 
@@ -60,20 +78,11 @@ export default {
     }
 
     // Capture the tokens for later usage.
-    this.tokens = response.tokens;
+    this.use(response.tokens);
   },
 
   /**
    * Generates a new set of access and refresh tokens.
    */
-  async refresh() {
-    // Dispose of the existing token
-    this.tokens.access = null;
-
-    const response = await handleRequest(endpoints.REFRESH, {
-      refresh_token: this.tokens.refresh,
-    });
-
-    this.tokens = response.tokens;
-  },
+  refresh: async () => refreshAuthentication(),
 };
