@@ -77,7 +77,7 @@ See also: [auth.`login`](#auth-login)
 ```javascript
 auth.use(state) -> void
 ```
-Initialize the auth module with an existing state of tokens. The state provided should contain access, refresh, and expires properties (i.e., exact object format returned by [auth.`tokens`](#auth-tokens)).
+Initialize the auth module with an existing state of tokens. The state provided should contain `access`, `refresh`, and `expires` properties (i.e., exact object format returned by [auth.`tokens`](#auth-tokens)).
 
 Use of this API is recommended if you have valid authentication tokens that you want to reuse. 
 
