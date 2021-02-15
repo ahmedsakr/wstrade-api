@@ -1,0 +1,29 @@
+name: CI
+
+on:
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  pr-check:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: install dependencies
+        run: |
+          npm i
+
+      - name: linting the changes for compliancy
+        run: |
+          npm run lint
+      
+      - name: running unit tests
+        run: |
+          npm test
+      
+      - name: checking if dist.js was updated
+        run: |
+          npm run bundle
+          git diff -s --exit-code dist.js
