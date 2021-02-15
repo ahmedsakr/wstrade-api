@@ -7,13 +7,25 @@ on:
     branches: [ main ]
 
 jobs:
-  lint:
+  pr-check:
     runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v2
 
-      - name: eslint
+      - name: install dependencies
         run: |
           npm i
+
+      - name: linting the changes for compliancy
+        run: |
           npm run lint
+      
+      - name: running unit tests
+        run: |
+          npm test
+      
+      - name: checking if dist.js was updated
+        run: |
+          npm run bundle
+          git diff-index --quiet HEAD && echo "dist.js not updated!"
