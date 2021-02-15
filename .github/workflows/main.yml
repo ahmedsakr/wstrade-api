@@ -28,4 +28,4 @@ jobs:
       - name: checking if dist.js was updated
         run: |
           npm run bundle
-          git diff-index --quiet HEAD && echo "dist.js not updated!"
+          git diff -s --exit-code dist.js
