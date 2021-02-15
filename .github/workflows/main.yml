@@ -1,0 +1,17 @@
+name: CI
+
+on:
+  push:
+    branches: [ github-actions ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: eslint
+        run: npm run lint
