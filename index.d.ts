@@ -376,15 +376,15 @@ declare namespace Trade {
 
 
   /**
-   * Enable or disable an optional feature within wstrade-api.
-   * 
+   * Enable or disable a optional feature within wstrade-api.
+   *
    * Examples:
    * ---
-   * config('pancakes')
-   * Enables the fictitious pancakes feature.
-   * 
-   * config('no_pancakes')
-   * Disables the fictitious pancakes feature.
+   * config('implicit_token_refresh')
+   * Enables implicit refreshing of tokens.
+   *
+   * config('no_implicit_token_refresh')
+   * Disables implicit refreshing of tokens.
    *
    * @param {*} feature The string identifier for the feature, starting with "no_" if
    *                    you wish to disable it.
