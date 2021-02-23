@@ -13,7 +13,7 @@ const disabled = ['securities_cache'];
 export const configEnabled = (feature) => !disabled.includes(feature);
 
 /**
- * Enable or disable a optional feature within wstrade-api.
+ * Enable or disable an optional feature within wstrade-api.
  *
  * Examples:
  * ---
