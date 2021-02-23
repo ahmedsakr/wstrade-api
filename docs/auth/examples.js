@@ -52,12 +52,9 @@ auth.on('otp', getCodeFromGmail);
     // it as discussed above.
     await auth.login('example@hotmail.ca', 'mypassword');
 
-    // If login succeeded, the auth.tokens object will be populated with access
-    // and refresh tokens, and an expiry time for the access token.
-    // These tokens will automatically be used by wstrade-api when you call
-    // an API call that needs to talk to Wealthsimple Trade servers
-    // (for example, to place an order of 5 shares of AAPL in your TFSA account)
-    console.log(auth.tokens);
+    // if you wanted to check the current authentication tokens, use the
+    // auth.tokens API
+    const currentTokens = auth.tokens();
     // Output:
     // {
     //   access: 'm8GKZp_wdnnae4JnqUmpNInZli-IkP9escCGcvwEsTQ',
@@ -74,10 +71,6 @@ auth.on('otp', getCodeFromGmail);
         refresh: 'O3xScrMpYlPxdaDu2QM-yS-YlJS8s4jwZYZlHbt5RC0',
         expires: 1607137004  
     });
-
-    // if you wanted to check the current authentication tokens, use the
-    // auth.tokens API
-    const currentTokens = auth.tokens();
 
     // If you wish to generate a new set of access and refresh tokens, you can do
     // so by invoking auth.refresh. This will take your existing auth.tokens.refresh
