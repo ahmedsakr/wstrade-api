@@ -62,7 +62,9 @@ export default {
   }),
 
   /**
-   * Retrieves the most recent 20 activities on the Wealthsimple Trade Account.
+   * Fetches activities on your Wealthsimple Trade account. You can limit number of activities
+   * to fetch or refine what activities are fetched based on activity type (e.g., buy, sell),
+   * account (e.g., tfsa, rrsp).
    */
   activities: async (filters = {}) => {
     // The maximum draw per API call is 99. If it's higher, we must abort.
