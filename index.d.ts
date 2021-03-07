@@ -138,8 +138,8 @@ declare namespace Trade {
     // filters that can be provided to the activities() API.
     type ActivitiesFilters = {
       limit?: number,
-      accounts: String[],
-      type: ActivityType[]
+      accounts?: String[],
+      type?: ActivityType[]
     };
 
     /**
