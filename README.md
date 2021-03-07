@@ -4,6 +4,7 @@
 </div>
 
 ### [Documentation and Examples](/docs)
+### [Changelog: what's new?](/CHANGELOG.md)
 
 ###   ⚠️⚠️ **Version 0 (`0.x.x`) is no longer supported. Please upgrade to version 1**.
 # wstrade-api
