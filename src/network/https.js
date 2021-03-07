@@ -24,10 +24,33 @@ function finalizeRequest(endpoint, data) {
       // we have to explicitly check for null and undefined since parameter
       // values might be 0.
       if (params[parameterName] === null || params[parameterName] === undefined) {
-        throw new Error(`URL Path parameter '${parameterName}' missing!`);
+        throw new Error(`URL parameter '${parameterName}' missing!`);
       }
 
-      url = url.replace(`{${index}}`, params[endpoint.parameters[index]]);
+      /*
+       * Parameters surrounded with curly braces (e.g., {2}) are simple value replacements,
+       * while ones surrounded with square brackets (e.g., [1]) are array-value replacements.
+       */
+      if (url.indexOf(`{${index}}`) >= 0) {
+        url = url.replace(`{${index}}`, params[endpoint.parameters[index]]);
+      } else if (url.indexOf(`[${index}]`) >= 0) {
+
+        // extract query parameter name and the array of values
+        const queryParamName = endpoint.parameters[index];
+        const values = params[queryParamName];
+
+        // Construct the queryParam using every value in the values array
+        // Here is an example of what queryParam ends up being:
+        //
+        // queryParamName = 'type'
+        // values = ['buy', 'sell', 'dividend']
+        // queryParam = 'type=buy&type=sell&type=dividend'
+        const queryParam = values.map((value) => `${queryParamName}=${value}`).join('&');
+
+        url = url.replace(`[${index}]`, queryParam);
+      } else {
+        throw new Error('Malformed URL! This is an internal error: raise an issue!');
+      }
 
       // Must remove this key from the payload as it has been consumed by the URL
       delete params[endpoint.parameters[index]];
