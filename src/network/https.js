@@ -34,12 +34,11 @@ function finalizeRequest(endpoint, data) {
       if (url.indexOf(`{${index}}`) >= 0) {
         url = url.replace(`{${index}}`, params[endpoint.parameters[index]]);
       } else if (url.indexOf(`[${index}]`) >= 0) {
-
         // extract query parameter name and the array of values
         const queryParamName = endpoint.parameters[index];
         const values = params[queryParamName];
 
-        // Construct the queryParam using every value in the values array
+        // Construct the queryParam using every value in the values array.
         // Here is an example of what queryParam ends up being:
         //
         // queryParamName = 'type'
