@@ -131,6 +131,17 @@ declare namespace Trade {
       crypto?: string,
     };
 
+    // supported activity types
+    type ActivityType = 'sell' | 'buy' | 'deposit' | 'withdrawal' | 'dividend' | 'institutional_transfer' |
+                        'internal_transfer' | 'refund' | 'referral_bonus' | 'affiliate';
+
+    // filters that can be provided to the activities() API.
+    type ActivitiesFilters = {
+      limit?: number,
+      accounts?: String[],
+      type?: ActivityType[]
+    };
+
     /**
      * The set of time intervals that are supported by the accounts.history() API call.
      */
@@ -168,9 +179,11 @@ declare namespace Trade {
     function history(interval: HistoryInterval, accountId: string): Promise<any>;
 
     /**
-     * Retrieves the most recent 20 activities on the Wealthsimple Trade Account.
+     * Fetches activities on your Wealthsimnple Trade account. You can limit number of activities
+     * to fetch or refine what activities are fetched based on activity type (e.g., buy, sell),
+     * account (e.g., tfsa, rrsp).
      */
-    function activities(): Promise<any>;
+    function activities(filters?: ActivitiesFilters): Promise<any>;
 
     /**
      * Retrieves all bank accounts linked to the Wealthsimple Trade account.

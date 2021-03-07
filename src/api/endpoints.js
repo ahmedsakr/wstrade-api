@@ -131,12 +131,15 @@ const WealthsimpleTradeEndpoints = {
    */
   ACTIVITIES: {
     method: 'GET',
-    url: 'https://trade-service.wealthsimple.com/account/activities',
+    url: 'https://trade-service.wealthsimple.com/account/activities?limit={0}&account_ids={1}&[2]&bookmark={3}',
     authenticated: true,
-    onSuccess: async (response) => {
-      const data = await response.json();
-      return data.results;
+    parameters: {
+      0: 'limit',
+      1: 'accountIds',
+      2: 'type',
+      3: 'bookmark',
     },
+    onSuccess: defaultEndpointBehaviour.onSuccess,
     onFailure: defaultEndpointBehaviour.onFailure,
   },
 
