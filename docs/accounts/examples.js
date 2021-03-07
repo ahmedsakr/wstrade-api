@@ -40,8 +40,18 @@ import { auth, accounts } from 'wstrade-api';
     // History of Jane's crypto in the past year.
     let oneYearPerformance = await accounts.history('1y', openAccs.crypto);
 
-    // Recent activity on Jane's Wealthsimple Trade account
-    let activity = await accounts.activities();
+    // All activities from Jane's open accounts
+    let allActivities = await accounts.activities();
+
+    // Dividend actvities from Jane's open accounts
+    let dividendActivities = await accounts.activities({ type: ['dividend'] });
+
+    // Up to 5 buy/sell activities from Jane's TFSA.
+    let limitedBuysSellsTfsaActivities = await accounts.activities({
+        limit: 5,
+        type: [ 'buy', 'sell' ],
+        accounts: [ openAccs.tfsa ]
+    });
 
     // Bank accounts that Jane has linked to her Wealthsimple Trade account
     let banks = await accounts.getBankAccounts();

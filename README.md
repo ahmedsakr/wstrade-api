@@ -5,7 +5,7 @@
 
 ### [Documentation and Examples](/docs)
 
-###   ⚠️⚠️ **Version 0 (`0.x.x`) will only be supported with hotfixes until **February 28, 2021**. Please start planning migration to Version 1**.
+###   ⚠️⚠️ **Version 0 (`0.x.x`) is no longer supported. Please upgrade to version 1**.
 # wstrade-api
 
 A tiny Unofficial Wealthsimple Trade API Wrapper for JavaScript, supporting the core abilities of the Wealthsimple Trade application including placing orders, viewing and cancelling orders, and more.
@@ -15,12 +15,6 @@ A tiny Unofficial Wealthsimple Trade API Wrapper for JavaScript, supporting the 
 * **USE AT YOUR OWN RISK**. This is an unofficial Wealthsimple Trade API Wrapper.
 *  **DO NOT LEVERAGE THIS IN ATTEMPT TO DISRUPT ORDERLY MARKET FUNCTIONS**. This package is provided to you so you can
 build cool shit with it, but you should understand that you have a responsibility to not engage in illegal trading behaviours that can disrupt orderly market functions.
-
-## Deprecated Versions
-* Versions `< v0.11.0` are deprecated due to one-time passwords (OTP) becoming mandatory.
-* Versions `<= v0.9.0` are deprecated due to a WS Trade architecture change in handling buy and sell APIs. These old versions
-will work for everything except buying and selling. Upgrade to a later version if you wish to use the buying and selling
-APIs.
 
 ## Server-Side Limitation
 
@@ -61,7 +55,7 @@ git clone git@github.com:ahmedsakr/wstrade-api.git
 
 ## Versioning
 
-We use [SemVer](http://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://github.com/your/project/tags). 
+We use [SemVer](http://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://github.com/ahmedsakr/wstrade-api/tags). 
 
 ## Authors
 

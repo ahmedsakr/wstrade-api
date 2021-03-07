@@ -185,12 +185,18 @@ See also: [accounts.`all`](#accounts-all)
 <a id="accounts-activities"></a>
 ### accounts.`activities`
 
-Retrieves up to  20 recent activities on the Wealthsimple Trade Account.
+Fetches activities on your Wealthsimple Trade account. You can limit number of activities to fetch or refine what activities are fetched based on activity type (e.g., buy, sell), account (e.g., tfsa, rrsp).
+
+* `filters.limit`:  The number of activities to fetch. The maximum value is `99`. However, if you wish to fetch all activities (which could be more than 99), leave `filters.limit` as undefined.
+* `filters.type`: The type of activities to fetch. This must be specified as an array of strings. Valid activity types: `sell`, `buy`, `deposit`, `withdrawal`, `dividend`, `institutional_transfer`, `internal_transfer`, `refund`, `referral_bonus`, and `affiliate`.
+* `filters.accounts`: The accounts to pull activities from. This must be specified as an array of account ids that you get from [accounts.`all`](#accounts-all)
+
+**Note**: The filters parameter is optional. If you provide nothing, then all activities across all of your accounts will be fetched.
 
 [View examples](/docs/accounts/examples.js)
 
 ```javascript
-accounts.activities() -> Promise<Array<any>>
+accounts.activities([filters]) -> Promise<Array<any>>
 ```
 ```javascript
 * This is not the full returned object - it has been cut.
@@ -214,6 +220,8 @@ accounts.activities() -> Promise<Array<any>>
   ...
 ]
 ```
+
+See also: [accounts.`all`](#accounts-all)
 
 ---
 
