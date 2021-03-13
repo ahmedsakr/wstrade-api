@@ -3,6 +3,7 @@ import customHeaders from '../headers';
 import tokens from '../core/tokens';
 import endpoints from '../api/endpoints';
 import { configEnabled } from '../config';
+import cloudscraper from 'cloudscraper';
 
 const [HTTP_OK, HTTP_CREATED] = [200, 201];
 
@@ -61,7 +62,7 @@ function finalizeRequest(endpoint, data) {
     return { url, payload: undefined };
   }
 
-  return { url, payload: JSON.stringify(params) };
+  return { url, payload: params };
 }
 
 /*
@@ -69,8 +70,7 @@ function finalizeRequest(endpoint, data) {
  * Wealthsimple Trade HTTPS API.
  */
 async function talk(endpoint, data) {
-  const headers = new Headers();
-  headers.append('Content-Type', 'application/json');
+  const headers = {};
 
   if (endpoint.authenticated) {
     // no access token means we will prematurely fail the request because
@@ -83,20 +83,29 @@ async function talk(endpoint, data) {
       await implicitTokenRefresh();
     }
 
-    headers.append('Authorization', tokens.access);
+    headers['Authorization'] = tokens.access;
   }
 
   // Apply all custom headers
-  customHeaders.values().forEach((header) => headers.append(...header));
+  //customHeaders.values().forEach((header) => headers.append(...header));
 
   // fill path and query parameters in the URL
   const { url, payload } = finalizeRequest(endpoint, data);
 
-  return fetch(url, {
-    body: payload,
+  let response = null;
+
+  await cloudscraper({
+    url: url,
+    form: payload,
     method: endpoint.method,
     headers,
+    callback: (stuff, res, body1) => {
+      response = res;
+    }
   });
+
+  response.body = JSON.parse(response.body);
+  return response;
 }
 
 /*
@@ -106,8 +115,8 @@ async function talk(endpoint, data) {
 export default async function handleRequest(endpoint, data) {
   // Submit the HTTP request to the Wealthsimple Trade Servers
   const response = await talk(endpoint, data);
-
-  if ([HTTP_OK, HTTP_CREATED].includes(response.status)) {
+  
+  if ([HTTP_OK, HTTP_CREATED].includes(response.statusCode)) {
     return endpoint.onSuccess(response);
   }
 

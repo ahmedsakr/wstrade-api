@@ -24,6 +24,12 @@ module.exports = {
             commonjs2: 'source-map-support',
             amd: 'source-map-support',
             root: '_',
+        },
+        "cloudscraper": {
+            commonjs: 'cloudscraper',
+            commonjs2: 'cloudscraper',
+            amd: 'cloudscraper',
+            root: '_',
         }
     },
     module: {
