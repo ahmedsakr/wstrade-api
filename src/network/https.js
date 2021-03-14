@@ -1,9 +1,8 @@
-import fetch, { Headers } from 'node-fetch';
+import cloudscraper from 'cloudscraper';
 import customHeaders from '../headers';
 import tokens from '../core/tokens';
 import endpoints from '../api/endpoints';
 import { configEnabled } from '../config';
-import cloudscraper from 'cloudscraper';
 
 const [HTTP_OK, HTTP_CREATED] = [200, 201];
 
@@ -83,29 +82,28 @@ async function talk(endpoint, data) {
       await implicitTokenRefresh();
     }
 
-    headers['Authorization'] = tokens.access;
+    headers.Authorization = tokens.access;
   }
 
   // Apply all custom headers
-  customHeaders.values().forEach((header) => headers[header[0]] = header[1]);
+  customHeaders.values().forEach(([key, value]) => { headers[key] = value; });
 
   // fill path and query parameters in the URL
   const { url, payload } = finalizeRequest(endpoint, data);
-  
+
   // Wealthsimple endpoints are protected by Cloudflare.
   // The cloudscraper library takes care of the Cloudflare challenges
   // while also executing our request
   let response = null;
   await cloudscraper({
-    url: url,
-    body:  payload,
+    url,
+    body: payload,
     method: endpoint.method,
     headers,
-    callback: (stuff, res, body1) => {
-
+    callback: (unused, res) => {
       // Save the HTTP response
       response = res;
-    }
+    },
   }).catch(() => {});
 
   try {
@@ -125,7 +123,7 @@ async function talk(endpoint, data) {
 export default async function handleRequest(endpoint, data) {
   // Submit the HTTP request to the Wealthsimple Trade Servers
   const response = await talk(endpoint, data);
-  
+
   if ([HTTP_OK, HTTP_CREATED].includes(response.statusCode)) {
     return endpoint.onSuccess(response);
   }

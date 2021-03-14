@@ -6,6 +6,7 @@
 ### [Documentation and Examples](/docs)
 ### [Changelog: what's new?](/CHANGELOG.md)
 
+###   ⚠️⚠️ **Versions `1.0.0` -> `1.6.0` are deprecated because Wealthsimple enabled Cloudflare for all endpoints. Upgrade to 1.7.0 or later.
 ###   ⚠️⚠️ **Version 0 (`0.x.x`) is no longer supported. Please upgrade to version 1**.
 # wstrade-api
 
@@ -34,7 +35,7 @@ You just need node.js — and npm, obviously.
 
 ### Dependencies
 
-The dependency list is tiny — **node-fetch** and **source-map-support**. They will be automatically installed when you install `wstrade-api` through `npm`.
+The dependency list is tiny — **node-fetch**, **source-map-support**, and **cloudscraper**. They will be automatically installed when you install `wstrade-api` through `npm`.
 
 ### Installing
 
