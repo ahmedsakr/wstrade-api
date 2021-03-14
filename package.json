@@ -1,6 +1,6 @@
 {
   "name": "wstrade-api",
-  "version": "1.7.0",
+  "version": "1.7.1",
   "description": "Wealthsimple Trade API Wrapper",
   "main": "dist.js",
   "types": "index.d.ts",
@@ -45,6 +45,7 @@
   "dependencies": {
     "cloudscraper": "^4.6.0",
     "node-fetch": "^2.6.1",
+    "request": "^2.88.2",
     "source-map-support": "^0.5.19"
   }
 }

@@ -6,7 +6,7 @@
 ### [Documentation and Examples](/docs)
 ### [Changelog: what's new?](/CHANGELOG.md)
 
-###   ⚠️⚠️ **Versions `1.0.0` -> `1.6.0` are deprecated because Wealthsimple enabled Cloudflare for all endpoints. Upgrade to 1.7.0 or later**.
+###   ⚠️⚠️ **Versions `1.0.0` -> `1.7.0` are deprecated because Wealthsimple enabled Cloudflare for all endpoints. Upgrade to 1.7.1 or later**.
 ###   ⚠️⚠️ **Version 0 (`0.x.x`) is no longer supported. Please upgrade to version 1**.
 # wstrade-api
 
