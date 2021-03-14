@@ -30,7 +30,7 @@ module.exports = {
             commonjs2: 'cloudscraper',
             amd: 'cloudscraper',
             root: '_',
-        }
+        },
     },
     module: {
         rules: [
