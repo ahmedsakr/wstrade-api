@@ -2,13 +2,13 @@ const defaultEndpointBehaviour = {
 
   // Default failure method for all endpoint calls
   onFailure: async (response) => ({
-    status: response.status,
-    reason: response.statusText,
+    status: response.statusCode,
+    reason: response.statusMessage,
     body: response.body,
   }),
 
   // Default success method for all endpoint calls
-  onSuccess: async (response) => response.data,
+  onSuccess: async (response) => response.body,
 };
 
 const WealthsimpleTradeEndpoints = {
@@ -44,9 +44,9 @@ const WealthsimpleTradeEndpoints = {
     authenticated: false,
     onSuccess: async (response) => ({
       tokens: {
-        access: response.headers.get('x-access-token'),
-        refresh: response.headers.get('x-refresh-token'),
-        expires: parseInt(response.headers.get('x-access-token-expires'), 10),
+        access: response.headers['x-access-token'],
+        refresh: response.headers['x-refresh-token'],
+        expires: parseInt(response.headers['x-access-token-expires'], 10),
       },
     }),
     onFailure: defaultEndpointBehaviour.onFailure,
@@ -61,7 +61,6 @@ const WealthsimpleTradeEndpoints = {
     authenticated: true,
     onSuccess: async (response) => {
       const data = response.body;
-      console.log(data);
 
       // Collect all account ids registered under this Wealthsimple Trade Account
       return data.results.map((account) => account.id);

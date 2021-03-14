@@ -62,7 +62,7 @@ function finalizeRequest(endpoint, data) {
     return { url, payload: undefined };
   }
 
-  return { url, payload: params };
+  return { url, payload: JSON.stringify(params) };
 }
 
 /*
@@ -70,7 +70,7 @@ function finalizeRequest(endpoint, data) {
  * Wealthsimple Trade HTTPS API.
  */
 async function talk(endpoint, data) {
-  const headers = {};
+  const headers = { 'Content-type': 'application/json' };
 
   if (endpoint.authenticated) {
     // no access token means we will prematurely fail the request because
@@ -87,24 +87,34 @@ async function talk(endpoint, data) {
   }
 
   // Apply all custom headers
-  //customHeaders.values().forEach((header) => headers.append(...header));
+  customHeaders.values().forEach((header) => headers[header[0]] = header[1]);
 
   // fill path and query parameters in the URL
   const { url, payload } = finalizeRequest(endpoint, data);
-
+  
+  // Wealthsimple endpoints are protected by Cloudflare.
+  // The cloudscraper library takes care of the Cloudflare challenges
+  // while also executing our request
   let response = null;
-
   await cloudscraper({
     url: url,
-    form: payload,
+    body:  payload,
     method: endpoint.method,
     headers,
     callback: (stuff, res, body1) => {
+
+      // Save the HTTP response
       response = res;
     }
-  });
+  }).catch(() => {});
 
-  response.body = JSON.parse(response.body);
+  try {
+    response.body = JSON.parse(response.body);
+  } catch (error) {
+    // it's not JSON, but that's fine. We don't do anything
+    // for now.
+  }
+
   return response;
 }
 
