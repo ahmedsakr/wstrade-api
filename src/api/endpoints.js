@@ -2,13 +2,13 @@ const defaultEndpointBehaviour = {
 
   // Default failure method for all endpoint calls
   onFailure: async (response) => ({
-    status: response.status,
-    reason: response.statusText,
-    body: await response.json(),
+    status: response.statusCode,
+    reason: response.statusMessage,
+    body: response.body,
   }),
 
   // Default success method for all endpoint calls
-  onSuccess: async (response) => response.json(),
+  onSuccess: async (response) => response.body,
 };
 
 const WealthsimpleTradeEndpoints = {
@@ -25,12 +25,12 @@ const WealthsimpleTradeEndpoints = {
     authenticated: false,
     onSuccess: async (response) => ({
       tokens: {
-        access: response.headers.get('x-access-token'),
-        refresh: response.headers.get('x-refresh-token'),
-        expires: parseInt(response.headers.get('x-access-token-expires'), 10),
+        access: response.headers['x-access-token'],
+        refresh: response.headers['x-refresh-token'],
+        expires: parseInt(response.headers['x-access-token-expires'], 10),
       },
 
-      accountInfo: await response.json(),
+      accountInfo: response.body,
     }),
     onFailure: defaultEndpointBehaviour.onFailure,
   },
@@ -44,9 +44,9 @@ const WealthsimpleTradeEndpoints = {
     authenticated: false,
     onSuccess: async (response) => ({
       tokens: {
-        access: response.headers.get('x-access-token'),
-        refresh: response.headers.get('x-refresh-token'),
-        expires: parseInt(response.headers.get('x-access-token-expires'), 10),
+        access: response.headers['x-access-token'],
+        refresh: response.headers['x-refresh-token'],
+        expires: parseInt(response.headers['x-access-token-expires'], 10),
       },
     }),
     onFailure: defaultEndpointBehaviour.onFailure,
@@ -60,7 +60,7 @@ const WealthsimpleTradeEndpoints = {
     url: 'https://trade-service.wealthsimple.com/account/list',
     authenticated: true,
     onSuccess: async (response) => {
-      const data = await response.json();
+      const data = response.body;
 
       // Collect all account ids registered under this Wealthsimple Trade Account
       return data.results.map((account) => account.id);
@@ -78,7 +78,7 @@ const WealthsimpleTradeEndpoints = {
     url: 'https://trade-service.wealthsimple.com/account/list',
     authenticated: true,
     onSuccess: async (response) => {
-      const data = await response.json();
+      const data = response.body;
       return data.results;
     },
     onFailure: defaultEndpointBehaviour.onFailure,
@@ -151,7 +151,7 @@ const WealthsimpleTradeEndpoints = {
     url: 'https://trade-service.wealthsimple.com/deposits',
     authenticated: true,
     onSuccess: async (response) => {
-      const data = await response.json();
+      const data = response.body;
       return data.results;
     },
     onFailure: defaultEndpointBehaviour.onFailure,
@@ -165,7 +165,7 @@ const WealthsimpleTradeEndpoints = {
     url: 'https://trade-service.wealthsimple.com/bank-accounts',
     authenticated: true,
     onSuccess: async (response) => {
-      const data = await response.json();
+      const data = response.body;
       return data.results;
     },
     onFailure: defaultEndpointBehaviour.onFailure,
@@ -193,7 +193,7 @@ const WealthsimpleTradeEndpoints = {
       0: 'ticker',
     },
     onSuccess: async (response) => {
-      const data = await response.json();
+      const data = response.body;
 
       if (data.results.length === 0) {
         throw new Error('Security does not exist');
@@ -246,7 +246,7 @@ const WealthsimpleTradeEndpoints = {
       0: 'accountId',
     },
     onSuccess: async (response) => {
-      const data = await response.json();
+      const data = response.body;
       return data.results;
     },
     onFailure: defaultEndpointBehaviour.onFailure,
@@ -264,7 +264,7 @@ const WealthsimpleTradeEndpoints = {
       1: 'accountId',
     },
     onSuccess: async (response) => {
-      const data = await response.json();
+      const data = response.body;
       return {
         total: data.total,
         orders: data.results,

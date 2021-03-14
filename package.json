@@ -1,6 +1,6 @@
 {
   "name": "wstrade-api",
-  "version": "1.6.0",
+  "version": "1.7.0",
   "description": "Wealthsimple Trade API Wrapper",
   "main": "dist.js",
   "types": "index.d.ts",
@@ -43,6 +43,7 @@
     "webpack-cli": "^4.2.0"
   },
   "dependencies": {
+    "cloudscraper": "^4.6.0",
     "node-fetch": "^2.6.1",
     "source-map-support": "^0.5.19"
   }

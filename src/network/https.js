@@ -1,4 +1,4 @@
-import fetch, { Headers } from 'node-fetch';
+import cloudscraper from 'cloudscraper';
 import customHeaders from '../headers';
 import tokens from '../core/tokens';
 import endpoints from '../api/endpoints';
@@ -69,8 +69,7 @@ function finalizeRequest(endpoint, data) {
  * Wealthsimple Trade HTTPS API.
  */
 async function talk(endpoint, data) {
-  const headers = new Headers();
-  headers.append('Content-Type', 'application/json');
+  const headers = { 'Content-type': 'application/json' };
 
   if (endpoint.authenticated) {
     // no access token means we will prematurely fail the request because
@@ -83,20 +82,38 @@ async function talk(endpoint, data) {
       await implicitTokenRefresh();
     }
 
-    headers.append('Authorization', tokens.access);
+    headers.Authorization = tokens.access;
   }
 
   // Apply all custom headers
-  customHeaders.values().forEach((header) => headers.append(...header));
+  customHeaders.values().forEach(([key, value]) => { headers[key] = value; });
 
   // fill path and query parameters in the URL
   const { url, payload } = finalizeRequest(endpoint, data);
 
-  return fetch(url, {
+  // Wealthsimple endpoints are protected by Cloudflare.
+  // The cloudscraper library takes care of the Cloudflare challenges
+  // while also executing our request
+  let response = null;
+  await cloudscraper({
+    url,
     body: payload,
     method: endpoint.method,
     headers,
-  });
+    callback: (unused, res) => {
+      // Save the HTTP response
+      response = res;
+    },
+  }).catch(() => {});
+
+  try {
+    response.body = JSON.parse(response.body);
+  } catch (error) {
+    // it's not JSON, but that's fine. We don't do anything
+    // for now.
+  }
+
+  return response;
 }
 
 /*
@@ -107,7 +124,7 @@ export default async function handleRequest(endpoint, data) {
   // Submit the HTTP request to the Wealthsimple Trade Servers
   const response = await talk(endpoint, data);
 
-  if ([HTTP_OK, HTTP_CREATED].includes(response.status)) {
+  if ([HTTP_OK, HTTP_CREATED].includes(response.statusCode)) {
     return endpoint.onSuccess(response);
   }
 
