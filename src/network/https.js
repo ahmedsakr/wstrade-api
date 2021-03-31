@@ -1,6 +1,5 @@
 import cloudscraper from 'cloudscraper';
 import customHeaders from '../headers';
-import tokens from '../core/tokens';
 import endpoints from '../api/endpoints';
 import { configEnabled } from '../config';
 
@@ -28,9 +27,9 @@ function finalizeRequest(endpoint, data) {
       }
 
       /*
-       * Parameters surrounded with curly braces (e.g., {2}) are simple value replacements,
-       * while ones surrounded with square brackets (e.g., [1]) are array-value replacements.
-       */
+        * Parameters surrounded with curly braces (e.g., {2}) are simple value replacements,
+        * while ones surrounded with square brackets (e.g., [1]) are array-value replacements.
+        */
       if (url.indexOf(`{${index}}`) >= 0) {
         url = url.replace(`{${index}}`, params[endpoint.parameters[index]]);
       } else if (url.indexOf(`[${index}]`) >= 0) {
@@ -64,100 +63,116 @@ function finalizeRequest(endpoint, data) {
   return { url, payload: JSON.stringify(params) };
 }
 
-/*
- * Implements the network level protocol for talking to the
- * Wealthsimple Trade HTTPS API.
- */
-async function talk(endpoint, data) {
-  const headers = { 'Content-type': 'application/json' };
-
-  if (endpoint.authenticated) {
-    // no access token means we will prematurely fail the request because
-    // this is a privileged endpoint.
-    if (!tokens.access) {
-      throw new Error(`Authentication required for '${endpoint.url}'`);
-    }
-
-    if (configEnabled('implicit_token_refresh')) {
-      await implicitTokenRefresh();
-    }
-
-    headers.Authorization = tokens.access;
+class HttpsWorker {
+  /**
+   * Create a new HttpsWorker associated with provided authentication tokens.
+   *
+   * @param {*} tokens
+   */
+  constructor(tokens) {
+    this.tokens = tokens;
   }
 
-  // Apply all custom headers
-  customHeaders.values().forEach(([key, value]) => { headers[key] = value; });
+  /*
+   * Implements the network level protocol for talking to the
+   * Wealthsimple Trade HTTPS API.
+   */
+  async talk(endpoint, data) {
+    const headers = { 'Content-type': 'application/json' };
 
-  // fill path and query parameters in the URL
-  const { url, payload } = finalizeRequest(endpoint, data);
-
-  // Wealthsimple endpoints are protected by Cloudflare.
-  // The cloudscraper library takes care of the Cloudflare challenges
-  // while also executing our request
-  let response = null;
-  await cloudscraper({
-    url,
-    body: payload,
-    method: endpoint.method,
-    headers,
-    callback: (unused, res) => {
-      // Save the HTTP response
-      response = res;
-    },
-  }).catch(() => {});
-
-  try {
-    response.body = JSON.parse(response.body);
-  } catch (error) {
-    // it's not JSON, but that's fine. We don't do anything
-    // for now.
-  }
-
-  return response;
-}
-
-/*
- * Fulfill the endpoint request given the endpoint configuration, optional
- * data.
- */
-export default async function handleRequest(endpoint, data) {
-  // Submit the HTTP request to the Wealthsimple Trade Servers
-  const response = await talk(endpoint, data);
-
-  if ([HTTP_OK, HTTP_CREATED].includes(response.statusCode)) {
-    return endpoint.onSuccess(response);
-  }
-
-  return Promise.reject(await endpoint.onFailure(response));
-}
-
-/**
- * Obtain a new set of authentication tokens using the
- * existing refresh token.
- */
-export async function refreshAuthentication() {
-  const response = await handleRequest(endpoints.REFRESH, { refresh_token: tokens.refresh });
-  tokens.store(response.tokens);
-}
-
-/**
- * Check if the existing set of tokens have expired, automatically
- * triggering a refresh if they have expired.
- */
-async function implicitTokenRefresh() {
-  if (tokens.expired()) {
-    if (tokens.refresh) {
-      try {
-        // Let's implicitly refresh the access token using the refresh token.
-        await refreshAuthentication();
-      } catch (error) {
-        // The refresh token is not valid.
-        throw new Error(`Unable to refresh expired token: ${error}`);
+    if (endpoint.authenticated) {
+      // no access token means we will prematurely fail the request because
+      // this is a privileged endpoint.
+      if (!this.tokens.access) {
+        throw new Error(`Authentication required for '${endpoint.url}'`);
       }
-    } else {
-      // We are forced to reject as our access token has expired and we
-      // do not have a refresh token.
-      throw new Error('Access token expired');
+
+      if (configEnabled('implicit_token_refresh')) {
+        await this.implicitTokenRefresh();
+      }
+
+      headers.Authorization = this.tokens.access;
+    }
+
+    // Apply all custom headers
+    customHeaders.values().forEach(([key, value]) => { headers[key] = value; });
+
+    // fill path and query parameters in the URL
+    const { url, payload } = finalizeRequest(endpoint, data);
+
+    // Wealthsimple endpoints are protected by Cloudflare.
+    // The cloudscraper library takes care of the Cloudflare challenges
+    // while also executing our request
+    let response = null;
+    await cloudscraper({
+      url,
+      body: payload,
+      method: endpoint.method,
+      headers,
+      callback: (unused, res) => {
+        // Save the HTTP response
+        response = res;
+      },
+    }).catch(() => { });
+
+    try {
+      response.body = JSON.parse(response.body);
+    } catch (error) {
+      // it's not JSON, but that's fine. We don't do anything
+      // for now.
+    }
+
+    return response;
+  }
+
+  /*
+   * Fulfill the endpoint request given the endpoint configuration, optional
+   * data.
+   */
+  async handleRequest(endpoint, data) {
+    // Submit the HTTP request to the Wealthsimple Trade Servers
+    const response = await this.talk(endpoint, data);
+
+    if ([HTTP_OK, HTTP_CREATED].includes(response.statusCode)) {
+      return endpoint.onSuccess(response);
+    }
+
+    return Promise.reject(await endpoint.onFailure(response));
+  }
+
+  /**
+   * Obtain a new set of authentication tokens using the
+   * existing refresh token.
+   */
+  async refreshAuthentication() {
+    const response = await this.handleRequest(endpoints.REFRESH, {
+      refresh_token: this.tokens.refresh,
+    });
+
+    this.tokens.store(response.tokens);
+  }
+
+  /**
+   * Check if the existing set of tokens have expired, automatically
+   * triggering a refresh if they have expired.
+   */
+  async implicitTokenRefresh() {
+    if (this.tokens.expired()) {
+      if (this.tokens.refresh) {
+        try {
+          // Let's implicitly refresh the access token using the refresh token.
+          await this.refreshAuthentication();
+        } catch (error) {
+          // The refresh token is not valid.
+          throw new Error(`Unable to refresh expired token: ${error}`);
+        }
+      } else {
+        // We are forced to reject as our access token has expired and we
+        // do not have a refresh token.
+        throw new Error('Access token expired');
+      }
     }
   }
 }
+
+export default HttpsWorker;

@@ -1,17 +1,24 @@
-import trade from './default';
-import data from '../data';
+import TradeQuotes from './default';
 import Ticker from '../core/ticker';
-import handleRequest from '../network/https';
 import endpoints from '../api/endpoints';
 
-export default {
+class Quotes {
+  /**
+   * Creates a new Quotes object associated with the given HTTPS Worker state.
+   *
+   * @param {*} httpsWorker
+   */
+  constructor(httpsWorker, data) {
+    // Wealthsimple Trade is our default source for quotes, despite
+    // having a 15 min delay
+    this.defaultProvider = new TradeQuotes(data);
 
-  // Wealthsimple Trade is our default source for quotes, despite
-  // having a 15 min delay
-  defaultProvider: trade,
+    // Maintains quote providers on an exchange basis
+    this.providers = {};
 
-  // Maintains quote providers on an exchange basis
-  providers: {},
+    this.worker = httpsWorker;
+    this.data = data;
+  }
 
   /**
      * Load a custom provider for the exchange.
@@ -26,7 +33,7 @@ export default {
     }
 
     this.providers[exchange] = provider;
-  },
+  }
 
   /**
      * Obtains a quote for the ticker. The source of the quote may be a custom
@@ -49,7 +56,7 @@ export default {
       // we will automatically set exchange to 'CC'.
       exchange = 'CC';
     } else if (Object.keys(this.providers).length > 0) {
-      const info = await data.getSecurity(ticker, false);
+      const info = await this.data.getSecurity(ticker, false);
       exchange = info.stock.primary_exchange;
     }
 
@@ -57,8 +64,9 @@ export default {
     if (exchange in this.providers) {
       return this.providers[exchange].quote(ticker);
     }
+
     return this.defaultProvider.quote(ticker);
-  },
+  }
 
   /**
    * Retrieves the historical quotes within a specified interval for the ticker.
@@ -72,9 +80,11 @@ export default {
     // validate the user-given security
     const ticker = new Ticker(security);
     if (!ticker.id) {
-      ticker.id = (await data.getSecurity(ticker)).id;
+      ticker.id = (await this.data.getSecurity(ticker)).id;
     }
 
-    return handleRequest(endpoints.QUOTES_HISTORY, { id: ticker.id, interval });
-  },
-};
+    return this.worker.handleRequest(endpoints.QUOTES_HISTORY, { id: ticker.id, interval });
+  }
+}
+
+export default Quotes;

@@ -1,5 +1,4 @@
 import endpoints from './api/endpoints';
-import handleRequest from './network/https';
 
 // The maximumum number of activities we can pull in one go.
 const ACTIVITIES_MAX_DRAW = 99;
@@ -17,13 +16,21 @@ const ACTIVITIES_TYPES_ALL = [
   'buy',
 ];
 
-export default {
+class Accounts {
+  /**
+   * Creates a new Account object associated with an HTTPS worker state.
+   *
+   * @param {*} httpsWorker
+   */
+  constructor(httpsWorker) {
+    this.worker = httpsWorker;
+  }
 
   /**
    * Retrieves all account ids open under this Wealthsimple Trade account.
    */
-  all: async () => {
-    const accounts = await handleRequest(endpoints.ACCOUNT_IDS, {});
+  async all() {
+    const accounts = await this.worker.handleRequest(endpoints.ACCOUNT_IDS, {});
 
     return {
       tfsa: accounts.find((account) => account.startsWith('tfsa')),
@@ -31,25 +38,31 @@ export default {
       crypto: accounts.find((account) => account.startsWith('non-registered-crypto')),
       personal: accounts.find((account) => account.startsWith('non-registered') && !account.startsWith('non-registered-crypto')),
     };
-  },
+  }
 
   /**
    * Returns a list of details about your open accounts, like account type, buying power,
    * current balance, and more.
    */
-  data: async () => handleRequest(endpoints.LIST_ACCOUNT, {}),
+  async data() {
+    return this.worker.handleRequest(endpoints.LIST_ACCOUNT, {});
+  }
 
   /**
    * Retrieves some surface information about you like your name and email, account
    * signatures, and other metadata.
    */
-  me: async () => handleRequest(endpoints.ME, {}),
+  async me() {
+    return this.worker.handleRequest(endpoints.ME, {});
+  }
 
   /**
    * Detailed information about you that you provided on signup, like residential and
    * mailing addresses, employment, phone numbers, and so on.
    */
-  person: async () => handleRequest(endpoints.PERSON, {}),
+  async person() {
+    return this.worker.handleRequest(endpoints.PERSON, {});
+  }
 
   /**
    * Query the history of the account within a certain time interval.
@@ -57,16 +70,16 @@ export default {
    * @param {*} interval The time interval for the history query
    * @param {*} accountId The account to query
    */
-  history: async (interval, accountId) => handleRequest(endpoints.HISTORY_ACCOUNT, {
-    interval, accountId,
-  }),
+  async history(interval, accountId) {
+    return this.worker.handleRequest(endpoints.HISTORY_ACCOUNT, { interval, accountId });
+  }
 
   /**
    * Fetches activities on your Wealthsimple Trade account. You can limit number of activities
    * to fetch or refine what activities are fetched based on activity type (e.g., buy, sell),
    * account (e.g., tfsa, rrsp).
    */
-  activities: async (filters = {}) => {
+  async activities(filters = {}) {
     // The maximum draw per API call is 99. If it's higher, we must abort.
     if (filters?.limit && filters.limit > ACTIVITIES_MAX_DRAW) {
       throw new Error('filters.limit can not exceed 99! Leave filters.limit undefined if you want to retrieve all.');
@@ -85,7 +98,7 @@ export default {
     const results = [];
 
     // Draw the first set of activities
-    let response = await handleRequest(endpoints.ACTIVITIES, {
+    let response = await this.worker.handleRequest(endpoints.ACTIVITIES, {
       limit: filters?.limit ?? ACTIVITIES_MAX_DRAW,
       accountIds: filters?.accounts?.join() ?? '',
       bookmark: '',
@@ -106,7 +119,7 @@ export default {
        */
       /* eslint-disable no-await-in-loop */
       while (results.length % ACTIVITIES_MAX_DRAW === 0) {
-        response = await handleRequest(endpoints.ACTIVITIES, {
+        response = await this.worker.handleRequest(endpoints.ACTIVITIES, {
           limit: ACTIVITIES_MAX_DRAW,
           accountIds: filters?.accounts?.join() ?? '',
           bookmark: response.bookmark,
@@ -124,22 +137,30 @@ export default {
     }
 
     return results;
-  },
+  }
 
   /**
    * Retrieves all bank accounts linked to the Wealthsimple Trade account.
    */
-  getBankAccounts: async () => handleRequest(endpoints.BANK_ACCOUNTS, {}),
+  async getBankAccounts() {
+    return this.worker.handleRequest(endpoints.BANK_ACCOUNTS, {});
+  }
 
   /**
    * Grab all deposit records on the Wealthsimple Trade account.
    */
-  deposits: async () => handleRequest(endpoints.DEPOSITS, {}),
+  async deposits() {
+    return this.worker.handleRequest(endpoints.DEPOSITS, {});
+  }
 
   /**
    * Lists all positions in the specified trading account under the Wealthsimple Trade Account.
    *
    * @param {*} accountId The specific account in the Wealthsimple Trade account
    */
-  positions: async (accountId) => handleRequest(endpoints.POSITIONS, { accountId }),
-};
+  async positions(accountId) {
+    return this.worker.handleRequest(endpoints.POSITIONS, { accountId });
+  }
+}
+
+export default Accounts;
