@@ -1,4 +1,4 @@
-declare namespace Trade {
+export declare namespace Trade {
 
   type AuthTokens = {
     access: string,
@@ -406,4 +406,8 @@ declare namespace Trade {
 
 }
 
-export = Trade;
+/**
+ * Create a new Trade API object with its own authentication state.
+ * This is useful if you are managing several Trade accounts.
+ */
+export function Session(): typeof Trade;
