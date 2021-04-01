@@ -85,7 +85,7 @@ export namespace auth {
   function refresh(): Promise<void>;
 }
 
-namespace headers {
+export namespace headers {
 
   /**
    * Appends a header name-value pair to all requests.
