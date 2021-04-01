@@ -5,7 +5,7 @@ import cache from './optional/securities-cache';
 
 class Data {
   /**
-   * Creates a new Data pbject associated with the given HTTPS worker state.
+   * Creates a new Data pbject associated with the given Https worker state.
    *
    * @param {*} httpsWorker
    */

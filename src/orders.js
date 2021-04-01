@@ -37,7 +37,7 @@ function filteredOrders(list, ticker, status) {
 
 class Orders {
   /**
-   * Createw a new OrderHistory object associated with an HTTPS worker state.
+   * Createw a new OrderHistory object associated with an Https worker state.
    *
    * @param {*} httpsWorker
    */

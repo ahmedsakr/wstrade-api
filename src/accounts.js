@@ -18,7 +18,7 @@ const ACTIVITIES_TYPES_ALL = [
 
 class Accounts {
   /**
-   * Creates a new Account object associated with an HTTPS worker state.
+   * Creates a new Account object associated with an Https worker state.
    *
    * @param {*} httpsWorker
    */
