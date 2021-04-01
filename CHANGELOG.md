@@ -1,3 +1,8 @@
+v1.8.0
+==
+* Support concurrency with a `Session` API. The codebase has been refactored to allow for concurrent usage where you can manage several
+Trade accounts!
+
 v1.7.1
 ==
 * Add `request` to package.json to force install it because `cloudscraper` requires it even though it's deprecated.
