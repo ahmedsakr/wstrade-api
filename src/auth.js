@@ -38,7 +38,7 @@ class Authentication {
    * @param {*} state Pre-existing authentication state
    */
   use(state) {
-    this.workers.tokens.store(state);
+    this.worker.tokens.store(state);
   }
 
   /**
