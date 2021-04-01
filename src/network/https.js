@@ -2,6 +2,7 @@ import cloudscraper from 'cloudscraper';
 import customHeaders from '../headers';
 import endpoints from '../api/endpoints';
 import { configEnabled } from '../config';
+import Tokens from '../core/tokens';
 
 const [HTTP_OK, HTTP_CREATED] = [200, 201];
 
@@ -65,12 +66,10 @@ function finalizeRequest(endpoint, data) {
 
 class HttpsWorker {
   /**
-   * Create a new HttpsWorker associated with provided authentication tokens.
-   *
-   * @param {*} tokens
+   * Create a new HttpsWorker with its own authentication state.
    */
-  constructor(tokens) {
-    this.tokens = tokens;
+  constructor() {
+    this.tokens = new Tokens();
   }
 
   /*

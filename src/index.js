@@ -8,7 +8,6 @@ const Data = require('./data').default;
 const Quotes = require('./quotes').default;
 const config = require('./config').default;
 
-const Tokens = require('./core/tokens').default;
 const HttpsWorker = require('./network/https').default;
 
 /**
@@ -19,12 +18,11 @@ const HttpsWorker = require('./network/https').default;
  * all sessions.
  */
 const Session = () => {
-  const authTokens = new Tokens();
-  const worker = new HttpsWorker(authTokens);
+  const worker = new HttpsWorker();
   const data = new Data(worker);
 
   return {
-    auth: new Authentication(authTokens, worker),
+    auth: new Authentication(worker),
     headers,
     accounts: new Accounts(worker),
     orders: new Orders(worker, data),

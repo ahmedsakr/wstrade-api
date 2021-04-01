@@ -8,8 +8,7 @@ class Authentication {
    * @param {*} authTokens
    * @param {*} httpsWorker
    */
-  constructor(authTokens, httpsWorker) {
-    this.authTokens = authTokens;
+  constructor(httpsWorker) {
     this.worker = httpsWorker;
 
     // authentication events
@@ -39,7 +38,7 @@ class Authentication {
    * @param {*} state Pre-existing authentication state
    */
   use(state) {
-    this.authTokens.store(state);
+    this.workers.tokens.store(state);
   }
 
   /**
@@ -47,9 +46,9 @@ class Authentication {
    */
   tokens() {
     return {
-      access: this.authTokens.access,
-      refresh: this.authTokens.refresh,
-      expires: this.authTokens.expires,
+      access: this.worker.tokens.access,
+      refresh: this.worker.tokens.refresh,
+      expires: this.woorker.tokens.expires,
     };
   }
 
