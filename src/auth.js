@@ -5,7 +5,6 @@ class Authentication {
    * Creates an instance of the Authentication classs associated with the
    * provided tokens and https worker.
    *
-   * @param {*} authTokens
    * @param {*} httpsWorker
    */
   constructor(httpsWorker) {
@@ -48,7 +47,7 @@ class Authentication {
     return {
       access: this.worker.tokens.access,
       refresh: this.worker.tokens.refresh,
-      expires: this.woorker.tokens.expires,
+      expires: this.worker.tokens.expires,
     };
   }
 
@@ -101,7 +100,7 @@ class Authentication {
    * Generates a new set of access and refresh tokens.
    */
   async refresh() {
-    this.worker.refreshAuthentication();
+    return this.worker.refreshAuthentication();
   }
 }
 

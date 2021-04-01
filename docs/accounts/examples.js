@@ -61,4 +61,4 @@ import { auth, accounts } from 'wstrade-api';
 
     // Jane's current positions in her personal account
     let personalPositions = await accounts.positions(openAccs.personal);
-})().catch(error => console.log(error));
+})().catch(console.log);
