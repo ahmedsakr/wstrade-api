@@ -36,4 +36,4 @@ import { auth, quotes } from 'wstrade-api';
     // Retrieves a list containing the historical price performance of apple
     // within the last year
     let appleYearHistory = await quotes.history('AAPL', '1y');
-})().catch(error => console.log(error));
+})().catch(console.log);

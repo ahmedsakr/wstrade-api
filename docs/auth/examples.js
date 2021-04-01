@@ -79,4 +79,4 @@ auth.on('otp', getCodeFromGmail);
     // Keep in mind that wstrade-api does implicitly refresh access tokens when they expire.
     await auth.refresh();
  })()
- .catch(error => console.log(error));
+ .catch(console.log);

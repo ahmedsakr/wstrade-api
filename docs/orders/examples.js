@@ -87,4 +87,4 @@ import { auth, orders, accounts, quotes } from 'wstrade-api';
     let limitSuPrice = suPrice - 0.25
     let stopSuPrice = suPrice;
     let stopLimitSellSu = await orders.stopLimitBuy(accs.tfsa, 'UBER:NYSE', limitSuPrice, stopSuPrice, 10);
-})().catch(error => console.log(error));
+})().catch(console.log);

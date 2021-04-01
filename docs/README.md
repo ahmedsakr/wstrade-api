@@ -1,4 +1,5 @@
 
+
 Getting started with `wstrade-api`
 ===
 
@@ -26,6 +27,7 @@ and a lot more usecases. `wstrade-api` is developed to provide you with the prog
 | [`orders`](/docs/orders) | Pending/Filled/Cancelled orders, buying/selling securities |
 | [`data`](/docs/data) | Securities information, exchange rates |
 | [`config`](/docs/config) | Manage optional features of `wstrade-api` |
+| [`Session`](/docs/session)<span style="color:red;"><sup>new</sup></span> | Create independent API sessions, Concurrency |
 
 It is recommended to go through the table of modules in order if you are new to `wstrade-api`.
 

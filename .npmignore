@@ -1,6 +1,7 @@
 src/
 docs/
 Contributing.md
+CHANGELOG.md
 webpack.config.js
 .eslintrc.json
 .babelrc

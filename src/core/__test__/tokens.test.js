@@ -1,5 +1,7 @@
 import epochSeconds from '../../helpers/time';
-import tokens from '../tokens';
+import Tokens from '../tokens';
+
+const tokens = new Tokens();
 
 test('tokens update with a valid state', () => {
     tokens.store({ access: 'abcde', refresh: 'fghij', expires: 1000 });
