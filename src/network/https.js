@@ -70,6 +70,25 @@ class HttpsWorker {
    */
   constructor() {
     this.tokens = new Tokens();
+
+    // authentication events
+    this.events = {
+      refresh: null,
+    };
+  }
+
+  /**
+   * Register a function to run on a certain event.
+   *
+   * @param {*} event The trigger for the function
+   * @param {*} handler event handler for the event
+   */
+   on(event, handler) {
+    if (!(event in this.events)) {
+      throw new Error(`Unsupported authentication event '${event}'!`);
+    }
+
+    this.events[event] = handler;
   }
 
   /*
@@ -142,6 +161,9 @@ class HttpsWorker {
   /**
    * Obtain a new set of authentication tokens using the
    * existing refresh token.
+   *
+   * If we are given a function for refresh, call that function
+   * with the refreshed tokens.
    */
   async refreshAuthentication() {
     const response = await this.handleRequest(endpoints.REFRESH, {
@@ -149,11 +171,18 @@ class HttpsWorker {
     });
 
     this.tokens.store(response.tokens);
+    // call the handler for this event if we have one
+    if (typeof (this.events.refresh) === 'function') {
+      await this.events.refresh(this.tokens)
+    }
   }
 
   /**
    * Check if the existing set of tokens have expired, automatically
    * triggering a refresh if they have expired.
+   *
+   * If we are given a function for refresh, call that function
+   * with the refreshed tokens.
    */
   async implicitTokenRefresh() {
     if (this.tokens.expired()) {
@@ -164,6 +193,17 @@ class HttpsWorker {
         } catch (error) {
           // The refresh token is not valid.
           throw new Error(`Unable to refresh expired token: ${error}`);
+        }
+        try {
+          // and call the handler for this event if we have one
+          if (typeof (this.events.refresh) === 'function') {
+            await this.events.refresh(this.tokens)
+          } 
+        } catch (error) {
+          // what should we do here?
+          // this is not a show stopper but the user
+          // should know this happened
+          throw new Error(`Trouble in call to refresh handler: ${error}`);
         }
       } else {
         // We are forced to reject as our access token has expired and we

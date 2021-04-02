@@ -13,6 +13,7 @@ class Authentication {
     // authentication events
     this.events = {
       otp: null,
+      refresh: null,
     };
   }
 
@@ -26,8 +27,14 @@ class Authentication {
     if (!(event in this.events)) {
       throw new Error(`Unsupported authentication event '${event}'!`);
     }
-
-    this.events[event] = handler;
+    // this creates a edge case in the list of events
+    // because we're now partly a configuration proxy and validation for a
+    // setting that's in https.js
+    if (event == 'refresh') {
+      this.worker.on(event, handler)
+    } else {
+      this.events[event] = handler;
+    }
   }
 
   /**
