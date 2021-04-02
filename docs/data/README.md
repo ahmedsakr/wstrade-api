@@ -122,7 +122,7 @@ data.securityGroups() -> Promise<any>
 
 Retrieves all securities associated with the group name or id.
   * If you provide the group name, we will automatically do a lookup from the Trade servers to get its identifier.
-  * Alternatively, You can get a list of all groups (with their group ids) from data.groups() and provide the group identifier directly.
+  * Alternatively, You can get a list of all groups (with their group ids) from data.`securityGroups` and provide the group identifier directly.
 
 [View examples](/docs/data/examples.js)
 
