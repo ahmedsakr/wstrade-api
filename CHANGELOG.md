@@ -1,3 +1,8 @@
+v1.9.0
+==
+* Introduce data.`securityGroups` and data.`getSecurityGroup` APIs for looking up all security groups on Trade
+and also fetching the securities associated with them.
+
 v1.8.0
 ==
 * Support concurrency with a `Session` API. The codebase has been refactored to allow for concurrent usage where you can manage several

@@ -5,7 +5,7 @@ import { auth, orders, Session } from 'wstrade-api';
 auth.use(...);
 orders.marketBuy(...);
 
-// if you require independnet sessions for concurrent usecases,
+// if you require independent sessions for concurrent usecases,
 // you can go ahead and create more sessions!
 const user1 = new Session();
 // Just remember - you need to setup the authentication state
