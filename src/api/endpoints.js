@@ -1,14 +1,14 @@
 const defaultEndpointBehaviour = {
 
   // Default failure method for all endpoint calls
-  onFailure: async (response) => ({
+  onFailure: (response) => ({
     status: response.statusCode,
     reason: response.statusMessage,
     body: response.body,
   }),
 
   // Default success method for all endpoint calls
-  onSuccess: async (response) => response.body,
+  onSuccess: (response) => response.body,
 };
 
 const WealthsimpleTradeEndpoints = {
@@ -23,7 +23,7 @@ const WealthsimpleTradeEndpoints = {
     method: 'POST',
     url: 'https://trade-service.wealthsimple.com/auth/login',
     authenticated: false,
-    onSuccess: async (response) => ({
+    onSuccess: (response) => ({
       tokens: {
         access: response.headers['x-access-token'],
         refresh: response.headers['x-refresh-token'],
@@ -42,7 +42,7 @@ const WealthsimpleTradeEndpoints = {
     method: 'POST',
     url: 'https://trade-service.wealthsimple.com/auth/refresh',
     authenticated: false,
-    onSuccess: async (response) => ({
+    onSuccess: (response) => ({
       tokens: {
         access: response.headers['x-access-token'],
         refresh: response.headers['x-refresh-token'],
@@ -59,7 +59,7 @@ const WealthsimpleTradeEndpoints = {
     method: 'GET',
     url: 'https://trade-service.wealthsimple.com/account/list',
     authenticated: true,
-    onSuccess: async (response) => {
+    onSuccess: (response) => {
       const data = response.body;
 
       // Collect all account ids registered under this Wealthsimple Trade Account
@@ -77,10 +77,7 @@ const WealthsimpleTradeEndpoints = {
     method: 'GET',
     url: 'https://trade-service.wealthsimple.com/account/list',
     authenticated: true,
-    onSuccess: async (response) => {
-      const data = response.body;
-      return data.results;
-    },
+    onSuccess: (response) => response.body.results,
     onFailure: defaultEndpointBehaviour.onFailure,
   },
 
@@ -150,10 +147,7 @@ const WealthsimpleTradeEndpoints = {
     method: 'GET',
     url: 'https://trade-service.wealthsimple.com/deposits',
     authenticated: true,
-    onSuccess: async (response) => {
-      const data = response.body;
-      return data.results;
-    },
+    onSuccess: (response) => response.body.results,
     onFailure: defaultEndpointBehaviour.onFailure,
   },
 
@@ -164,10 +158,7 @@ const WealthsimpleTradeEndpoints = {
     method: 'GET',
     url: 'https://trade-service.wealthsimple.com/bank-accounts',
     authenticated: true,
-    onSuccess: async (response) => {
-      const data = response.body;
-      return data.results;
-    },
+    onSuccess: (response) => response.body.results,
     onFailure: defaultEndpointBehaviour.onFailure,
   },
 
@@ -192,7 +183,7 @@ const WealthsimpleTradeEndpoints = {
     parameters: {
       0: 'ticker',
     },
-    onSuccess: async (response) => {
+    onSuccess: (response) => {
       const data = response.body;
 
       if (data.results.length === 0) {
@@ -217,6 +208,25 @@ const WealthsimpleTradeEndpoints = {
       0: 'id',
     },
     onSuccess: defaultEndpointBehaviour.onSuccess,
+    onFailure: defaultEndpointBehaviour.onFailure,
+  },
+
+  SECURITY_GROUPS: {
+    method: 'GET',
+    url: 'https://trade-service.wealthsimple.com/security-groups?limit=99',
+    authenticated: true,
+    onSuccess: (response) => response.body.results,
+    onFailure: defaultEndpointBehaviour.onFailure,
+  },
+
+  SECURITY_GROUP: {
+    method: 'GET',
+    url: 'https://trade-service.wealthsimple.com/security-groups/{0}/securities',
+    authenticated: true,
+    parameters: {
+      0: 'groupId',
+    },
+    onSuccess: (response) => response.body.results,
     onFailure: defaultEndpointBehaviour.onFailure,
   },
 
@@ -245,10 +255,7 @@ const WealthsimpleTradeEndpoints = {
     parameters: {
       0: 'accountId',
     },
-    onSuccess: async (response) => {
-      const data = response.body;
-      return data.results;
-    },
+    onSuccess: (response) => response.body.results,
     onFailure: defaultEndpointBehaviour.onFailure,
   },
 
@@ -263,7 +270,7 @@ const WealthsimpleTradeEndpoints = {
       0: 'offset',
       1: 'accountId',
     },
-    onSuccess: async (response) => {
+    onSuccess: (response) => {
       const data = response.body;
       return {
         total: data.total,

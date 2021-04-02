@@ -136,7 +136,7 @@ class HttpsWorker {
       return endpoint.onSuccess(response);
     }
 
-    return Promise.reject(await endpoint.onFailure(response));
+    return Promise.reject(endpoint.onFailure(response));
   }
 
   /**

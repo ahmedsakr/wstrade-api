@@ -79,6 +79,48 @@ class Data {
 
     return result;
   }
+
+  /**
+   * Fetches a mapping of all security groups (available on the Trade platform) to
+   * their group ids.
+   */
+  async securityGroups() {
+    const result = await this.worker.handleRequest(endpoints.SECURITY_GROUPS, {});
+
+    // Construct a map of category name to category id
+    return result.reduce((map, item) => ({
+      ...map, [item.name]: item.external_security_group_id,
+    }), {});
+  }
+
+  /**
+   * Retrieves all securities associated with the group name or id.
+   *
+   * - If you provide the group name, we will automatically do a lookup
+   * from the Trade servers to get its identifier.
+   *
+   * - Alternatively, You can get a list of all groups (with their group ids) from
+   * data.groups() and provide the group identifier directly.
+   *
+   * @param {*} group The security group name or identifier
+   */
+  async getSecurityGroup(group) {
+    let groupId = group;
+
+    // Fetch the group id from the group name
+    if (!group?.startsWith('security-group')) {
+      const groups = await this.securityGroups();
+
+      if (!(group in groups)) {
+        throw new Error(`'${group}' is not a valid group name!`);
+      }
+
+      // record the matched group id.
+      groupId = groups[group];
+    }
+
+    return this.worker.handleRequest(endpoints.SECURITY_GROUP, { groupId });
+  }
 }
 
 export default Data;
