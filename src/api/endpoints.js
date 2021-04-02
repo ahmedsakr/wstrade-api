@@ -213,7 +213,7 @@ const WealthsimpleTradeEndpoints = {
 
   /*
    * Provides a comprehensive list on all security groups available
-   * on the platform. 
+   * on the platform.
    */
   SECURITY_GROUPS: {
     method: 'GET',
