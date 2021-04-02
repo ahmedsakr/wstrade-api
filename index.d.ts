@@ -384,6 +384,25 @@ export namespace data {
    * @param {boolean} extensive Pulls a more detailed report of the security using the /securities/{id} API
    */
   function getSecurity(ticker: Ticker, extensive?: boolean): Promise<any>;
+
+  /**
+   * Fetches a mapping of all security groups (available on the Trade platform) to
+   * their group ids.
+   */
+  function securityGroups(): Promise<any>;
+
+  /**
+   * Retrieves all securities associated with the group name or id.
+   *
+   * - If you provide the group name, we will automatically do a lookup
+   * from the Trade servers to get its identifier.
+   *
+   * - Alternatively, You can get a list of all groups (with their group ids) from
+   * data.groups() and provide the group identifier directly.
+   *
+   * @param {*} group The security group name or identifier
+   */
+  function getSecurityGroup(group: string): Promise<Array<any>>;
 }
 
 
