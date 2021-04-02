@@ -211,6 +211,10 @@ const WealthsimpleTradeEndpoints = {
     onFailure: defaultEndpointBehaviour.onFailure,
   },
 
+  /*
+   * Provides a comprehensive list on all security groups available
+   * on the platform. 
+   */
   SECURITY_GROUPS: {
     method: 'GET',
     url: 'https://trade-service.wealthsimple.com/security-groups?limit=99',
@@ -219,6 +223,9 @@ const WealthsimpleTradeEndpoints = {
     onFailure: defaultEndpointBehaviour.onFailure,
   },
 
+  /*
+   * Retrieves all securitieis associated with the security group id.
+   */
   SECURITY_GROUP: {
     method: 'GET',
     url: 'https://trade-service.wealthsimple.com/security-groups/{0}/securities',
