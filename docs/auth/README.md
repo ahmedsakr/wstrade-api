@@ -65,7 +65,7 @@ Supported events
 |Events| Description |
 |--|--|
 | `'otp'` | Event for handling one-time passwords. Invoked by `auth` during a login attempt.|
-| `'refresh'`<span style="color:red;"><sup>new</sup></span> | Event for handling a token refresh, implicit or explicit. Invoken by `auth` after tokens are refreshed. |
+| `'refresh'`<span style="color:red;"><sup>new</sup></span> | Event for handling a token refresh, implicit or explicit. Invoked by `auth` after tokens are refreshed. |
 
 See also: [auth.`login`](#auth-login)
 
