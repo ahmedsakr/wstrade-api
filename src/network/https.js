@@ -73,6 +73,7 @@ class HttpsWorker {
 
     // authentication events
     this.events = {
+      otp: null,
       refresh: null,
     };
   }
@@ -156,6 +157,51 @@ class HttpsWorker {
     }
 
     return Promise.reject(endpoint.onFailure(response));
+  }
+
+  /**
+   * Attempts to establish a session for the provided email and password.
+   *
+   * @param {*} email emailed registered by the Wealthsimple Trade account
+   * @param {*} password The password of the account
+   */
+   async login(email, password) {
+    let response = null;
+
+    /*
+     * If we are given a function for otp, then we must fail a log in to
+     * trigger an OTP event with Wealthsimple Trade. This will allow the user
+     * otp thunk to retrieve the code.
+     *
+     * If a literal value is provided for otp, it means the user has manually
+     * provided us with the otp code. We can skip this login attempt.
+     */
+    if (typeof (this.events.otp) === 'function') {
+      await this.handleRequest(endpoints.LOGIN, {
+        email,
+        password,
+      }).catch(() => { });
+    }
+
+    // Try to log in for real this time.
+    try {
+      response = await this.handleRequest(endpoints.LOGIN, {
+        email,
+        password,
+        otp: typeof (this.events.otp) === 'function' ? await this.events.otp() : this.events.otp,
+      });
+    } catch (error) {
+      // we might have failed because OTP was not provided
+      if (!this.events.otp) {
+        throw new Error('OTP not provided!');
+      }
+
+      // Seems to be incorrect credentials or OTP.
+      throw error;
+    }
+
+    // Capture the tokens for later usage.
+    this.tokens.store(response.tokens);
   }
 
   /**
