@@ -63,6 +63,7 @@ We use [SemVer](http://semver.org/) for versioning. For the versions available, 
 
 * **Ahmed Sakr** - *Owner* - [@ahmedsakr](https://github.com/ahmedsakr)
 * **Mitchell Sawatzky** - *Contributor* - [@bufutda](https://github.com/bufutda)
+* **Dominic Gregoire** - *Contributor* - [@dgregoire](https://github.com/dgregoire)
 
 ## License
 

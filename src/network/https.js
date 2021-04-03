@@ -246,10 +246,8 @@ class HttpsWorker {
             await this.events.refresh(this.tokens);
           }
         } catch (error) {
-          // what should we do here?
-          // this is not a show stopper but the user
-          // should know this happened
-          throw new Error(`Trouble in call to refresh handler: ${error}`);
+          // The handler had an issue
+          throw new Error(`Error in auth.on() handler for 'refresh': ${error}`);
         }
       } else {
         // We are forced to reject as our access token has expired and we

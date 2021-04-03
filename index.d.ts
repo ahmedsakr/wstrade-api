@@ -27,7 +27,7 @@ export namespace auth {
   /**
    * Supported Auth Events at this time.
    */
-  type AuthEvent = 'otp';
+  type AuthEvent = 'otp' | 'refresh';
 
   /**
    * You may provide the auth event handler as the following:

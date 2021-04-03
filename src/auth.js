@@ -16,7 +16,7 @@ class Authentication {
    * @param {*} handler event handler for the event
    */
   on(event, handler) {
-    return this.worker.on(event, handler);
+    this.worker.on(event, handler);
   }
 
   /**
