@@ -14,4 +14,5 @@ Once your changes are ready for review, please make sure you run through this ch
 
 - [ ] Have you verified your changes  with existing testcases?
 - [ ] Did you update the output `dist/wstrade.js` by running `npm run bundle`?
+- [ ] Does the lint test passes? verify by running `npm run lint`
 - [ ] Did you update the npm version in `package.json`/`package-lock.json` to reflect the [semver](http://semver.org) protocol adopted by `wstrade-api`?

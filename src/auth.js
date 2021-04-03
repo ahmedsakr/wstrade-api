@@ -1,5 +1,3 @@
-import endpoints from './api/endpoints';
-
 class Authentication {
   /**
    * Creates an instance of the Authentication classs associated with the
@@ -18,7 +16,7 @@ class Authentication {
    * @param {*} handler event handler for the event
    */
   on(event, handler) {
-    return this.worker.on(event, handler)
+    return this.worker.on(event, handler);
   }
 
   /**
@@ -49,7 +47,7 @@ class Authentication {
    * @param {*} password The password of the account
    */
   async login(email, password) {
-    return this.worker.login(email, password)
+    return this.worker.login(email, password);
   }
 
   /**

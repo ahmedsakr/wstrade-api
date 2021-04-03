@@ -84,7 +84,7 @@ class HttpsWorker {
    * @param {*} event The trigger for the function
    * @param {*} handler event handler for the event
    */
-   on(event, handler) {
+  on(event, handler) {
     if (!(event in this.events)) {
       throw new Error(`Unsupported authentication event '${event}'!`);
     }
@@ -165,7 +165,7 @@ class HttpsWorker {
    * @param {*} email emailed registered by the Wealthsimple Trade account
    * @param {*} password The password of the account
    */
-   async login(email, password) {
+  async login(email, password) {
     let response = null;
 
     /*
@@ -219,7 +219,7 @@ class HttpsWorker {
     this.tokens.store(response.tokens);
     // call the handler for this event if we have one
     if (typeof (this.events.refresh) === 'function') {
-      await this.events.refresh(this.tokens)
+      await this.events.refresh(this.tokens);
     }
   }
 
@@ -243,8 +243,8 @@ class HttpsWorker {
         try {
           // and call the handler for this event if we have one
           if (typeof (this.events.refresh) === 'function') {
-            await this.events.refresh(this.tokens)
-          } 
+            await this.events.refresh(this.tokens);
+          }
         } catch (error) {
           // what should we do here?
           // this is not a show stopper but the user
