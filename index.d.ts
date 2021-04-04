@@ -30,17 +30,23 @@ export namespace auth {
   type AuthEvent = 'otp' | 'refresh';
 
   /**
-   * You may provide the auth event handlers as the following:
+   * Supported auth events:
    *
-   * otp
-   * - A function: If you provide a function, this function is triggered whenever the event associated
-   * with it occurs.
-   * - A string: Appropriate for simple value passing (e.g., providing OTP manually for logging in)
+   * 'otp':
+   * - Invoked during a login attempt to retrieve an OTP code
+   * - Handler type:
+   *     - A function: If you provide a function, this function is triggered whenever the event associated
+   *     with it occurs.
+   *     - A string: Appropriate for simple value passing (e.g., providing OTP manually for logging in)
    *
-   * refresh
-   * - A function that receives `tokens` as argument on explicit or implicit token updates
-   */
-   type AuthEventHandler = string | (() => string | Promise<string>) | ((tokens: AuthTokens) => Promise<void>);
+   * 'refresh':
+   * - Invoked when the authentication state has been successfully refreshed.
+   * - Handler type:
+   *     - A function: Receives `tokens` as an argument and is not expected to return anything
+   **/
+   type OTPEvent = string | (() => string | Promise<string>);
+   type RefreshEvent = ((tokens: AuthTokens) => Promise<void>);
+   type AuthEventHandler =  OTPEvent | RefreshEvent;
 
   /**
    * One-Time Passwords (OTP) are mandatory to login to your Wealthsimple Trade account.
