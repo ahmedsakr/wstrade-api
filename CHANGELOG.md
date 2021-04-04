@@ -1,3 +1,7 @@
+v1.10.0
+==
+* Added a new `on` handler for `refresh` events, called when the library automatically updates your access token and also when auth.`refresh()` is used.
+
 v1.9.0
 ==
 * Introduce data.`securityGroups` and data.`getSecurityGroup` APIs for looking up all security groups on Trade
