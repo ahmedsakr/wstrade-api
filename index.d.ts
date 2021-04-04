@@ -36,7 +36,7 @@ export namespace auth {
    * with it occurs.
    * - A string: Appropriate for simple value passing (e.g., providing OTP manually for logging in)
    */
-  type AuthEventHandler = string | (() => string | Promise<string>);
+  type AuthEventHandler = string | (() => string | Promise<string | void>);
 
   /**
    * One-Time Passwords (OTP) are mandatory to login to your Wealthsimple Trade account.

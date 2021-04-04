@@ -240,15 +240,6 @@ class HttpsWorker {
           // The refresh token is not valid.
           throw new Error(`Unable to refresh expired token: ${error}`);
         }
-        try {
-          // and call the handler for this event if we have one
-          if (typeof (this.events.refresh) === 'function') {
-            await this.events.refresh(this.tokens);
-          }
-        } catch (error) {
-          // The handler had an issue
-          throw new Error(`Error in auth.on() handler for 'refresh': ${error}`);
-        }
       } else {
         // We are forced to reject as our access token has expired and we
         // do not have a refresh token.
