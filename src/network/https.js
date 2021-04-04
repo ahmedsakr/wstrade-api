@@ -217,18 +217,20 @@ class HttpsWorker {
     });
 
     this.tokens.store(response.tokens);
-    // call the handler for this event if we have one
-    if (typeof (this.events.refresh) === 'function') {
-      await this.events.refresh(this.tokens);
+    try {
+      // and call the handler for this event if we have one
+      if (typeof (this.events.refresh) === 'function') {
+        await this.events.refresh(this.tokens);
+      }
+    } catch (error) {
+      // The handler had an issue
+      throw new Error(`Error in auth.on() handler for 'refresh': ${error}`);
     }
   }
 
   /**
    * Check if the existing set of tokens have expired, automatically
    * triggering a refresh if they have expired.
-   *
-   * If we are given a function for refresh, call that function
-   * with the refreshed tokens.
    */
   async implicitTokenRefresh() {
     if (this.tokens.expired()) {
