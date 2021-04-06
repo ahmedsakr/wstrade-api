@@ -1,3 +1,8 @@
+v1.10.1
+==
+* Minor documentation cleanup
+* Added examples for newer APIs in the `auth` and `data` modules
+
 v1.10.0
 ==
 * Added a new `on` handler for `refresh` events, called when the library automatically updates your access token and also when auth.`refresh()` is used.
