@@ -39,6 +39,14 @@ const getCodeFromGmail = async () => {
 // * Attempt to login for a second time with the OTP returned by getCodeFromGmail.
 auth.on('otp', getCodeFromGmail);
 
+// The 'refresh' authentication handler will be invoked when
+// the existing tokens are refreshed. This could happen when you explicitly
+// request a refresh through auth.tokens(), or it could happen implicitly
+// if the existing access token has expired.
+auth.on('refresh', (tokens) => {
+  console.log("My tokens were refreshed! Maybe i should store the new ones in my database...");
+});
+
 /**
  * Now that we understand how to specify the OTP, let's talk about
  * using the auth.login API.
