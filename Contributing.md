@@ -17,3 +17,4 @@ Once your changes are ready for review, please make sure you run through this ch
 - [ ] Does the lint test passes? verify by running `npm run lint`
 - [ ] Did you update the npm version in `package.json`/`package-lock.json` to reflect the [semver](http://semver.org) protocol adopted by `wstrade-api`?
 - [ ] Have you updated the `index.d.ts` file to reflect any API changes you made?
+- [ ] Have you updated the `CHANGELOG.md` file with the new version you are introducing?
