@@ -21,4 +21,14 @@ import { auth, data } from 'wstrade-api';
     // Retrieiving the extensive information on the apple stock, including quote of the
     // stock
     let appleExtensive = await data.getSecurity('AAPL:NASDAQ', true);
+
+    // Fetching all security groups available on the app (with their ids)
+    let groups = await data.securityGroups();
+
+    // Fetching all securities associated with the 'ETFs' group
+    let etfs = await data.getSecurityGroup(groups['ETFs']);
+
+    // you could also directly specify the group name and we will fetch the group id for you
+    // behind the scenes.
+    etfs = await getSecurityGroup('ETFs');
 })();
