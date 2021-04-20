@@ -1,3 +1,7 @@
+v1.10.2
+==
+* Add `all` as a supported value in index.d.ts for accounts.`history` interval
+
 v1.10.1
 ==
 * Minor documentation cleanup
