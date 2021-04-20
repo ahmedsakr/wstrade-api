@@ -154,7 +154,7 @@ export namespace accounts {
   /**
    * The set of time intervals that are supported by the accounts.history() API call.
    */
-  type HistoryInterval = '1d' | '1w' | '1m' | '3m' | '1y';
+  type HistoryInterval = '1d' | '1w' | '1m' | '3m' | '1y' | 'all';
 
   /**
    * Retrieves all open account ids under this Wealthsimple Trade account.

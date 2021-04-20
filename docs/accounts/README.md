@@ -144,7 +144,7 @@ accounts.person() -> Promise<any>
 ### accounts.`history`
 
 Query the history of the open account within the specified time  interval.
-* Valid interval values: `1d`, `1w`, `1m`, `3m`, `1y`
+* Valid interval values: `1d`, `1w`, `1m`, `3m`, `1y`, or `all`
 * `accountId` should be one that is returned by accounts.`all`
 
 [View examples](/docs/accounts/examples.js)
